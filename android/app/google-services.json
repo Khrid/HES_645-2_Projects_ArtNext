@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "556430102597",
+    "firebase_url": "https://nextart-772b8-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "nextart-772b8",
+    "storage_bucket": "nextart-772b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556430102597:android:ee4e44f8dbf37d8e26932c",
+        "android_client_info": {
+          "package_name": "com.example.startup_namer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556430102597-hqv1bgakr1i0ioqtkbn6kafhroja57j7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhLxyu-pUyPEWDBsotfL6qztAdhmcn4X4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556430102597-hqv1bgakr1i0ioqtkbn6kafhroja57j7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

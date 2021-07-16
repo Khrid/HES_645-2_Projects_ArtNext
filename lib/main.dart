@@ -2,12 +2,22 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:math';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async
+{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +25,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      home: RandomWords(),
+      home:
+      FutureBuilder(
+        future: _fbApp,
+        builder: (context, snapshot){
+          if(snapshot.hasError){
+    print('You have an error ${snapshot.error.toString()}');
+    return Text('Something went wrong!');
+    }else if(snapshot.hasData){
+    return RandomWords();
+    }else{
+            return Center(
+            child: CircularProgressIndicator(),
+            );
+    }
+    },
+    )
+
+
     );
   }
 }
@@ -75,6 +102,8 @@ class _RandomWordsState extends State<RandomWords> {
         color : alreadySaved ? Colors.red : null,
       ),
       onTap: () {
+        DatabaseReference _testRef = FirebaseDatabase.instance.reference().child("test");
+        _testRef.set("Hello world ${pair.toString()}"); // ENVOIE SUR FIREBASE
         setState(() {
           if(alreadySaved){
             _saved.remove(pair);
