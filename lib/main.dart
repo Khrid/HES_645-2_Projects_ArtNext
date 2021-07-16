@@ -1,61 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'pages/firstScreen.dart';
+import 'pages/secondScreen.dart';
+import 'pages/thirdScreen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MaterialApp(
+      title: 'Named Routes Demo',
+      // Start the app with the "/" named route. In this case, the app starts
+      // on the FirstScreen widget.
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => FirstScreen(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/second': (context) => SecondScreen(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/third': (context) => ThirdScreen(),
+      },
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Startup Name Generator",
-      home: RandomWords()
-    );
-  }
-}
+/*
+* Réflexion pour les routes
+* /
+* /login
+*
+* /events => pour la liste des évenements
+* /events/id => le détail d'un event
+* /events/id/attendees => liste des gens qui viennent à un event
+* /events/create
+* /events/modify/id ou /events/id/modify
+*
+* /account/ => info utilisateur
+* /account/upgrade => pour passer en premium
+*
+* /search => pour chercher quelqu'un
+* /user/id/attendencyHistory => historique de participation d'un user (à voir pour le nom)
+*
+* */
 
-class RandomWords extends StatefulWidget {
-  const RandomWords({Key? key}) : super(key: key);
 
-  @override
-  _RandomWordsState createState() => _RandomWordsState();
-}
 
-class _RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Startup Name Generator'),
-      ),
-      body: _buildSuggestions(),
-    );
-  }
-
-  Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return const Divider();
-          /*2*/
-
-          final index = i ~/ 2; /*3*/
-          if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10)) /*4*/;
-          }
-          return _buildRow(_suggestions[index]);
-        });
-  }
-
-  Widget _buildRow(WordPair pair) {
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-    );
-  }
-}
