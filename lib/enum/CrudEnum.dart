@@ -1,0 +1,2 @@
+
+enum MODE { CREATE, READ, UPDATE, DELETE }
