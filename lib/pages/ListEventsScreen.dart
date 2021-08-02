@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:artnext/pages/loginScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+
 import 'events/CreateEvenementScreen.dart';
-import 'events/CrudEvenementArguments.dart';
 
 export 'ListEventsScreen.dart';
 
@@ -33,28 +33,7 @@ class ListEventsScreen extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('ArtNext'),
-            ),
-            ListTile(
-              title: const Text('Logout'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                Navigator.pushNamed(context, LoginScreen.routeName);
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: MyDrawer(""),
     );
   }
 }
@@ -65,16 +44,19 @@ Widget buildEventsList(
     return ListView.builder(
         itemCount: snapshot.data!.docs.length,
         itemBuilder: (context, index) {
-          DocumentSnapshot event = snapshot.data!.docs[index];
+          DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
           //log(event.reference.id);
-          Event e = Event.fromJson(event);
-          log(e.toString());
+          Event event = Event.fromJson(eventFromFirebase);
+          log("ListEventsScreen - buildEventsList - event #" +
+              index.toString() +
+              " = " +
+              event.toString());
           return ListTile(
-            title: Text(e.title),
-            subtitle: Text(e.city),
+            title: Text(event.title),
+            subtitle: Text(event.city),
             onTap: () => {
               Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
-                  arguments: CrudEvenementArguments(e))
+                  arguments: event)
             },
           );
         });

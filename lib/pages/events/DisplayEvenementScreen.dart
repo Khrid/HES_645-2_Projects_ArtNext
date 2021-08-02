@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:artnext/pages/events/CrudEvenementArguments.dart';
 import 'package:artnext/models/event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,11 +12,10 @@ class DisplayEvenementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as CrudEvenementArguments;
-    Event? event = args.event;
-    log(event.toString());
-    log(event!.id);
+    final event = ModalRoute.of(context)!.settings.arguments as Event;
+    //Event? event = args.event;
+    log("DisplayEvenementScreen - event from args = " + event.toString());
+    //log(event!.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +32,20 @@ class DisplayEvenementScreen extends StatelessWidget {
             } else {
               var event = snapshot.data;
               Event e = Event.fromJson(event);
-              return new Text(e.title);
+              //return new Text(e.title + " - " + e.city);
+              return Column(
+                children: [
+                  Row(
+                    children: [Image.asset("assets/images/login.png")],
+                  ),
+                  Row(
+                    children: [new Text(e.title)],
+                  ),
+                  Row(
+                    children: [new Text(e.city)],
+                  )
+                ],
+              );
             }
           }),
     );
