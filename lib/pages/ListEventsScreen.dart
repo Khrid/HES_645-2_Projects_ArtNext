@@ -50,7 +50,7 @@ Widget buildEventsList(
           log("ListEventsScreen - buildEventsList - event #" +
               index.toString() +
               " = " +
-              event.toString());
+              event.id);
           return ListTile(
             title: Text(event.title),
             subtitle: Text(event.city),

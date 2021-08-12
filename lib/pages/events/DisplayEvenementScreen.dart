@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +15,18 @@ class DisplayEvenementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
     //Event? event = args.event;
-    log("DisplayEvenementScreen - event from args = " + event.toString());
+    log("DisplayEvenementScreen - event from args = " + event.id);
     //log(event!.id);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Event detail'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, UpdateEvenementScreen.routeName, arguments: event);
+        },
+        child: Icon(Icons.edit),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
