@@ -81,7 +81,9 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                   image: "imagePath",
                                   startDate: Timestamp.fromDate(DateTime.now()
                                       .add(Duration(
-                                          days: new Random().nextInt(31)))));
+                                          days: new Random().nextInt(31)))),
+                                details: 'detailEnDur'
+                              );
 
                               addEvent(e);
                               // Navigate to the second screen using a named route.

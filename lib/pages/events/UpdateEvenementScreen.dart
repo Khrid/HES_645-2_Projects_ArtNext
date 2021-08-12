@@ -96,7 +96,8 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                       title: eventNameController.text,
                                       city: eventCityController.text,
                                     startDate: _event!.startDate,
-                                    image: _event!.image
+                                    image: _event!.image,
+                                      details: _event!.details
                                   );
 
                                   updateEvent(e);
@@ -152,7 +153,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
+      title: Text("Event deletion"),
       content: Text("Do you really want to delete this event?"),
       actions: [
         cancelButton,
