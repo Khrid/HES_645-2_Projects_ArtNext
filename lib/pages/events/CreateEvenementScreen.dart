@@ -41,6 +41,7 @@ class CreateEvenementScreen extends StatelessWidget {
                     Event e = new Event(
                         title: "Random #" +
                             new Random().nextInt(1000).toString(),
+                        details: "Description of event",
                         city: "Martigny",
                         image: "imagePath",
                         startDate: Timestamp.fromDate(DateTime.now().add(

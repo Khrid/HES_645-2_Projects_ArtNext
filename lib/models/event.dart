@@ -9,6 +9,7 @@ class Event {
   Event({
     this.id = "-1",
     required this.title,
+    required this.details,
     required this.city,
     required this.image,
     required this.startDate
@@ -19,6 +20,9 @@ class Event {
       id: json.id,
       title: (json.data()['title'] != null
           ? json.data()['title']
+          : "<emptyTitle>") as String,
+      details: (json.data()['details'] != null
+          ? json.data()['details']
           : "<emptyTitle>") as String,
       city: (json.data()['city'] != null
           ? json.data()['city']
@@ -33,6 +37,7 @@ class Event {
 
   late final String id;
   final String title;
+  final String details;
   final String city;
   final String image;
   final Timestamp startDate;
@@ -41,7 +46,9 @@ class Event {
     return {
       //'id': id,
       'title': title,
+      'details': details,
       'city': city,
+      'image': image,
       'startDate': startDate
     };
   }
@@ -52,7 +59,8 @@ class Event {
 
     return "Event{"
         "id:" + id + ", " +
-    "title:" + title + ", " +
+        "title:" + title + ", " +
+        "details:" + details + ", " +
         "city:" + city + ", " +
         "image:" + image + ", " +
         "startDate:" + startDate.toDate().toString() + "}";

@@ -48,9 +48,21 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 250),
+                    // SizedBox(height: 250),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top:250),
+
+                            child: Text("Username"),
+                        )
+                      ]
+                    ),
+
+
                     TextField(
-                      obscureText: false,
+                      obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'User',
@@ -66,13 +78,28 @@ class LoginScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    side: BorderSide(color: Colors.teal, width: 2.0)
+                                )
+                            )
+                        ),
+
                         // Within the `FirstScreen` widget
                         onPressed: () {
                           // Navigate to the second screen using a named route.
                           Navigator.pushNamedAndRemoveUntil(context,
                               ListEventsScreen.routeName, (_) => false);
                         },
-                        child: Text('Connexion (fake)'))
+                        child: Text('Connexion (fake)')
+
+                    ),
+
+
+
+
                   ],
                 ));
           },

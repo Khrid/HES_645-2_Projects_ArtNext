@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:developer';
 
 import 'events/CreateEvenementScreen.dart';
 
@@ -20,8 +21,7 @@ class ListEventsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Events'),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
+      body: StreamBuilder(stream: FirebaseFirestore.instance
             .collection('events')
             .orderBy('startDate', descending: true)
             .snapshots(),
@@ -38,8 +38,7 @@ class ListEventsScreen extends StatelessWidget {
   }
 }
 
-Widget buildEventsList(
-    BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
   if (snapshot.hasData) {
     return ListView.builder(
         itemCount: snapshot.data!.docs.length,
@@ -52,8 +51,19 @@ Widget buildEventsList(
               " = " +
               event.toString());
           return ListTile(
+
             title: Text(event.title),
             subtitle: Text(event.city),
+            leading: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                child:
+                FadeInImage(image: NetworkImage(event.image),
+                  placeholder: AssetImage('https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png'),
+                  // CachedNetworkImage(
+                  //     placeholder: (context, url) => CircularProgressIndicator(),
+                  //     imageUrl: event.image,
+                  // ),
+                )),
             onTap: () => {
               Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
                   arguments: event)
