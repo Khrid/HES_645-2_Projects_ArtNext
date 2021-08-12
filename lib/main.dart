@@ -65,6 +65,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'NextArt',
       theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
       // Start the app with the "/" named route. In this case, the app starts
       // on the FirstScreen widget.
       initialRoute: LoginScreen.routeName,
