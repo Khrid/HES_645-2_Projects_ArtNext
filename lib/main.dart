@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:artnext/pages/events/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -93,8 +94,8 @@ class _AppState extends State<App> {
         // /events
         DisplayEvenementScreen.routeName: (context) => DisplayEvenementScreen(),
         // /events/details
-        CreateEvenementScreen.routeName: (context) => CreateEvenementScreen()
-        // /events/details
+        CreateEvenementScreen.routeName: (context) => CreateEvenementScreen(),
+        UpdateEvenementScreen.routeName: (context) => UpdateEvenementScreen()
       },
     );
   }

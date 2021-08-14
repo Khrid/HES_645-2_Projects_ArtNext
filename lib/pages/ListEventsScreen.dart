@@ -49,7 +49,7 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
           log("ListEventsScreen - buildEventsList - event #" +
               index.toString() +
               " = " +
-              event.toString());
+              event.id);
           return ListTile(
 
             title: Text(event.title),
@@ -57,7 +57,8 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
             leading: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 child:
-                FadeInImage(image: NetworkImage(event.image),
+                FadeInImage(
+                  image: NetworkImage((event.image.contains("http") ? event.image : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")),
                   placeholder: AssetImage('https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png'),
                   // CachedNetworkImage(
                   //     placeholder: (context, url) => CircularProgressIndicator(),
