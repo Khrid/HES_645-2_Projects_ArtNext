@@ -109,12 +109,49 @@ Widget buildEventDetails(
         ),
         Container(
             padding: const EdgeInsets.all(8),
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildAttendees(e),
-                _buildAttendees(e),
-                _buildAttendees(e),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("events")
+                      .doc(e.id)
+                      .collection("attendees")
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return CircularProgressIndicator();
+                      default:
+
+                        snapshot.data!.docs.forEach((element) {
+                          FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(element["ref"].id)
+                          .get().then((value) => {
+                            log(value.data()!["firstname"] + " participates as " + element["role"])
+                          });
+                        });
+                        return Column();
+                        /*return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                .collection("users"),
+                              );
+                              return ListTile(
+                                title: Text(snapshot.data!.docs[index].id),
+                              );
+                            });*/
+                    }
+                  },
+                )
+                //_buildAttendees(e),
+                //_buildAttendees(e),
+                //_buildAttendees(e),
               ],
             ))
       ],
@@ -148,8 +185,11 @@ Column _buildAttendees(Event e) {
         height: 50,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          image:
-              DecorationImage(image: NetworkImage((e.image.contains("http") ? e.image : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")), fit: BoxFit.fill),
+          image: DecorationImage(
+              image: NetworkImage((e.image.contains("http")
+                  ? e.image
+                  : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")),
+              fit: BoxFit.fill),
         ),
       ),
       Text("Le nom")
