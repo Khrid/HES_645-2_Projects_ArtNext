@@ -42,6 +42,32 @@ class DisplayEvenementScreen extends StatelessWidget {
   }
 }
 
+Widget buildAttendeeInfo(
+    BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+  if (snapshot.hasData) {
+    var attendee = snapshot.data;
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(16.0),
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+                image: NetworkImage(
+                    "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
+                fit: BoxFit.fill),
+          ),
+        ),
+        Text(attendee!["firstname"].toString().substring(0,1) + ". "+attendee!["lastname"])
+      ],
+    );
+  } else {
+    return Column();
+  }
+}
+
 Widget buildEventDetails(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
   //Widget for buttons Share and participate
@@ -107,53 +133,64 @@ Widget buildEventDetails(
             fontWeight: FontWeight.w400,
           ),
         ),
-        Container(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("events")
-                      .doc(e.id)
-                      .collection("attendees")
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return CircularProgressIndicator();
-                      default:
+        Flexible(
+            child: Container(
+          padding: const EdgeInsets.all(8),
+          margin: EdgeInsets.symmetric(vertical: 20.0),
+          height: 200.0,
+          child:
+              /*Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [*/
+              StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("events")
+                .doc(e.id)
+                .collection("attendees")
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return CircularProgressIndicator();
+                default:
+                  //return Column();
+                  if (snapshot.data!.docs.length > 0) {
+                    return ListView.builder(
+                      padding: EdgeInsets.all(8.0),
+                        physics: NeverScrollableScrollPhysics(),
 
-                        snapshot.data!.docs.forEach((element) {
-                          FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(element["ref"].id)
-                          .get().then((value) => {
-                            log(value.data()!["firstname"] + " participates as " + element["role"])
-                          });
+                        ///
+                        shrinkWrap: true,
+
+                        ///
+                        scrollDirection: Axis.horizontal,
+
+                        ///
+
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          log(snapshot.data!.docs[index]["ref"].id);
+                          //return Container();
+
+                          return StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(snapshot.data!.docs[index]["ref"].id)
+                                  .snapshots(),
+                              builder: buildAttendeeInfo);
                         });
-                        return Column();
-                        /*return ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              return StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                .collection("users"),
-                              );
-                              return ListTile(
-                                title: Text(snapshot.data!.docs[index].id),
-                              );
-                            });*/
-                    }
-                  },
-                )
-                //_buildAttendees(e),
-                //_buildAttendees(e),
-                //_buildAttendees(e),
-              ],
-            ))
+                  } else {
+                    return Text("No attendees yet :(");
+                  }
+              }
+            },
+          )
+          //_buildAttendees(e),
+          //_buildAttendees(e),
+          //_buildAttendees(e),
+          ,
+        ))
       ],
     );
   }
