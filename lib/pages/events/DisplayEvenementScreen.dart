@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
-import 'package:artnext/models/favoriteWidget.dart';
+import 'package:artnext/pages/favoriteWidget.dart';
 import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,7 +60,7 @@ Widget buildAttendeeInfo(
                 fit: BoxFit.fill),
           ),
         ),
-        Text(attendee!["firstname"].toString().substring(0,1) + ". "+attendee!["lastname"])
+        Text(attendee!["firstname"].toString().substring(0,1) + ". "+attendee["lastname"].toString())
       ],
     );
   } else {

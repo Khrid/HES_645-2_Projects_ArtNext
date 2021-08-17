@@ -5,6 +5,8 @@ import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
 
 import 'pages/ListEventsScreen.dart';
 import 'pages/loginScreen.dart';
@@ -48,11 +50,13 @@ class _AppState extends State<App> {
   @override
   void initState() {
     initializeFlutterFire();
+    Intl.defaultLocale = 'fr_CH';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     if (_error) {
       // TODO: handle error
