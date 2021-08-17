@@ -54,7 +54,8 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
 
             title: Text(event.title),
             subtitle: Text(event.city),
-            leading: ClipRRect(
+            // TODO décommenter pour remettre l'image
+            /*leading: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 child:
                 FadeInImage(
@@ -64,7 +65,7 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
                   //     placeholder: (context, url) => CircularProgressIndicator(),
                   //     imageUrl: event.image,
                   // ),
-                )),
+                )),*/
             onTap: () => {
               Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
                   arguments: event)
