@@ -45,8 +45,8 @@ class ListEventsScreen extends StatelessWidget {
               height: 200.0,
               child: StreamBuilder(stream: FirebaseFirestore.instance
                     .collection('events')
-                    .orderBy('startDate', descending: true)
-                  .where('startDate', isGreaterThan: DateTime.now())
+                    .orderBy('endDate')
+                  .where('endDate', isGreaterThan: DateTime.now())
                     .snapshots(),
                 builder: buildEventsList,
               ),
@@ -67,11 +67,11 @@ class ListEventsScreen extends StatelessWidget {
 
 String readTimestamp(int timestamp) {
   initializeDateFormatting('fr_CH', null);
-  var now = new DateTime.now();
+  // var now = new DateTime.now();
   var format = new DateFormat('dd/MM/yyy');
   var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-  var diff = date.difference(now);
-  var time = '';
+  // var diff = date.difference(now);
+  // var time = '';
   var timer = format.format(date);
 
   // if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
@@ -86,7 +86,7 @@ String readTimestamp(int timestamp) {
 
   return timer;
 }
-String readTimestamp2(int timestamp) {
+String readTimestampYear(int timestamp) {
   initializeDateFormatting('fr_CH', null);
   var now = new DateTime.now();
   var format = new DateFormat('yyy');
@@ -95,16 +95,6 @@ String readTimestamp2(int timestamp) {
   var time = '';
   var timer = format.format(date);
 
-  // if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
-  //   time = format.format(date);
-  // } else {
-  //   if (diff.inDays == 1) {
-  //     time = diff.inDays.toString() + 'DAY AGO';
-  //   } else {
-  //     time = diff.inDays.toString() + 'DAYS AGO';
-  //   }
-  // }
-
   return timer;
 }
 
@@ -112,7 +102,7 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
   if (snapshot.hasData) {
     return Column(
       children: <Widget>[
-        Text(readTimestamp2(Event.fromJson(snapshot.data!.docs[0]).startDate.millisecondsSinceEpoch)),
+        Text(readTimestampYear(Event.fromJson(snapshot.data!.docs[0]).startDate.millisecondsSinceEpoch)),
         Expanded(
           child: ListView.builder(
               itemCount: snapshot.data!.docs.length,
@@ -126,12 +116,14 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
                 //     event.id);
 
                 var Datum = readTimestamp(event.startDate.millisecondsSinceEpoch);
+                var eventTypeTransform = event.type.toString().toLowerCase()
+                    .replaceAll('eventtypeenum.','');
 
                 return ListTile(
-                  title: Text(event.title),
+                  title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 3.0),
-                    child: Text( (event.details.length > 100) ? event.details.substring(0,100)+("[...]") : event.details),
+                    child: Text(eventTypeTransform.substring(0,1).toUpperCase()+eventTypeTransform.substring(1,)),
                   ),
                   leading:  SizedBox(
                     height: 100.0,
@@ -139,12 +131,11 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
                     child: ClipRRect(
                         // borderRadius: BorderRadius.all(Radius.circular(4.0)),
                           child: FadeInImage(
-                            image: NetworkImage((event.image.contains("http") ? event.image : "assets/images/placeholder.jpg")),
+                            image: NetworkImage(event.image),
                             placeholder: AssetImage('assets/images/placeholder.jpg'),
                           )),
                   ),
-
-                  onTap: () => {
+                    onTap: () => {
                     Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
                         arguments: event)
                   },
