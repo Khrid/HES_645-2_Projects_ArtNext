@@ -12,7 +12,6 @@ import '../ListEventsScreen.dart';
 
 export 'CreateEvenementScreen.dart';
 
-
 class UpdateEvenementScreen extends StatefulWidget {
   static const routeName = '/events/event/update';
 
@@ -48,15 +47,17 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
     //Event? event = args.event;
     _event = ModalRoute.of(context)!.settings.arguments as Event;
     dev.log("UpdateEvenementScreen - event from args = " + _event!.id);
-    if(eventTypeSelectedValue != null) {
-      dev.log("UpdateEvenementScreen - eventTypeSelectedValue = " + eventTypeSelectedValue);
+    if (eventTypeSelectedValue != null) {
+      dev.log("UpdateEvenementScreen - eventTypeSelectedValue = " +
+          eventTypeSelectedValue);
     } else {
       eventTypeSelectedValue = getEventTypeText(_event!.type);
     }
 
-
-    DateTime startDateTimeEvent = DateTime.parse(_event!.startDate.toDate().toString());
-    DateTime endDateTimeEvent = DateTime.parse(_event!.endDate.toDate().toString());
+    DateTime startDateTimeEvent =
+        DateTime.parse(_event!.startDate.toDate().toString());
+    DateTime endDateTimeEvent =
+        DateTime.parse(_event!.endDate.toDate().toString());
 
     eventTitleController.text = _event!.title;
     eventCityController.text = _event!.city;
@@ -64,38 +65,28 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
     eventDetailsController.text = _event!.details;
 
     // Dates
-    initializeDateFormatting("fr", null)
-        .then((_) {
+    initializeDateFormatting("fr", null).then((_) {
       var formatter = DateFormat.yMMMd("fr_CH");
-      eventStartDateController.text = formatter
-          .format(startDateTimeEvent)
-          .toString();
-      eventEndDateController.text = formatter
-          .format(endDateTimeEvent)
-          .toString();
+      eventStartDateController.text =
+          formatter.format(startDateTimeEvent).toString();
+      eventEndDateController.text =
+          formatter.format(endDateTimeEvent).toString();
     });
 
     // Heures
-    eventStartTimeController.text = startDateTimeEvent
-        .hour
-        .toString()
-        .padLeft(2, '0') +
-        ":" +
-        startDateTimeEvent.minute
-            .toString()
-            .padLeft(2, '0');
+    eventStartTimeController.text =
+        startDateTimeEvent.hour.toString().padLeft(2, '0') +
+            ":" +
+            startDateTimeEvent.minute.toString().padLeft(2, '0');
 
-    eventEndTimeController.text = endDateTimeEvent
-        .hour
-        .toString()
-        .padLeft(2, '0') +
-        ":" +
-        endDateTimeEvent.minute
-            .toString()
-            .padLeft(2, '0');
+    eventEndTimeController.text =
+        endDateTimeEvent.hour.toString().padLeft(2, '0') +
+            ":" +
+            endDateTimeEvent.minute.toString().padLeft(2, '0');
 
     //eventTypeSelectedValue = getEventTypeText(_event!.type);
-    dev.log("UpdateEvenementScreen - eventTypeSelectedValue = " + eventTypeSelectedValue);
+    dev.log("UpdateEvenementScreen - eventTypeSelectedValue = " +
+        eventTypeSelectedValue);
 
     _events = FirebaseFirestore.instance.collection("events");
 
@@ -109,53 +100,56 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
           title: Text('Edit event'),
         ),
         body: Form(
-          key: _formKey,
-          child: Center(
-              child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      /// Title
-                      TextFormField(
-                          controller: eventTitleController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: 'Title'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the title';
-                            }
-                            return null;
-                          }),
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Center(
+                  child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          /// Title
+                          TextFormField(
+                              controller: eventTitleController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Title'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the title';
+                                }
+                                return null;
+                              }),
 
-                      /// Address
-                      SizedBox(height: 10),
-                      TextFormField(
-                          controller: eventAddressController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Address'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the address';
-                            }
-                            return null;
-                          }),
+                          /// Address
+                          SizedBox(height: 10),
+                          TextFormField(
+                              controller: eventAddressController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Address'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the address';
+                                }
+                                return null;
+                              }),
 
-                      /// City
-                      SizedBox(height: 10),
-                      TextFormField(
-                          controller: eventCityController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: 'City'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the city';
-                            }
-                            return null;
-                          }),
+                          /// City
+                          SizedBox(height: 10),
+                          TextFormField(
+                              controller: eventCityController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'City'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the city';
+                                }
+                                return null;
+                              }),
 
-                      /// Map
-                      /*SizedBox(
+                          /// Map
+                          /*SizedBox(
                             height: 10,
                           ),
                           SizedBox(
@@ -172,297 +166,310 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                     zoom: 11),
                               )),*/
 
-                      /// Details
-                      SizedBox(height: 10),
-                      TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          minLines: 5,
-                          //Normal textInputField will be displayed
-                          maxLines: 5,
-                          // when user presses enter it will adapt to it
-                          controller: eventDetailsController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Details'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the details';
-                            }
-                            return null;
-                          }),
-
-                      /// Type
-                      SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: 'Type'),
-                        isExpanded: true,
-                        value: eventTypeSelectedValue,
-                        items: EventTypeEnum.values.map((EventTypeEnum value) {
-                          return DropdownMenuItem<String>(
-                            value: getEventTypeText(value),
-                            child: new Text(getEventTypeText(value)),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            dev.log(value.toString());
-                            eventTypeSelectedValue = value!;
-                            dev.log(eventTypeSelectedValue);
-                          });
-                        },
-                      ),
-
-                      /// Start date
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              flex: 7,
-                              child: TextFormField(
-                                controller: eventStartDateController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Start date'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the start date';
-                                  } else if (endDateTimeEvent
-                                          .compareTo(startDateTimeEvent) <
-                                      1) {
-                                    return '';
-                                  }
-                                  return null;
-                                },
-                                onTap: () async {
-                                  DateTime? datePicked = await showDatePicker(
-                                      context: context,
-                                      initialDate: new DateTime.now(),
-                                      firstDate: new DateTime(2021),
-                                      lastDate: new DateTime(2022));
-                                  if (datePicked != null) {
-                                    initializeDateFormatting("fr", null)
-                                        .then((_) {
-                                      var formatter = DateFormat.yMMMd("fr_CH");
-                                      eventStartDateController.text = formatter
-                                          .format(datePicked)
-                                          .toString();
-                                      startDateTimeEvent = new DateTime(
-                                          datePicked.year,
-                                          datePicked.month,
-                                          datePicked.day,
-                                          startDateTimeEvent.hour,
-                                          startDateTimeEvent.minute);
-                                    });
-                                  }
-                                },
-                              )),
-                          Spacer(),
-                          Expanded(
-                              flex: 3,
-                              child: TextFormField(
-                                controller: eventStartTimeController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Start time'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the start time';
-                                  } else if (endDateTimeEvent
-                                          .compareTo(startDateTimeEvent) <
-                                      1) {
-                                    return '';
-                                  }
-                                  return null;
-                                },
-                                onTap: () async {
-                                  TimeOfDay? timePicked = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                      builder: (BuildContext context,
-                                          Widget? child) {
-                                        return MediaQuery(
-                                            data: MediaQuery.of(context)
-                                                .copyWith(
-                                                    alwaysUse24HourFormat:
-                                                        true),
-                                            child: child!);
-                                      });
-                                  if (timePicked != null) {
-                                    eventStartTimeController.text = timePicked
-                                            .hour
-                                            .toString()
-                                            .padLeft(2, '0') +
-                                        ":" +
-                                        timePicked.minute
-                                            .toString()
-                                            .padLeft(2, '0');
-
-                                    startDateTimeEvent = new DateTime(
-                                        startDateTimeEvent.year,
-                                        startDateTimeEvent.month,
-                                        startDateTimeEvent.day,
-                                        timePicked.hour,
-                                        timePicked.minute);
-                                  }
-                                },
-                              ))
-                        ],
-                      ),
-
-                      /// End date
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              flex: 7,
-                              child: TextFormField(
-                                controller: eventEndDateController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'End date'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the end date';
-                                  } else if (endDateTimeEvent
-                                          .compareTo(startDateTimeEvent) <
-                                      1) {
-                                    return '';
-                                  }
-                                  return null;
-                                },
-                                onTap: () async {
-                                  DateTime? datePicked = await showDatePicker(
-                                      context: context,
-                                      initialDate: new DateTime.now(),
-                                      firstDate: new DateTime(2021),
-                                      lastDate: new DateTime(2022));
-                                  if (datePicked != null) {
-                                    initializeDateFormatting("fr", null)
-                                        .then((_) {
-                                      var formatter = DateFormat.yMMMd("fr_CH");
-                                      eventEndDateController.text = formatter
-                                          .format(datePicked)
-                                          .toString();
-                                      endDateTimeEvent = new DateTime(
-                                          datePicked.year,
-                                          datePicked.month,
-                                          datePicked.day,
-                                          endDateTimeEvent.hour,
-                                          endDateTimeEvent.minute);
-                                    });
-                                  }
-                                },
-                              )),
-                          Spacer(),
-                          Expanded(
-                              flex: 3,
-                              child: TextFormField(
-                                controller: eventEndTimeController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'End time'),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter the end time';
-                                  } else if (endDateTimeEvent
-                                          .compareTo(startDateTimeEvent) <
-                                      1) {
-                                    return '';
-                                  }
-
-                                  return null;
-                                },
-                                onTap: () async {
-                                  TimeOfDay? timePicked = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                      builder: (BuildContext context,
-                                          Widget? child) {
-                                        return MediaQuery(
-                                            data: MediaQuery.of(context)
-                                                .copyWith(
-                                                    alwaysUse24HourFormat:
-                                                        true),
-                                            child: child!);
-                                      });
-                                  if (timePicked != null) {
-                                    eventEndTimeController.text = timePicked
-                                            .hour
-                                            .toString()
-                                            .padLeft(2, '0') +
-                                        ":" +
-                                        timePicked.minute
-                                            .toString()
-                                            .padLeft(2, '0');
-                                    endDateTimeEvent = new DateTime(
-                                        endDateTimeEvent.year,
-                                        endDateTimeEvent.month,
-                                        endDateTimeEvent.day,
-                                        timePicked.hour,
-                                        timePicked.minute);
-                                  }
-                                },
-                              ))
-                        ],
-                      ),
-                      SizedBox(height: 50),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                              // Within the `FirstScreen` widget
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Timestamp startDate = Timestamp.fromDate(startDateTimeEvent);
-                                  Timestamp endDate = Timestamp.fromDate(endDateTimeEvent);
-                                  Event e = new Event(
-                                    id: _event!.id,
-                                    title: eventTitleController.text,
-                                    city: eventCityController.text,
-                                    type: getEventTypeEnum(
-                                        eventTypeSelectedValue),
-                                    startDate: startDate,
-                                    image: _event!.image,
-                                    details: eventDetailsController.text,
-                                    geopoint: _event!.geopoint,
-                                    endDate: endDate,
-                                    address: eventAddressController.text,
-                                    //organizer: _event!.organizer
-                                  );
-
-                                  _event = e;
-
-                                  updateEvent(e);
-                                  // Navigate to the second screen using a named route.
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: const Text('Event updated'),
-                                          duration: Duration(seconds: 2)));
-                                  //Navigator.pushNamedAndRemoveUntil(context,
-                                  //    ListEventsScreen.routeName, (route) => false);
-                                  Navigator.pop(context);
+                          /// Details
+                          SizedBox(height: 10),
+                          TextFormField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 5,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: eventDetailsController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Details'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the details';
                                 }
-                              },
-                              child: Text('Update event')),
-                          Container(width: 20, height: 20),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.red, // background
-                                onPrimary: Colors.white, // foreground
-                              ),
-                              // Within the `FirstScreen` widget
-                              onPressed: () {
-                                showAlertDialog(context);
-                              },
-                              child: Text('Delete event'))
+                                return null;
+                              }),
+
+                          /// Type
+                          SizedBox(height: 10),
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Type'),
+                            isExpanded: true,
+                            value: eventTypeSelectedValue,
+                            items:
+                                EventTypeEnum.values.map((EventTypeEnum value) {
+                              return DropdownMenuItem<String>(
+                                value: getEventTypeText(value),
+                                child: new Text(getEventTypeText(value)),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                dev.log(value.toString());
+                                eventTypeSelectedValue = value!;
+                                dev.log(eventTypeSelectedValue);
+                              });
+                            },
+                          ),
+
+                          /// Start date
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 7,
+                                  child: TextFormField(
+                                    controller: eventStartDateController,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Start date'),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter the start date';
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
+                                        return '';
+                                      }
+                                      return null;
+                                    },
+                                    onTap: () async {
+                                      DateTime? datePicked =
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: new DateTime.now(),
+                                              firstDate: new DateTime(2021),
+                                              lastDate: new DateTime(2022));
+                                      if (datePicked != null) {
+                                        initializeDateFormatting("fr", null)
+                                            .then((_) {
+                                          var formatter =
+                                              DateFormat.yMMMd("fr_CH");
+                                          eventStartDateController.text =
+                                              formatter
+                                                  .format(datePicked)
+                                                  .toString();
+                                          startDateTimeEvent = new DateTime(
+                                              datePicked.year,
+                                              datePicked.month,
+                                              datePicked.day,
+                                              startDateTimeEvent.hour,
+                                              startDateTimeEvent.minute);
+                                        });
+                                      }
+                                    },
+                                  )),
+                              Spacer(),
+                              Expanded(
+                                  flex: 3,
+                                  child: TextFormField(
+                                    controller: eventStartTimeController,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Start time'),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter the start time';
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
+                                        return '';
+                                      }
+                                      return null;
+                                    },
+                                    onTap: () async {
+                                      TimeOfDay? timePicked =
+                                          await showTimePicker(
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                              builder: (BuildContext context,
+                                                  Widget? child) {
+                                                return MediaQuery(
+                                                    data: MediaQuery.of(context)
+                                                        .copyWith(
+                                                            alwaysUse24HourFormat:
+                                                                true),
+                                                    child: child!);
+                                              });
+                                      if (timePicked != null) {
+                                        eventStartTimeController.text =
+                                            timePicked.hour
+                                                    .toString()
+                                                    .padLeft(2, '0') +
+                                                ":" +
+                                                timePicked.minute
+                                                    .toString()
+                                                    .padLeft(2, '0');
+
+                                        startDateTimeEvent = new DateTime(
+                                            startDateTimeEvent.year,
+                                            startDateTimeEvent.month,
+                                            startDateTimeEvent.day,
+                                            timePicked.hour,
+                                            timePicked.minute);
+                                      }
+                                    },
+                                  ))
+                            ],
+                          ),
+
+                          /// End date
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 7,
+                                  child: TextFormField(
+                                    controller: eventEndDateController,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'End date'),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter the end date';
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
+                                        return '';
+                                      }
+                                      return null;
+                                    },
+                                    onTap: () async {
+                                      DateTime? datePicked =
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: new DateTime.now(),
+                                              firstDate: new DateTime(2021),
+                                              lastDate: new DateTime(2022));
+                                      if (datePicked != null) {
+                                        initializeDateFormatting("fr", null)
+                                            .then((_) {
+                                          var formatter =
+                                              DateFormat.yMMMd("fr_CH");
+                                          eventEndDateController.text =
+                                              formatter
+                                                  .format(datePicked)
+                                                  .toString();
+                                          endDateTimeEvent = new DateTime(
+                                              datePicked.year,
+                                              datePicked.month,
+                                              datePicked.day,
+                                              endDateTimeEvent.hour,
+                                              endDateTimeEvent.minute);
+                                        });
+                                      }
+                                    },
+                                  )),
+                              Spacer(),
+                              Expanded(
+                                  flex: 3,
+                                  child: TextFormField(
+                                    controller: eventEndTimeController,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'End time'),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter the end time';
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
+                                        return '';
+                                      }
+
+                                      return null;
+                                    },
+                                    onTap: () async {
+                                      TimeOfDay? timePicked =
+                                          await showTimePicker(
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                              builder: (BuildContext context,
+                                                  Widget? child) {
+                                                return MediaQuery(
+                                                    data: MediaQuery.of(context)
+                                                        .copyWith(
+                                                            alwaysUse24HourFormat:
+                                                                true),
+                                                    child: child!);
+                                              });
+                                      if (timePicked != null) {
+                                        eventEndTimeController.text = timePicked
+                                                .hour
+                                                .toString()
+                                                .padLeft(2, '0') +
+                                            ":" +
+                                            timePicked.minute
+                                                .toString()
+                                                .padLeft(2, '0');
+                                        endDateTimeEvent = new DateTime(
+                                            endDateTimeEvent.year,
+                                            endDateTimeEvent.month,
+                                            endDateTimeEvent.day,
+                                            timePicked.hour,
+                                            timePicked.minute);
+                                      }
+                                    },
+                                  ))
+                            ],
+                          ),
+                          SizedBox(height: 50),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  // Within the `FirstScreen` widget
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      Timestamp startDate = Timestamp.fromDate(
+                                          startDateTimeEvent);
+                                      Timestamp endDate =
+                                          Timestamp.fromDate(endDateTimeEvent);
+                                      Event e = new Event(
+                                        id: _event!.id,
+                                        title: eventTitleController.text,
+                                        city: eventCityController.text,
+                                        type: getEventTypeEnum(
+                                            eventTypeSelectedValue),
+                                        startDate: startDate,
+                                        image: _event!.image,
+                                        details: eventDetailsController.text,
+                                        geopoint: _event!.geopoint,
+                                        endDate: endDate,
+                                        address: eventAddressController.text,
+                                        //organizer: _event!.organizer
+                                      );
+
+                                      _event = e;
+
+                                      updateEvent(e);
+                                      // Navigate to the second screen using a named route.
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content:
+                                                  const Text('Event updated'),
+                                              duration: Duration(seconds: 2)));
+                                      //Navigator.pushNamedAndRemoveUntil(context,
+                                      //    ListEventsScreen.routeName, (route) => false);
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Text('Update event')),
+                              Container(width: 20, height: 20),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red, // background
+                                    onPrimary: Colors.white, // foreground
+                                  ),
+                                  // Within the `FirstScreen` widget
+                                  onPressed: () {
+                                    showAlertDialog(context);
+                                  },
+                                  child: Text('Delete event'))
+                            ],
+                          ),
                         ],
-                      ),
-                    ],
-                  ))),
-        ));
+                      ))),
+            )));
   }
 
   showAlertDialog(BuildContext context) {
