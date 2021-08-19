@@ -4,10 +4,9 @@ import 'dart:js';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'events/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
@@ -55,6 +54,8 @@ class ListEventsScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        elevation:0.0,
         onPressed: () {
           Navigator.pushNamed(context, CreateEvenementScreen.routeName);
         },
@@ -65,44 +66,15 @@ class ListEventsScreen extends StatelessWidget {
   }
 }
 
-String readTimestamp(int timestamp) {
-  initializeDateFormatting('fr_CH', null);
-  // var now = new DateTime.now();
-  var format = new DateFormat('dd/MM/yyy');
-  var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-  // var diff = date.difference(now);
-  // var time = '';
-  var timer = format.format(date);
 
-  // if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
-  //   time = format.format(date);
-  // } else {
-  //   if (diff.inDays == 1) {
-  //     time = diff.inDays.toString() + 'DAY AGO';
-  //   } else {
-  //     time = diff.inDays.toString() + 'DAYS AGO';
-  //   }
-  // }
-
-  return timer;
-}
-String readTimestampYear(int timestamp) {
-  initializeDateFormatting('fr_CH', null);
-  var now = new DateTime.now();
-  var format = new DateFormat('yyy');
-  var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-  var diff = date.difference(now);
-  var time = '';
-  var timer = format.format(date);
-
-  return timer;
-}
 
 Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
   if (snapshot.hasData) {
     return Column(
       children: <Widget>[
-        Text(readTimestampYear(Event.fromJson(snapshot.data!.docs[0]).startDate.millisecondsSinceEpoch)),
+        Text(readTimestampYear(Event.fromJson(snapshot.data!.docs[0]).startDate.millisecondsSinceEpoch),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        ),
         Expanded(
           child: ListView.builder(
               itemCount: snapshot.data!.docs.length,
@@ -115,44 +87,45 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
                 //     " = " +
                 //     event.id);
 
-                var Datum = readTimestamp(event.startDate.millisecondsSinceEpoch);
+                var datum = readTimestamptoDate(event.startDate.millisecondsSinceEpoch);
                 var eventTypeTransform = event.type.toString().toLowerCase()
                     .replaceAll('eventtypeenum.','');
 
-                return ListTile(
-                  title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 3.0),
-                    child: Text(eventTypeTransform.substring(0,1).toUpperCase()+eventTypeTransform.substring(1,)),
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: Text(eventTypeTransform.substring(0,1).toUpperCase()+eventTypeTransform.substring(1,)),
+                    ),
+                    leading:  SizedBox(
+                      height: 100.0,
+                      width: 100.0,
+                      child: ClipRRect(
+                          // borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                            child: FadeInImage(
+                              image: NetworkImage(event.image),
+                              placeholder: AssetImage('assets/images/placeholder.jpg'),
+                            )),
+                    ),
+                      onTap: () => {
+                      Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
+                          arguments: event)
+                    },
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 3.0),
+                          child: Text( datum),
+                        ),
+                        Text( event.city),
+                      ],
+                    ),
+                    isThreeLine: true,
                   ),
-                  leading:  SizedBox(
-                    height: 100.0,
-                    width: 100.0,
-                    child: ClipRRect(
-                        // borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                          child: FadeInImage(
-                            image: NetworkImage(event.image),
-                            placeholder: AssetImage('assets/images/placeholder.jpg'),
-                          )),
-                  ),
-                    onTap: () => {
-                    Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
-                        arguments: event)
-                  },
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 3.0),
-                        child: Text( Datum),
-                      ),
-                      Text( event.city),
-                    ],
-                  ),
-                  isThreeLine: true,
                 );
-
-
               }),
         ),
       ],

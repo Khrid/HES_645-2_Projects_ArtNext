@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
-import 'package:artnext/pages/favoriteWidget.dart';
+import 'package:artnext/widget/favoriteWidget.dart';
 import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 export 'DisplayEvenementScreen.dart';
 
 class DisplayEvenementScreen extends StatelessWidget {
@@ -42,6 +42,178 @@ class DisplayEvenementScreen extends StatelessWidget {
   }
 }
 
+Widget buildEventDetails(
+    BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+  //Widget for buttons Share and participate
+  Widget buttonSection = Container(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildButtonColumn(Colors.black, Icons.share, "Share"),
+            SizedBox(width: 30),
+            FavoriteWidget(),
+          ]));
+
+  if (!snapshot.hasData) {
+    return Center(child: CircularProgressIndicator());
+  } else {
+    var event = snapshot.data;
+    Event e = Event.fromJson(event);
+    //return new Text(e.title + " - " + e.city);
+    return Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: FadeInImage.memoryNetwork(
+              image: (e.image),
+              fit: BoxFit.cover,
+              placeholder: kTransparentImage,
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: const EdgeInsets.only(left:10, right:10),
+              height: MediaQuery.of(context).size.height * 0.6,
+              width: MediaQuery.of(context).size.width,
+
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(.2),
+                        offset: Offset(0, -4),
+                        blurRadius: 8
+                    )
+                  ]
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    e.title,
+                    style: GoogleFonts.ptSans(
+                        fontSize: 36.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  // Image.asset("assets/images/login.png")],
+                  Container(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30,left: 30,right: 10),
+                          child: Text(
+                            "Details :\n\n" + e.details,
+                            textAlign: TextAlign.justify,
+                            softWrap: true,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Container(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: Text("Lieu : " + e.city,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  buttonSection,
+                  Text(
+                    "Attendees : ",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child:
+                    /*Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [*/
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection("events")
+                          .doc(e.id)
+                          .collection("attendees")
+                          .snapshots(),
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return Center(child: CircularProgressIndicator());
+                          default:
+                          //return Column();
+                            if (snapshot.data!.docs.length > 0) {
+                              return ListView.builder(
+                                  padding: EdgeInsets.all(8.0),
+                                  // physics: NeverScrollableScrollPhysics(),
+
+                                  ///
+                                  shrinkWrap: true,
+
+                                  ///
+                                  scrollDirection: Axis.horizontal,
+
+                                  ///
+
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (context, index) {
+                                    log(snapshot.data!.docs[index]["ref"].id);
+                                    //return Container();
+
+                                    return StreamBuilder(
+                                        stream: FirebaseFirestore.instance
+                                            .collection("users")
+                                            .doc(snapshot.data!.docs[index]["ref"].id)
+                                            .snapshots(),
+                                        builder: buildAttendeeInfo);
+                                  });
+                            } else {
+                              return Text("No attendees yet :(");
+                            }
+                        }
+                      },
+                    ),
+                    //_buildAttendees(e),
+                  )
+
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+  }
+}
+
+//Button share
+Column _buildButtonColumn(Color color, IconData icon, String label) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Icon(icon, color: color)),
+      Text(label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: color,
+          ))
+    ],
+  );
+}
+
 Widget buildAttendeeInfo(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
   if (snapshot.hasData) {
@@ -68,213 +240,69 @@ Widget buildAttendeeInfo(
   }
 }
 
-Widget buildEventDetails(
-    BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-  //Widget for buttons Share and participate
-  Widget buttonSection = Container(
-      padding: const EdgeInsets.all(8),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        _buildButtonColumn(Colors.black, Icons.share, "Share"),
-        FavoriteWidget(),
-      ]));
 
-  if (!snapshot.hasData) {
-    return Center(child: CircularProgressIndicator());
-  } else {
-    var event = snapshot.data;
-    Event e = Event.fromJson(event);
-    //return new Text(e.title + " - " + e.city);
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            e.title,
-            style: TextStyle(fontSize: 22.0),
-          ),
-        ),
-        Stack(
-          children: [
-            Container(
-              width: 600,
-              height: 240,
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            FadeInImage.memoryNetwork(
-              image: (e.image),
-              width: 600,
-              height: 240,
-              fit: BoxFit.cover,
-              placeholder: kTransparentImage,
-            ),
-          ],
-        ),
+// Column _buildAttendees(Event e) {
+//   return Column(
+//     children: [
+//       Container(
+//         width: 50,
+//         height: 50,
+//         decoration: BoxDecoration(
+//           shape: BoxShape.circle,
+//           image: DecorationImage(
+//               image: NetworkImage((e.image.contains("http")
+//                   ? e.image
+//                   : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")),
+//               fit: BoxFit.fill),
+//         ),
+//       ),
+//       Text("Le nom")
+//     ],
+//   );
+// }
 
-        // Image.asset("assets/images/login.png")],
-        Container(
-          padding: const EdgeInsets.only(top: 30),
-          child: Column(
-            children: [
-              Text(
-                "Details : " + e.details,
-                softWrap: true,
-              ),
-              Container(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Text("Lieu : " + e.city)),
-            ],
-          ),
-        ),
-        buttonSection,
-        Text(
-          "Attendees : ",
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        Flexible(
-            child: Container(
-          padding: const EdgeInsets.all(8),
-          margin: EdgeInsets.symmetric(vertical: 20.0),
-          height: 200.0,
-          child:
-              /*Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [*/
-              StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("events")
-                .doc(e.id)
-                .collection("attendees")
-                .snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return CircularProgressIndicator();
-                default:
-                  //return Column();
-                  if (snapshot.data!.docs.length > 0) {
-                    return ListView.builder(
-                      padding: EdgeInsets.all(8.0),
-                        physics: NeverScrollableScrollPhysics(),
 
-                        ///
-                        shrinkWrap: true,
-
-                        ///
-                        scrollDirection: Axis.horizontal,
-
-                        ///
-
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          log(snapshot.data!.docs[index]["ref"].id);
-                          //return Container();
-
-                          return StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection("users")
-                                  .doc(snapshot.data!.docs[index]["ref"].id)
-                                  .snapshots(),
-                              builder: buildAttendeeInfo);
-                        });
-                  } else {
-                    return Text("No attendees yet :(");
-                  }
-              }
-            },
-          )
-          //_buildAttendees(e),
-          //_buildAttendees(e),
-          //_buildAttendees(e),
-          ,
-        ))
-      ],
-    );
-  }
-}
-
-//Button share
-Column _buildButtonColumn(Color color, IconData icon, String label) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Icon(icon, color: color)),
-      Text(label,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: color,
-          ))
-    ],
-  );
-}
-
-Column _buildAttendees(Event e) {
-  return Column(
-    children: [
-      Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-              image: NetworkImage((e.image.contains("http")
-                  ? e.image
-                  : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")),
-              fit: BoxFit.fill),
-        ),
-      ),
-      Text("Le nom")
-    ],
-  );
-}
-
-Widget buildEventsList(
-    BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  if (snapshot.hasData) {
-    return ListView.builder(
-        itemCount: snapshot.data!.docs.length,
-        itemBuilder: (context, index) {
-          DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
-          //log(event.reference.id);
-          Event event = Event.fromJson(eventFromFirebase);
-          log("ListEventsScreen - buildEventsList - event #" +
-              index.toString() +
-              " = " +
-              event.toString());
-          return ListTile(
-            title: Text(event.title),
-            subtitle: Text(event.city),
-            leading: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                child: FadeInImage(
-                  image: NetworkImage(event.image),
-                  placeholder: AssetImage(
-                      'https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png'),
-                  // CachedNetworkImage(
-                  //     placeholder: (context, url) => CircularProgressIndicator(),
-                  //     imageUrl: event.image,
-                  // ),
-                )),
-            onTap: () => {
-              Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
-                  arguments: event)
-            },
-          );
-        });
-  } else if (snapshot.connectionState == ConnectionState.done &&
-      !snapshot.hasData) {
-    // Handle no data
-    return Center(
-      child: Text("No events found."),
-    );
-  } else {
-    // Still loading
-    return CircularProgressIndicator();
-  }
-}
+// Widget buildEventsList(
+//     BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//   if (snapshot.hasData) {
+//     return ListView.builder(
+//         itemCount: snapshot.data!.docs.length,
+//         itemBuilder: (context, index) {
+//           DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
+//           //log(event.reference.id);
+//           Event event = Event.fromJson(eventFromFirebase);
+//           log("ListEventsScreen - buildEventsList - event #" +
+//               index.toString() +
+//               " = " +
+//               event.toString());
+//           return ListTile(
+//             title: Text(event.title),
+//             subtitle: Text(event.city),
+//             leading: ClipRRect(
+//                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
+//                 child: FadeInImage(
+//                   image: NetworkImage(event.image),
+//                   placeholder: AssetImage(
+//                       'https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png'),
+//                   // CachedNetworkImage(
+//                   //     placeholder: (context, url) => CircularProgressIndicator(),
+//                   //     imageUrl: event.image,
+//                   // ),
+//                 )),
+//             onTap: () => {
+//               Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
+//                   arguments: event)
+//             },
+//           );
+//         });
+//   } else if (snapshot.connectionState == ConnectionState.done &&
+//       !snapshot.hasData) {
+//     // Handle no data
+//     return Center(
+//       child: Text("No events found."),
+//     );
+//   } else {
+//     // Still loading
+//     return CircularProgressIndicator();
+//   }
+// }
