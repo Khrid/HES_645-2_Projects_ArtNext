@@ -1,13 +1,12 @@
 import 'dart:developer';
+import 'dart:js';
 
 import 'package:artnext/models/event.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
-
 import 'events/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
@@ -21,13 +20,42 @@ class ListEventsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Events'),
       ),
-      body: StreamBuilder(stream: FirebaseFirestore.instance
-            .collection('events')
-            .orderBy('startDate', descending: true)
-            .snapshots(),
-        builder: buildEventsList,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top:15.0, bottom:10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Filter by'),
+                ),
+                SizedBox(width: 30),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Sorted by'),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SizedBox(
+              height: 200.0,
+              child: StreamBuilder(stream: FirebaseFirestore.instance
+                    .collection('events')
+                    .orderBy('endDate')
+                  .where('endDate', isGreaterThan: DateTime.now())
+                    .snapshots(),
+                builder: buildEventsList,
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        elevation:0.0,
         onPressed: () {
           Navigator.pushNamed(context, CreateEvenementScreen.routeName);
         },
@@ -38,40 +66,70 @@ class ListEventsScreen extends StatelessWidget {
   }
 }
 
+
+
 Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
   if (snapshot.hasData) {
-    return ListView.builder(
-        itemCount: snapshot.data!.docs.length,
-        itemBuilder: (context, index) {
-          DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
-          //log(event.reference.id);
-          Event event = Event.fromJson(eventFromFirebase);
-          log("ListEventsScreen - buildEventsList - event #" +
-              index.toString() +
-              " = " +
-              event.id);
-          return ListTile(
+    return Column(
+      children: <Widget>[
+        Text(readTimestampYear(Event.fromJson(snapshot.data!.docs[0]).startDate.millisecondsSinceEpoch),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+        Expanded(
+          child: ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
+                //log(event.reference.id);
+                Event event = Event.fromJson(eventFromFirebase);
+                // log("ListEventsScreen - buildEventsList - event #" +
+                //     index.toString() +
+                //     " = " +
+                //     event.id);
 
-            title: Text(event.title),
-            subtitle: Text(event.city),
-            // TODO décommenter pour remettre l'image
-            /*leading: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                child:
-                FadeInImage(
-                  image: NetworkImage((event.image.contains("http") ? event.image : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")),
-                  placeholder: AssetImage('https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png'),
-                  // CachedNetworkImage(
-                  //     placeholder: (context, url) => CircularProgressIndicator(),
-                  //     imageUrl: event.image,
-                  // ),
-                )),*/
-            onTap: () => {
-              Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
-                  arguments: event)
-            },
-          );
-        });
+                var datum = readTimestamptoDate(event.startDate.millisecondsSinceEpoch);
+                var eventTypeTransform = event.type.toString().toLowerCase()
+                    .replaceAll('eventtypeenum.','');
+
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: Text(eventTypeTransform.substring(0,1).toUpperCase()+eventTypeTransform.substring(1,)),
+                    ),
+                    leading:  SizedBox(
+                      height: 100.0,
+                      width: 100.0,
+                      child: ClipRRect(
+                          // borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                            child: FadeInImage(
+                              image: NetworkImage(event.image),
+                              placeholder: AssetImage('assets/images/placeholder.jpg'),
+                            )),
+                    ),
+                      onTap: () => {
+                      Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
+                          arguments: event)
+                    },
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 3.0),
+                          child: Text( datum),
+                        ),
+                        Text( event.city),
+                      ],
+                    ),
+                    isThreeLine: true,
+                  ),
+                );
+              }),
+        ),
+      ],
+    );
   } else if (snapshot.connectionState == ConnectionState.done &&
       !snapshot.hasData) {
     // Handle no data
@@ -80,6 +138,6 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
     );
   } else {
     // Still loading
-    return CircularProgressIndicator();
+    return Center(child: CircularProgressIndicator());
   }
 }

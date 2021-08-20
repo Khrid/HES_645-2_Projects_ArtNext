@@ -39,7 +39,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:556430102597:android:ee4e44f8dbf37d8e26932c",
         "android_client_info": {
-          "package_name": "com.example.startup_namer"
+          "package_name": "ch.hevs.students.artnext.grp2"
         }
       },
       "oauth_client": [

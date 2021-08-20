@@ -13,10 +13,10 @@ class _FavoriteWidgetState extends State<FavoriteWidget>{
     setState(() {
       if(_isFavorited){
         _isFavorited = false;
-        _favoriteCheck ="Participate ?";
+        _favoriteCheck ="Participate?";
       }else{
         _isFavorited = true;
-        _favoriteCheck ="Participe";
+        _favoriteCheck ="I participate !";
       }
 
     });
@@ -29,7 +29,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget>{
         children: [
             IconButton(
             icon : _isFavorited ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-            color: Colors.black,
+            color: Colors.red,
             onPressed: _toggleFavorite,
             ),
             Text('$_favoriteCheck',style: TextStyle(
