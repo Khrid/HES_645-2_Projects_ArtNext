@@ -1,7 +1,10 @@
 import 'dart:developer';
 
+import 'package:artnext/authentication_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/src/provider.dart';
 
 import 'ListEventsScreen.dart';
 
@@ -89,11 +92,29 @@ class LoginScreen extends StatelessWidget {
 
                         // Within the `FirstScreen` widget
                         onPressed: () {
-                          // Navigate to the second screen using a named route.
-                          Navigator.pushNamedAndRemoveUntil(context,
-                              ListEventsScreen.routeName, (_) => false);
+
+                          Provider.of<User>(context,listen:false);
+
+                          log("LoginScreen - connection");
+
+                          // TODO : voir pourquoi la ligne suivante ne remonte pas l'UID de l'utilisateur
+
+                          context.read<AuthenticationService>().signIn(email: "sylvain.meyer@students.hevs.ch", password: "Qwertz.1234");
+
+                          final firebaseUser = context.watch<User>();
+
+                          if(firebaseUser != null){
+                            log("LoginScreen - Signed in");
+
+                            // Navigate to the second screen using a named route.
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                ListEventsScreen.routeName, (_) => false);
+                          }else {
+                            log("LoginScreen - Not signed in");
+                          }
+
                         },
-                        child: Text('Connexion (fake)')
+                        child: Text('Connexion')
 
                     ),
 
