@@ -75,23 +75,23 @@ class _AppState extends State<App> {
       initialRoute: LoginScreen.routeName,
       routes: {
         /**
-           * Réflexion pour les routes
-           * /
-           * /login
-           *
-           * /events => pour la liste des évenements
-           * /events/id => le détail d'un event
-           * /events/id/attendees => liste des gens qui viennent à un event
-           * /events/create
-           * /events/modify/id ou /events/id/modify
-           *
-           * /account/ => info utilisateur
-           * /account/upgrade => pour passer en premium
-           *
-           * /search => pour chercher quelqu'un
-           * /user/id/attendencyHistory => historique de participation d'un user (à voir pour le nom)
-           *
-           * */
+         * Réflexion pour les routes
+         * /
+         * /login
+         *
+         * /events => pour la liste des évenements
+         * /events/id => le détail d'un event
+         * /events/id/attendees => liste des gens qui viennent à un event
+         * /events/create
+         * /events/modify/id ou /events/id/modify
+         *
+         * /account/ => info utilisateur
+         * /account/upgrade => pour passer en premium
+         *
+         * /search => pour chercher quelqu'un
+         * /user/id/attendencyHistory => historique de participation d'un user (à voir pour le nom)
+         *
+         * */
         LoginScreen.routeName: (context) => LoginScreen(),
         // /login
         ListEventsScreen.routeName: (context) => ListEventsScreen(),
