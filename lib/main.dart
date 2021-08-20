@@ -27,6 +27,7 @@ void main() {
 /*
 * Réflexion pour les routes
 * /
+* /
 * /login
 *
 * /events => pour la liste des évenements
