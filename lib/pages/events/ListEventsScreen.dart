@@ -7,7 +7,7 @@ import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'events/CreateEvenementScreen.dart';
+import 'CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
 

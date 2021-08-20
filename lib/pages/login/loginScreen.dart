@@ -1,24 +1,38 @@
 import 'dart:developer';
 
-import 'package:artnext/authentication_service.dart';
+import 'package:artnext/services/AuthenticationService.dart';
+import 'package:artnext/models/myuser.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/src/provider.dart';
-
-import 'ListEventsScreen.dart';
 
 export 'loginScreen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
+
+  const LoginScreen({Key? key}) : super(key: key);
+
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final AuthenticationService _auth =
+      AuthenticationService();
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     log("LoginScreen - build - start");
+    usernameController.text = "user@artnext.ch";
+    passwordController.text = "test123";
 
     return Scaffold(
-      body: Align(
+        body: Form(
+      key: _formKey,
+      child: Align(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return Container(
@@ -44,83 +58,96 @@ class LoginScreen extends StatelessWidget {
                         Text(
                           "ArtNext",
                           style: TextStyle(
-                            fontSize: 70.0,
-                            color: Colors.white,
-                            fontFamily: 'RichieBrusher'
-                          ),
+                              fontSize: 70.0,
+                              color: Colors.white,
+                              fontFamily: 'RichieBrusher'),
                         ),
                       ],
                     ),
                     // SizedBox(height: 250),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top:250),
-
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 250),
                             child: Text("Username"),
-                        )
-                      ]
-                    ),
+                          )
+                        ]),
 
+                    TextFormField(
+                        controller: usernameController,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'User',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the username';
+                          }
+                          return null;
+                        }),
 
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'User',
-                      ),
-                    ),
                     SizedBox(height: 20),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                      ),
-                    ),
+                    TextFormField(
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Password',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the password';
+                          }
+                          return null;
+                        }),
                     SizedBox(height: 20),
                     ElevatedButton(
                         style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15.0),
-                                    side: BorderSide(color: Colors.teal, width: 2.0)
-                                )
-                            )
-                        ),
+                                    side: BorderSide(
+                                        color: Colors.teal, width: 2.0)))),
 
                         // Within the `FirstScreen` widget
-                        onPressed: () {
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            Object? result = await _auth.signIn(
+                                email: usernameController.text,
+                                password: passwordController.text);
+                            if (result is MyUser) {
+                              // result is user => login successful
+                              log(result.uid);
+                            } else {}
+                          }
 
-                          Provider.of<User>(context,listen:false);
+                          /*Provider.of<User>(context, listen: false);
 
                           log("LoginScreen - connection");
 
                           // TODO : voir pourquoi la ligne suivante ne remonte pas l'UID de l'utilisateur
 
-                          context.read<AuthenticationService>().signIn(email: "sylvain.meyer@students.hevs.ch", password: "Qwertz.1234");
+                          //context.read<AuthenticationService>().signIn(email: "sylvain.meyer@students.hevs.ch", password: "Qwertz.1234");
+                          context.read<AuthenticationService>().signIn(
+                              email: "david.crittin@students.hevs.ch",
+                              password: "testtest");
 
-                          final firebaseUser = context.watch<User>();
+                          final firebaseUser = context.watch<User?>();
 
-                          if(firebaseUser != null){
+                          if (firebaseUser != null) {
                             log("LoginScreen - Signed in");
 
                             // Navigate to the second screen using a named route.
                             Navigator.pushNamedAndRemoveUntil(context,
                                 ListEventsScreen.routeName, (_) => false);
-                          }else {
+                          } else {
                             log("LoginScreen - Not signed in");
-                          }
-
+                          }*/
                         },
-                        child: Text('Connexion')
-
-                    ),
-
-
-
-
+                        child: Text('Connexion')),
                   ],
                 ));
           },
@@ -165,6 +192,6 @@ class LoginScreen extends StatelessWidget {
         },
         child: Text('Connexion (fake)'),*/
       )*/
-    );
+    ));
   }
 }

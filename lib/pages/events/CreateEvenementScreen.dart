@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/event.dart';
-import 'package:artnext/pages/ListEventsScreen.dart';
+import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

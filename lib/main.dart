@@ -1,18 +1,17 @@
 import 'dart:developer';
 
-import 'package:artnext/authentication_service.dart';
+import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/wrapper.dart';
+import 'package:artnext/services/AuthenticationService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import 'pages/ListEventsScreen.dart';
-import 'pages/loginScreen.dart';
 
 /**
  * Flutterfire init guide =>
@@ -59,7 +58,6 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     if (_error) {
       // TODO: handle error
@@ -69,9 +67,34 @@ class _AppState extends State<App> {
       // TODO: handle initialization error
     }
 
-    return MultiProvider (providers: [
+    return StreamProvider<MyUser?>.value(
+        value: AuthenticationService().user,
+        initialData: null,
+        catchError: (_, __) => null,
+        child: MaterialApp(
+            title: 'NextArt',
+            theme: ThemeData.light(),
+            debugShowCheckedModeBanner: false,
+            // Start the app with the "/" named route. In this case, the app starts
+            // on the FirstScreen widget.
+            //initialRoute: LoginScreen.routeName,
+            home: Wrapper(),
+            routes: {
+              LoginScreen.routeName: (context) => LoginScreen(),
+              // /login
+              ListEventsScreen.routeName: (context) => ListEventsScreen(),
+              // /events
+              DisplayEvenementScreen.routeName: (context) =>
+                  DisplayEvenementScreen(),
+              // /events/details
+              CreateEvenementScreen.routeName: (context) =>
+                  CreateEvenementScreen(),
+              UpdateEvenementScreen.routeName: (context) =>
+                  UpdateEvenementScreen()
+            }));
+    /*return MultiProvider (providers: [
       Provider<AuthenticationService>(
-        create: (_) => AuthenticationService(FirebaseAuth.instance),
+        create: (_) => AuthenticationService(),
       ),
       StreamProvider(
         create: (context) => context.read<AuthenticationService>().authStateChanges, initialData: null,
@@ -83,7 +106,8 @@ class _AppState extends State<App> {
       debugShowCheckedModeBanner: false,
       // Start the app with the "/" named route. In this case, the app starts
       // on the FirstScreen widget.
-      initialRoute: LoginScreen.routeName,
+      //initialRoute: LoginScreen.routeName,
+      home: Wrapper(),
       routes: {
         /**
          * Réflexion pour les routes
@@ -112,6 +136,6 @@ class _AppState extends State<App> {
         CreateEvenementScreen.routeName: (context) => CreateEvenementScreen(),
         UpdateEvenementScreen.routeName: (context) => UpdateEvenementScreen()
       },
-    ));
+    ));*/
   }
 }

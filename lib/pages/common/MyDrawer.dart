@@ -1,14 +1,22 @@
+import 'package:artnext/services/AuthenticationService.dart';
+import 'package:artnext/services/AuthenticationService.dart';
+import 'package:artnext/models/myuser.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../loginScreen.dart';
+import '../../services/AuthenticationService.dart';
+
 
 class MyDrawer extends StatelessWidget {
   MyDrawer(this.currentPage);
 
   final String currentPage;
+  final AuthenticationService _auth = AuthenticationService();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MyUser?>(context);
+    print("MyDrawer" + user!.uid);
     // TODO: implement build
     return Drawer(
       child: ListView(
@@ -34,15 +42,15 @@ class MyDrawer extends StatelessWidget {
                             fontSize: 10.0, fontStyle: FontStyle.italic)),
                   ),
                   SizedBox(height: 25),
-                  Text("Hello Firstname lastname!")
+                  Text("Hello " + user.uid)
                 ],
               )),
           ListTile(
             title: const Text('Logout'),
-            onTap: () {
+            onTap: () async {
               // Update the state of the app.
               // ...
-              Navigator.pushNamed(context, LoginScreen.routeName);
+              await _auth.signOut();
             },
           ),
         ],
