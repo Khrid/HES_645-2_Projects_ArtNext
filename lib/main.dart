@@ -6,6 +6,7 @@ import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -74,6 +75,7 @@ class _AppState extends State<App> {
         child: MaterialApp(
             title: 'NextArt',
             theme: ThemeData.light(),
+
             debugShowCheckedModeBanner: false,
             // Start the app with the "/" named route. In this case, the app starts
             // on the FirstScreen widget.
@@ -90,7 +92,9 @@ class _AppState extends State<App> {
               CreateEvenementScreen.routeName: (context) =>
                   CreateEvenementScreen(),
               UpdateEvenementScreen.routeName: (context) =>
-                  UpdateEvenementScreen()
+                  UpdateEvenementScreen(),
+              UserInfo.routeName: (context) =>
+                  UserInfo()
             }));
     /*return MultiProvider (providers: [
       Provider<AuthenticationService>(

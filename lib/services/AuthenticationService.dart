@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/myuser.dart';
@@ -14,31 +15,44 @@ class AuthenticationService {
 
   // create user object base on FirebaseUser
   MyUser? _userFromFirebaseUser(User user) {
-    return user != null ? MyUser(uid: user.uid) : null;
+    if(user == null) return null;
+    MyUser myUser = MyUser(uid: user.uid);
+    myUser.populateUserInfoFromFirebase();
+    return myUser;
   }
 
-  /*Future<String?> signIn({required String email, required String password}) async{
-    try {
-      UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      User? user = result.user;
-      log(user!.uid);
-      return "Signed in";
-    } on FirebaseAuthException catch (e) {
-      log(e.message.toString());
-      return e.message;
-    }
-  }*/
-
-  Stream<MyUser?> get user{
-    return _auth.authStateChanges().map((User? user) => _userFromFirebaseUser(user!));
+  // complete the user object with info from the "users" collection
+  Future _populateUserInfoFromCollection(User user) async {
+    return null;
   }
 
-  Future signIn({required String email, required String password}) async{
+  Stream<MyUser?> get user {
+    return _auth.authStateChanges().map((User? user) {
+
+      return _userFromFirebaseUser(user!);
+    });
+  }
+
+  Future signIn({required String email, required String password}) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       log(user!.uid);
-      return _userFromFirebaseUser(user);
+      MyUser? myUser = _userFromFirebaseUser(user);
+      DocumentSnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+          .instance
+          .collection("users")
+          .doc(user.uid)
+          .get();
+      if (snap.exists) {
+        print("User found in collection");
+        myUser!.lastname = snap.get("lastname");
+        myUser.firstname = snap.get("firstname");
+        print(myUser);
+      }
+      print(myUser);
+      return myUser;
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
       return e.message;
@@ -46,14 +60,14 @@ class AuthenticationService {
   }
 
   Future signOut() async {
-    try{
+    try {
       return await _auth.signOut();
-    } catch(e) {
+    } catch (e) {
       return null;
     }
   }
 
-  /*Future<String?> signUp({required String email, required String password}) async{
+/*Future<String?> signUp({required String email, required String password}) async{
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       return "Signed up";

@@ -31,100 +31,100 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
         body: Form(
-      key: _formKey,
-      child: Align(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Container(
-                padding: EdgeInsets.only(left: 60, right: 60),
-                height: constraints.maxHeight,
-                width: constraints.maxWidth,
-                decoration: BoxDecoration(
-                  color: const Color(0xffa3a3a3),
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/login.png'),
-                    fit: BoxFit.fill,
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.4), BlendMode.dstATop),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 75),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "ArtNext",
-                          style: TextStyle(
-                              fontSize: 70.0,
-                              color: Colors.white,
-                              fontFamily: 'RichieBrusher'),
-                        ),
-                      ],
+          key: _formKey,
+          child: Align(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Container(
+                    padding: EdgeInsets.only(left: 60, right: 60),
+                    height: constraints.maxHeight,
+                    width: constraints.maxWidth,
+                    decoration: BoxDecoration(
+                      color: const Color(0xffa3a3a3),
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/login.png'),
+                        fit: BoxFit.fill,
+                        colorFilter: new ColorFilter.mode(
+                            Colors.black.withOpacity(0.4), BlendMode.dstATop),
+                      ),
                     ),
-                    // SizedBox(height: 250),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 250),
-                            child: Text("Username"),
-                          )
-                        ]),
-
-                    TextFormField(
-                        controller: usernameController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'User',
+                    child: Column(
+                      children: [
+                        SizedBox(height: 75),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "ArtNext",
+                              style: TextStyle(
+                                  fontSize: 70.0,
+                                  color: Colors.white,
+                                  fontFamily: 'RichieBrusher'),
+                            ),
+                          ],
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the username';
-                          }
-                          return null;
-                        }),
+                        // SizedBox(height: 250),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 250),
+                                child: Text("Username"),
+                              )
+                            ]),
 
-                    SizedBox(height: 20),
-                    TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Password',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the password';
-                          }
-                          return null;
-                        }),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
+                        TextFormField(
+                            controller: usernameController,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'User',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the username';
+                              }
+                              return null;
+                            }),
+
+                        SizedBox(height: 20),
+                        TextFormField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Password',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the password';
+                              }
+                              return null;
+                            }),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    side: BorderSide(
-                                        color: Colors.teal, width: 2.0)))),
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15.0),
+                                        side: BorderSide(
+                                            color: Colors.teal, width: 2.0)))),
 
-                        // Within the `FirstScreen` widget
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            Object? result = await _auth.signIn(
-                                email: usernameController.text,
-                                password: passwordController.text);
-                            if (result is MyUser) {
-                              // result is user => login successful
-                              log(result.uid);
-                            } else {}
-                          }
+                            // Within the `FirstScreen` widget
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                Object? result = await _auth.signIn(
+                                    email: usernameController.text,
+                                    password: passwordController.text);
+                                if (result is MyUser) {
+                                  // result is user => login successful
+                                  log(result.uid);
+                                } else {}
+                              }
 
-                          /*Provider.of<User>(context, listen: false);
+                              /*Provider.of<User>(context, listen: false);
 
                           log("LoginScreen - connection");
 
@@ -146,15 +146,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else {
                             log("LoginScreen - Not signed in");
                           }*/
-                        },
-                        child: Text('Connexion')),
-                  ],
-                ));
-          },
-        ),
-      ),
+                            },
+                            child: Text('Connexion')),
+                      ],
+                    ));
+              },
+            ),
+          ),
 
-      /*Center(
+          /*Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center, //Center Column contents vertically,
             crossAxisAlignment: CrossAxisAlignment.center, //Center Column contents horizontally,
@@ -192,6 +192,6 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: Text('Connexion (fake)'),*/
       )*/
-    ));
+        ));
   }
 }

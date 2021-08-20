@@ -1,11 +1,10 @@
-import 'package:artnext/services/AuthenticationService.dart';
-import 'package:artnext/services/AuthenticationService.dart';
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
+import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/AuthenticationService.dart';
-
 
 class MyDrawer extends StatelessWidget {
   MyDrawer(this.currentPage);
@@ -16,7 +15,6 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    print("MyDrawer" + user!.uid);
     // TODO: implement build
     return Drawer(
       child: ListView(
@@ -25,7 +23,8 @@ class MyDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color:
+                    (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
               ),
               child: Column(
                 children: [
@@ -42,9 +41,17 @@ class MyDrawer extends StatelessWidget {
                             fontSize: 10.0, fontStyle: FontStyle.italic)),
                   ),
                   SizedBox(height: 25),
-                  Text("Hello " + user.uid)
+                  Text("Hello " + user.firstname + " " + user.lastname)
                 ],
               )),
+          ListTile(
+            title: const Text('My account'),
+            onTap: () async {
+              // Update the state of the app.
+              // ...
+              Navigator.pushNamed(context, UserInfo.routeName);
+            },
+          ),
           ListTile(
             title: const Text('Logout'),
             onTap: () async {
@@ -52,7 +59,7 @@ class MyDrawer extends StatelessWidget {
               // ...
               await _auth.signOut();
             },
-          ),
+          )
         ],
       ),
     );

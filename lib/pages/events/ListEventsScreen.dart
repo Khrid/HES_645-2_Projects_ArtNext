@@ -1,12 +1,12 @@
-import 'dart:developer';
-import 'dart:js';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
@@ -16,9 +16,11 @@ class ListEventsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MyUser?>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Events'),
+        backgroundColor: (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
       ),
       body: Column(
         children: [
@@ -34,7 +36,7 @@ class ListEventsScreen extends StatelessWidget {
                 SizedBox(width: 30),
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text('Sorted by'),
+                  child: const Text('Sort by'),
                 ),
               ],
             ),
