@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:artnext/authentication_service.dart';
 import 'package:artnext/pages/events/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'pages/ListEventsScreen.dart';
 import 'pages/loginScreen.dart';
@@ -66,7 +69,15 @@ class _AppState extends State<App> {
       // TODO: handle initialization error
     }
 
-    return MaterialApp(
+    return MultiProvider (providers: [
+      Provider<AuthenticationService>(
+        create: (_) => AuthenticationService(FirebaseAuth.instance),
+      ),
+      StreamProvider(
+        create: (context) => context.read<AuthenticationService>().authStateChanges, initialData: null,
+      )
+    ],
+    child: MaterialApp(
       title: 'NextArt',
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
@@ -101,6 +112,6 @@ class _AppState extends State<App> {
         CreateEvenementScreen.routeName: (context) => CreateEvenementScreen(),
         UpdateEvenementScreen.routeName: (context) => UpdateEvenementScreen()
       },
-    );
+    ));
   }
 }

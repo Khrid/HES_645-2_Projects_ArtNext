@@ -8,6 +8,7 @@ import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'events/CreateEvenementScreen.dart';
+import 'package:share_plus/share_plus.dart';
 
 export 'ListEventsScreen.dart';
 
