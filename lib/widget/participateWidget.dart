@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
-class FavoriteWidget extends StatefulWidget{
-  _FavoriteWidgetState createState() => _FavoriteWidgetState();
+class ParticipateWidget extends StatefulWidget{
+
+
+
+  _ParticipateWidgetState createState() => _ParticipateWidgetState();
 
 }
 
-class _FavoriteWidgetState extends State<FavoriteWidget>{
+class _ParticipateWidgetState extends State<ParticipateWidget>{
   bool _isFavorited = false;
   String _favoriteCheck = "Participate ?";
+
 
   void _toggleFavorite(){
     setState(() {
@@ -16,7 +20,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget>{
         _favoriteCheck ="Participate?";
       }else{
         _isFavorited = true;
-        _favoriteCheck ="I participate !";
+
+        _favoriteCheck ="I participate !" ;
       }
 
     });

@@ -41,23 +41,23 @@ class LoginScreen extends StatelessWidget {
                         Text(
                           "ArtNext",
                           style: TextStyle(
-                            fontSize: 70.0,
-                            color: Colors.white,
-                            fontFamily: 'RichieBrusher'
+                              fontSize: 70.0,
+                              color: Colors.white,
+                              fontFamily: 'RichieBrusher'
                           ),
                         ),
                       ],
                     ),
                     // SizedBox(height: 250),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top:250),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top:250),
 
                             child: Text("Username"),
-                        )
-                      ]
+                          )
+                        ]
                     ),
 
 
@@ -135,7 +135,6 @@ class LoginScreen extends StatelessWidget {
             )
           ],
         ),
-
         /*ElevatedButton(
         // Within the `FirstScreen` widget
         onPressed: () {
