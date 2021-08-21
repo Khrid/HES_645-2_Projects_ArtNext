@@ -43,7 +43,6 @@ class MyUser {
       isPremium = (snap.data()!["isPremium"] != null ? snap.data()!["isPremium"] : false);
       isServiceProvider = (snap.data()!["isServiceProvider"] != null ? snap.data()!["isServiceProvider"] : false);
       image = (snap.data()!["image"] != null ? snap.data()!["image"] : "");
-      print(this);
     }
   }
 }

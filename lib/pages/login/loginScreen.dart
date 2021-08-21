@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.text = "test123";
 
     return Scaffold(
+        backgroundColor: Colors.brown[100],
         body: Form(
           key: _formKey,
           child: Align(
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.only(left: 60, right: 60),
                     height: constraints.maxHeight,
                     width: constraints.maxWidth,
-                    decoration: BoxDecoration(
+                    /*decoration: BoxDecoration(
                       color: const Color(0xffa3a3a3),
                       image: DecorationImage(
                         image: AssetImage('assets/images/login.png'),
@@ -47,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         colorFilter: new ColorFilter.mode(
                             Colors.black.withOpacity(0.4), BlendMode.dstATop),
                       ),
-                    ),
+                    ),*/
                     child: Column(
                       children: [
                         SizedBox(height: 75),
@@ -70,7 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(top: 250),
-                                child: Text("Username"),
                               )
                             ]),
 

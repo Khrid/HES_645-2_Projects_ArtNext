@@ -1,13 +1,14 @@
 
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'CreateEvenementScreen.dart';
+import 'manage/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
 
@@ -17,11 +18,11 @@ class ListEventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
+    print("ListEventScreen - user = " + user.toString());
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Events'),
-        backgroundColor: (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
-      ),
+      backgroundColor: Colors.brown[100],
+
+      appBar: MyAppBar("Events"),
       body: Column(
         children: [
           Padding(
@@ -109,6 +110,13 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
                             child: FadeInImage(
                               image: NetworkImage(event.image),
                               placeholder: AssetImage('assets/images/placeholder.jpg'),
+                              imageErrorBuilder: (BuildContext context, Object exception, StackTrace? stacktrace) {
+                                return Container(
+                                  child: FadeInImage(
+                                    image: AssetImage('assets/images/placeholder.jpg'), placeholder: AssetImage('assets/images/placeholder.jpg'),
+                                  ),
+                                );
+                              },
                             )),
                     ),
                       onTap: () => {

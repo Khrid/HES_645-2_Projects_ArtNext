@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
-import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/widget/favoriteWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,9 +23,7 @@ class DisplayEvenementScreen extends StatelessWidget {
     //log(event!.id);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Event detail'),
-      ),
+      appBar: MyAppBar("Event detail"),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, UpdateEvenementScreen.routeName,

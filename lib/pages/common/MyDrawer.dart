@@ -1,4 +1,7 @@
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/events/ListEventsScreen.dart';
+import 'package:artnext/pages/events/manage/MyEvents.dart';
+import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
+    print("MyDrawer - user = " + user.toString());
     // TODO: implement build
     return Drawer(
       child: ListView(
@@ -22,10 +26,9 @@ class MyDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-              decoration: BoxDecoration(
-                color:
-                    (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
-              ),
+              decoration: BoxDecoration(color: Colors.blue
+                  //    (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
+                  ),
               child: Column(
                 children: [
                   Text("ArtNext",
@@ -41,7 +44,7 @@ class MyDrawer extends StatelessWidget {
                             fontSize: 10.0, fontStyle: FontStyle.italic)),
                   ),
                   SizedBox(height: 25),
-                  Text("Hello " + user.firstname + " " + user.lastname)
+                  Text("Hello " + user!.firstname + " " + user.lastname)
                 ],
               )),
           ListTile(
@@ -53,10 +56,29 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            title: const Text('Events'),
+            onTap: () async {
+              // Update the state of the app.
+              // ...
+              Navigator.pushNamed(context, ListEventsScreen.routeName);
+            },
+          ),
+          user.isServiceProvider
+              ? ListTile(
+                  title: Text("Manage my events"),
+                  onTap: () async {
+                    // Update the state of the app.
+                    // ...
+                    Navigator.pushNamed(context, MyEvents.routeName);
+                  },
+                )
+              : Container(),
+          ListTile(
             title: const Text('Logout'),
             onTap: () async {
               // Update the state of the app.
               // ...
+              Navigator.pushReplacementNamed(context, "/");
               await _auth.signOut();
             },
           )
@@ -65,3 +87,4 @@ class MyDrawer extends StatelessWidget {
     );
   }
 }
+

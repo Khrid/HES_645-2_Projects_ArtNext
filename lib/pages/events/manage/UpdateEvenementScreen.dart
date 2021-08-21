@@ -2,13 +2,14 @@ import 'dart:developer' as dev;
 
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/event.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-import 'ListEventsScreen.dart';
+import '../ListEventsScreen.dart';
 
 export 'CreateEvenementScreen.dart';
 
@@ -96,9 +97,8 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
 
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Edit event'),
-        ),
+
+        appBar: MyAppBar("Edit event"),
         body: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -436,7 +436,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                         geopoint: _event!.geopoint,
                                         endDate: endDate,
                                         address: eventAddressController.text,
-                                        //organizer: _event!.organizer
+                                        organizer: _event!.organizer
                                       );
 
                                       _event = e;

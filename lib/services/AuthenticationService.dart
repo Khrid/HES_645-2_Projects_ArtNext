@@ -28,7 +28,6 @@ class AuthenticationService {
 
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map((User? user) {
-
       return _userFromFirebaseUser(user!);
     });
   }
@@ -39,20 +38,7 @@ class AuthenticationService {
           email: email, password: password);
       User? user = result.user;
       log(user!.uid);
-      MyUser? myUser = _userFromFirebaseUser(user);
-      DocumentSnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
-          .instance
-          .collection("users")
-          .doc(user.uid)
-          .get();
-      if (snap.exists) {
-        print("User found in collection");
-        myUser!.lastname = snap.get("lastname");
-        myUser.firstname = snap.get("firstname");
-        print(myUser);
-      }
-      print(myUser);
-      return myUser;
+      return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
       return e.message;

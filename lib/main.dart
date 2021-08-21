@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
-import 'package:artnext/pages/events/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
-import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
+import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
+import 'package:artnext/pages/events/manage/MyEvents.dart';
+import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
@@ -74,8 +75,7 @@ class _AppState extends State<App> {
         catchError: (_, __) => null,
         child: MaterialApp(
             title: 'NextArt',
-            theme: ThemeData.light(),
-
+            //theme: ThemeData.light(),
             debugShowCheckedModeBanner: false,
             // Start the app with the "/" named route. In this case, the app starts
             // on the FirstScreen widget.
@@ -93,53 +93,8 @@ class _AppState extends State<App> {
                   CreateEvenementScreen(),
               UpdateEvenementScreen.routeName: (context) =>
                   UpdateEvenementScreen(),
-              UserInfo.routeName: (context) =>
-                  UserInfo()
+              UserInfo.routeName: (context) => UserInfo(),
+              MyEvents.routeName: (context) => MyEvents()
             }));
-    /*return MultiProvider (providers: [
-      Provider<AuthenticationService>(
-        create: (_) => AuthenticationService(),
-      ),
-      StreamProvider(
-        create: (context) => context.read<AuthenticationService>().authStateChanges, initialData: null,
-      )
-    ],
-    child: MaterialApp(
-      title: 'NextArt',
-      theme: ThemeData.light(),
-      debugShowCheckedModeBanner: false,
-      // Start the app with the "/" named route. In this case, the app starts
-      // on the FirstScreen widget.
-      //initialRoute: LoginScreen.routeName,
-      home: Wrapper(),
-      routes: {
-        /**
-         * Réflexion pour les routes
-         * /
-         * /login
-         *
-         * /events => pour la liste des évenements
-         * /events/id => le détail d'un event
-         * /events/id/attendees => liste des gens qui viennent à un event
-         * /events/create
-         * /events/modify/id ou /events/id/modify
-         *
-         * /account/ => info utilisateur
-         * /account/upgrade => pour passer en premium
-         *
-         * /search => pour chercher quelqu'un
-         * /user/id/attendencyHistory => historique de participation d'un user (à voir pour le nom)
-         *
-         * */
-        LoginScreen.routeName: (context) => LoginScreen(),
-        // /login
-        ListEventsScreen.routeName: (context) => ListEventsScreen(),
-        // /events
-        DisplayEvenementScreen.routeName: (context) => DisplayEvenementScreen(),
-        // /events/details
-        CreateEvenementScreen.routeName: (context) => CreateEvenementScreen(),
-        UpdateEvenementScreen.routeName: (context) => UpdateEvenementScreen()
-      },
-    ));*/
   }
 }

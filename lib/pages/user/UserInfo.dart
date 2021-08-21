@@ -1,4 +1,5 @@
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,10 +15,7 @@ class _UserInfoState extends State<UserInfo> {
     final user = Provider.of<MyUser?>(context);
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('User info'),
-        backgroundColor: Colors.lightGreen,
-      ),
+      appBar: MyAppBar("User info"),
       body: Align(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {

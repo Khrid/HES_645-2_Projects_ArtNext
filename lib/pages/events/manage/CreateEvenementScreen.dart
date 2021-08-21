@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/event.dart';
+import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 export 'CreateEvenementScreen.dart';
 
@@ -45,6 +48,8 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    MyUser? user = Provider.of<MyUser?>(context);
     CollectionReference events =
         FirebaseFirestore.instance.collection("events");
 
@@ -81,9 +86,8 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
 
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Create event'),
-        ),
+
+        appBar: MyAppBar("Create event"),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -411,7 +415,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                       // https://pub.dev/packages/datetime_picker_formfield
                                       endDate: endDate,
                                       details: eventDetailsController.text,
-                                      //organizer: "users/tB42OF1s0NYKOoTzIqTT8J8BYq03",
+                                      organizer: user!.uid,
                                       address: eventAddressController.text,
                                       geopoint: new GeoPoint(0, 0));
 
