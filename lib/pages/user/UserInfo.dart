@@ -67,16 +67,18 @@ class _UserInfoState extends State<UserInfo> {
                     children: <Widget>[
                       user.isServiceProvider
                           ? FaIcon(
-                        FontAwesomeIcons.palette,
-                        size: 24,
-                      )
+                              FontAwesomeIcons.palette,
+                              size: 24,
+                            )
                           : FaIcon(
-                        FontAwesomeIcons.user,
-                        size: 24,
-                      ),
+                              FontAwesomeIcons.user,
+                              size: 24,
+                            ),
                       SizedBox(height: 2),
                       Text(
-                        user.isServiceProvider ? "Service provider" : "Classic account",
+                        user.isServiceProvider
+                            ? "Service provider"
+                            : "Classic account",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -133,6 +135,10 @@ class _UserInfoState extends State<UserInfo> {
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         ),
         child: Text(isPremium ? "Downgrade to CLASSIC" : "Upgrade to PREMIUM"),
-        onPressed: () {},
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text('Not implemented yet 😉'),
+              duration: Duration(seconds: 2)));
+        },
       );
 }
