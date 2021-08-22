@@ -34,7 +34,7 @@ class MyUser {
         "}";
   }
 
-  populateUserInfoFromFirebase() async {
+  Future<void> populateUserInfoFromFirebase() async {
     DocumentSnapshot<Map<String, dynamic>> snap =
         await FirebaseFirestore.instance.collection("users").doc(uid).get();
     if (snap.exists) {

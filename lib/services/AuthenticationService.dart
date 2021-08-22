@@ -37,10 +37,10 @@ class AuthenticationService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-      log(user!.uid);
+      print("AuthenticationService - signIn - returned user uid = " + user!.uid);
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
-      log(e.message.toString());
+      print("AuthenticationService - signIn - FireBaseAuthException message = " +e.message.toString());
       return e.message;
     }
   }

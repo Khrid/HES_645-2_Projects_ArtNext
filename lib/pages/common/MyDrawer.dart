@@ -1,10 +1,10 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
-import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/AuthenticationService.dart';
@@ -26,14 +26,14 @@ class MyDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue
+              decoration: BoxDecoration(color: Colors.brown[400]
                   //    (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
                   ),
               child: Column(
                 children: [
                   Text("ArtNext",
                       style: TextStyle(
-                          fontSize: 70.0,
+                          fontSize: 65.0,
                           color: Colors.white,
                           fontFamily: 'RichieBrusher')),
                   RichText(
@@ -43,8 +43,37 @@ class MyDrawer extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 10.0, fontStyle: FontStyle.italic)),
                   ),
-                  SizedBox(height: 25),
-                  Text("Hello " + user!.firstname + " " + user.lastname)
+                  SizedBox(height: 15),
+                  Text(
+                    "Hello " + user!.firstname + " " + user.lastname,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //Center Row contents horizontally,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    //Center Row contents vertically,
+                    children: [
+                      user.isPremium
+                          ? FaIcon(
+                              FontAwesomeIcons.solidStar,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Container(),
+                      (user.isServiceProvider && user.isPremium)
+                          ? SizedBox(width: 15)
+                          : Container(),
+                      user.isServiceProvider
+                          ? FaIcon(
+                              FontAwesomeIcons.palette,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Container()
+                    ],
+                  )
                 ],
               )),
           ListTile(
@@ -87,4 +116,3 @@ class MyDrawer extends StatelessWidget {
     );
   }
 }
-

@@ -2,7 +2,6 @@
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 
 export 'event.dart';
@@ -62,7 +61,6 @@ class Event {
   /// Technical ID of firestore document
   late final String id;
   /// Event title
-  @JsonValue("title")
   final String title;
   /// Event type
   final EventTypeEnum type;
