@@ -1,30 +1,32 @@
 import 'dart:developer' as dev;
-import 'dart:math';
 
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/event.dart';
-import 'package:artnext/pages/ListEventsScreen.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
+import '../ListEventsScreen.dart';
+
 export 'CreateEvenementScreen.dart';
 
-class CreateEvenementScreen extends StatefulWidget {
-  static const routeName = '/events/event/create';
+class UpdateEvenementScreen extends StatefulWidget {
+  static const routeName = '/events/event/update';
 
-  const CreateEvenementScreen({Key? key}) : super(key: key);
+  const UpdateEvenementScreen({Key? key}) : super(key: key);
 
-  CreateEvenementScreenState createState() {
-    return CreateEvenementScreenState();
+  UpdateEvenementScreenState createState() {
+    return UpdateEvenementScreenState();
   }
 }
 
-class CreateEvenementScreenState extends State<CreateEvenementScreen> {
+class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
   final _formKey = GlobalKey<FormState>();
+  Event? _event;
+  late CollectionReference _events;
   TextEditingController eventTitleController = new TextEditingController();
   TextEditingController eventCityController = new TextEditingController();
   TextEditingController eventAddressController = new TextEditingController();
@@ -33,60 +35,73 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
   TextEditingController eventStartTimeController = new TextEditingController();
   TextEditingController eventEndDateController = new TextEditingController();
   TextEditingController eventEndTimeController = new TextEditingController();
-  DateTime startDateTimeEvent = DateTime.now();
-  DateTime endDateTimeEvent = DateTime.now();
-  var eventTypeSelectedValue = getEventTypeText(EventTypeEnum.UNDEFINED);
-  late GoogleMapController mapController;
-  List<Marker> _markers = <Marker>[];
+  var eventTypeSelectedValue;
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference events =
-        FirebaseFirestore.instance.collection("events");
+    //Event? event = args.event;
+    _event = ModalRoute.of(context)!.settings.arguments as Event;
+    dev.log("UpdateEvenementScreen - event from args = " + _event!.id);
+    if (eventTypeSelectedValue != null) {
+      dev.log("UpdateEvenementScreen - eventTypeSelectedValue = " +
+          eventTypeSelectedValue);
+    } else {
+      eventTypeSelectedValue = getEventTypeText(_event!.type);
+    }
 
+    DateTime startDateTimeEvent =
+        DateTime.parse(_event!.startDate.toDate().toString());
+    DateTime endDateTimeEvent =
+        DateTime.parse(_event!.endDate.toDate().toString());
+
+    eventTitleController.text = _event!.title;
+    eventCityController.text = _event!.city;
+    eventAddressController.text = _event!.address;
+    eventDetailsController.text = _event!.details;
+
+    // Dates
     initializeDateFormatting("fr", null).then((_) {
       var formatter = DateFormat.yMMMd("fr_CH");
       eventStartDateController.text =
-          formatter.format(DateTime.now()).toString();
-      eventStartTimeController.text =
-          TimeOfDay.now().hour.toString().padLeft(2, '0') +
-              ":" +
-              TimeOfDay.now().minute.toString().padLeft(2, '0');
-
-
+          formatter.format(startDateTimeEvent).toString();
       eventEndDateController.text =
-          formatter.format(DateTime.now()).toString();
-      eventEndTimeController.text =
-          TimeOfDay.now().hour.toString().padLeft(2, '0') +
-              ":" +
-              TimeOfDay.now().minute.toString().padLeft(2, '0');
+          formatter.format(endDateTimeEvent).toString();
     });
 
-    _markers.add(Marker(
-        markerId: MarkerId("testId"),
-        position: LatLng(46.09473118297104, 7.070971809710631),
-        infoWindow: InfoWindow(title: "Test"),
-        draggable: true,
-        onDragEnd: ((newPos) async {})));
+    // Heures
+    eventStartTimeController.text =
+        startDateTimeEvent.hour.toString().padLeft(2, '0') +
+            ":" +
+            startDateTimeEvent.minute.toString().padLeft(2, '0');
 
-    Future<void> addEvent(Event e) async {
-      Event tmp = e;
-      events.add(e.toJson()).then((value) => dev.log(value.id.toString()));
-      //return tmp;
+    eventEndTimeController.text =
+        endDateTimeEvent.hour.toString().padLeft(2, '0') +
+            ":" +
+            endDateTimeEvent.minute.toString().padLeft(2, '0');
+
+    //eventTypeSelectedValue = getEventTypeText(_event!.type);
+    dev.log("UpdateEvenementScreen - eventTypeSelectedValue = " +
+        eventTypeSelectedValue);
+
+    _events = FirebaseFirestore.instance.collection("events");
+
+    Future<void> updateEvent(Event e) async {
+      _events.doc(e.id).update(e.toJson());
     }
 
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Create event'),
-        ),
+
+        appBar: MyAppBar("Edit event"),
         body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
+            key: _formKey,
+            child: SingleChildScrollView(
               child: Center(
                   child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -187,7 +202,9 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                             }).toList(),
                             onChanged: (value) {
                               setState(() {
+                                dev.log(value.toString());
                                 eventTypeSelectedValue = value!;
+                                dev.log(eventTypeSelectedValue);
                               });
                             },
                           ),
@@ -207,34 +224,35 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter the start date';
-                                      } else if(endDateTimeEvent.compareTo(startDateTimeEvent) < 1) {
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
                                         return '';
                                       }
                                       return null;
                                     },
                                     onTap: () async {
                                       DateTime? datePicked =
-                                      await showDatePicker(
-                                          context: context,
-                                          initialDate: new DateTime.now(),
-                                          firstDate: new DateTime(2021),
-                                          lastDate: new DateTime(2022));
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: new DateTime.now(),
+                                              firstDate: new DateTime(2021),
+                                              lastDate: new DateTime(2022));
                                       if (datePicked != null) {
                                         initializeDateFormatting("fr", null)
                                             .then((_) {
                                           var formatter =
-                                          DateFormat.yMMMd("fr_CH");
+                                              DateFormat.yMMMd("fr_CH");
                                           eventStartDateController.text =
                                               formatter
                                                   .format(datePicked)
                                                   .toString();
                                           startDateTimeEvent = new DateTime(
-                                            datePicked.year,
-                                            datePicked.month,
-                                            datePicked.day,
-                                            startDateTimeEvent.hour,
-                                            startDateTimeEvent.minute
-                                          );
+                                              datePicked.year,
+                                              datePicked.month,
+                                              datePicked.day,
+                                              startDateTimeEvent.hour,
+                                              startDateTimeEvent.minute);
                                         });
                                       }
                                     },
@@ -250,48 +268,48 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter the start time';
-                                      } else if(endDateTimeEvent.compareTo(startDateTimeEvent) < 1) {
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
                                         return '';
                                       }
                                       return null;
                                     },
                                     onTap: () async {
                                       TimeOfDay? timePicked =
-                                      await showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                          builder: (BuildContext context,
-                                              Widget? child) {
-                                            return MediaQuery(
-                                                data: MediaQuery.of(context)
-                                                    .copyWith(
-                                                    alwaysUse24HourFormat:
-                                                    true),
-                                                child: child!);
-                                          });
+                                          await showTimePicker(
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                              builder: (BuildContext context,
+                                                  Widget? child) {
+                                                return MediaQuery(
+                                                    data: MediaQuery.of(context)
+                                                        .copyWith(
+                                                            alwaysUse24HourFormat:
+                                                                true),
+                                                    child: child!);
+                                              });
                                       if (timePicked != null) {
                                         eventStartTimeController.text =
                                             timePicked.hour
-                                                .toString()
-                                                .padLeft(2, '0') +
+                                                    .toString()
+                                                    .padLeft(2, '0') +
                                                 ":" +
                                                 timePicked.minute
                                                     .toString()
                                                     .padLeft(2, '0');
 
                                         startDateTimeEvent = new DateTime(
-                                          startDateTimeEvent.year,
-                                          startDateTimeEvent.month,
-                                          startDateTimeEvent.day,
-                                          timePicked.hour,
-                                          timePicked.minute
-                                        );
+                                            startDateTimeEvent.year,
+                                            startDateTimeEvent.month,
+                                            startDateTimeEvent.day,
+                                            timePicked.hour,
+                                            timePicked.minute);
                                       }
                                     },
                                   ))
                             ],
                           ),
-
 
                           /// End date
                           SizedBox(height: 10),
@@ -308,23 +326,25 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter the end date';
-                                      } else if(endDateTimeEvent.compareTo(startDateTimeEvent) < 1) {
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
                                         return '';
                                       }
                                       return null;
                                     },
                                     onTap: () async {
                                       DateTime? datePicked =
-                                      await showDatePicker(
-                                          context: context,
-                                          initialDate: new DateTime.now(),
-                                          firstDate: new DateTime(2021),
-                                          lastDate: new DateTime(2022));
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: new DateTime.now(),
+                                              firstDate: new DateTime(2021),
+                                              lastDate: new DateTime(2022));
                                       if (datePicked != null) {
                                         initializeDateFormatting("fr", null)
                                             .then((_) {
                                           var formatter =
-                                          DateFormat.yMMMd("fr_CH");
+                                              DateFormat.yMMMd("fr_CH");
                                           eventEndDateController.text =
                                               formatter
                                                   .format(datePicked)
@@ -334,8 +354,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                               datePicked.month,
                                               datePicked.day,
                                               endDateTimeEvent.hour,
-                                              endDateTimeEvent.minute
-                                          );
+                                              endDateTimeEvent.minute);
                                         });
                                       }
                                     },
@@ -351,7 +370,9 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter the end time';
-                                      } else if(endDateTimeEvent.compareTo(startDateTimeEvent) < 1) {
+                                      } else if (endDateTimeEvent
+                                              .compareTo(startDateTimeEvent) <
+                                          1) {
                                         return '';
                                       }
 
@@ -359,27 +380,27 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                     },
                                     onTap: () async {
                                       TimeOfDay? timePicked =
-                                      await showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                          builder: (BuildContext context,
-                                              Widget? child) {
-                                            return MediaQuery(
-                                                data: MediaQuery.of(context)
-                                                    .copyWith(
-                                                    alwaysUse24HourFormat:
-                                                    true),
-                                                child: child!);
-                                          });
+                                          await showTimePicker(
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                              builder: (BuildContext context,
+                                                  Widget? child) {
+                                                return MediaQuery(
+                                                    data: MediaQuery.of(context)
+                                                        .copyWith(
+                                                            alwaysUse24HourFormat:
+                                                                true),
+                                                    child: child!);
+                                              });
                                       if (timePicked != null) {
-                                        eventEndTimeController.text =
-                                            timePicked.hour
+                                        eventEndTimeController.text = timePicked
+                                                .hour
                                                 .toString()
                                                 .padLeft(2, '0') +
-                                                ":" +
-                                                timePicked.minute
-                                                    .toString()
-                                                    .padLeft(2, '0');
+                                            ":" +
+                                            timePicked.minute
+                                                .toString()
+                                                .padLeft(2, '0');
                                         endDateTimeEvent = new DateTime(
                                             endDateTimeEvent.year,
                                             endDateTimeEvent.month,
@@ -391,45 +412,102 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                   ))
                             ],
                           ),
-
-                          /// Create button
                           SizedBox(height: 50),
-                          ElevatedButton(
-                              // Within the `FirstScreen` widget
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Timestamp startDate = Timestamp.fromDate(startDateTimeEvent);
-                                  Timestamp endDate = Timestamp.fromDate(endDateTimeEvent);
-                                  Event e = new Event(
-                                      title: eventTitleController.text,
-                                      city: eventCityController.text,
-                                      image:
-                                          "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg",
-                                      type: getEventTypeEnum(
-                                          eventTypeSelectedValue),
-                                      startDate: startDate,
-                                      // https://pub.dev/packages/datetime_picker_formfield
-                                      endDate: endDate,
-                                      details: eventDetailsController.text,
-                                      //organizer: "users/tB42OF1s0NYKOoTzIqTT8J8BYq03",
-                                      address: eventAddressController.text,
-                                      geopoint: new GeoPoint(0, 0));
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  // Within the `FirstScreen` widget
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      Timestamp startDate = Timestamp.fromDate(
+                                          startDateTimeEvent);
+                                      Timestamp endDate =
+                                          Timestamp.fromDate(endDateTimeEvent);
+                                      Event e = new Event(
+                                        id: _event!.id,
+                                        title: eventTitleController.text,
+                                        city: eventCityController.text,
+                                        type: getEventTypeEnum(
+                                            eventTypeSelectedValue),
+                                        startDate: startDate,
+                                        image: _event!.image,
+                                        details: eventDetailsController.text,
+                                        geopoint: _event!.geopoint,
+                                        endDate: endDate,
+                                        address: eventAddressController.text,
+                                        organizer: _event!.organizer
+                                      );
 
-                                  addEvent(e);
-                                  // Navigate to the second screen using a named route.
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: const Text('Event created'),
-                                          duration: Duration(seconds: 2)));
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      ListEventsScreen.routeName,
-                                      (route) => false);
-                                }
-                              },
-                              child: Text('Create event'))
+                                      _event = e;
+
+                                      updateEvent(e);
+                                      // Navigate to the second screen using a named route.
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content:
+                                                  const Text('Event updated'),
+                                              duration: Duration(seconds: 2)));
+                                      //Navigator.pushNamedAndRemoveUntil(context,
+                                      //    ListEventsScreen.routeName, (route) => false);
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Text('Update event')),
+                              Container(width: 20, height: 20),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red, // background
+                                    onPrimary: Colors.white, // foreground
+                                  ),
+                                  // Within the `FirstScreen` widget
+                                  onPressed: () {
+                                    showAlertDialog(context);
+                                  },
+                                  child: Text('Delete event'))
+                            ],
+                          ),
                         ],
-                      )))),
-        ));
+                      ))),
+            )));
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {
+        _events.doc(_event!.id).delete();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Event deleted'),
+            duration: Duration(seconds: 2)));
+        Navigator.pushNamedAndRemoveUntil(
+            context, ListEventsScreen.routeName, (route) => false);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Event deletion"),
+      content: Text("Do you really want to delete this event?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

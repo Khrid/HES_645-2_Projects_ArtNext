@@ -20,7 +20,7 @@ class Event {
     required this.endDate,
     required this.address,
     required this.geopoint,
-    //required this.organizer
+    required this.organizer
   });
 
   /// Creates an event from json data
@@ -54,9 +54,9 @@ class Event {
       geopoint: (json.data()['geopoint'] != null
           ? json.data()['geopoint']
           : new GeoPoint(0, 0)) as GeoPoint,
-      //organizer: (json.data()['organizer'] != null
-      //    ? json.data()['organizer']
-      //    : null) as DocumentReference
+      organizer: (json.data()['organizer'] != null
+          ? json.data()['organizer']
+          : null) as String
   );
 
   /// Technical ID of firestore document
@@ -75,7 +75,7 @@ class Event {
   /// Event geopoint (lat/lon)
   final GeoPoint geopoint;
   /// Event organizer (users collection reference)
-  //final DocumentReference organizer;
+  final String organizer;
   /// Event image
   final String image;
   /// Event start date
@@ -93,7 +93,7 @@ class Event {
       'city': city,
       'address': address,
       'geopoint': geopoint,
-      //'organizer': organizer,
+      'organizer': organizer,
       'image': image,
       'startDate': startDate,
       'endDate': endDate,
