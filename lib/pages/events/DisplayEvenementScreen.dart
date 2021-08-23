@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
+import 'package:artnext/services/DynamicLinkService.dart';
 import 'package:artnext/widget/participateWidget.dart';
-import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +47,8 @@ class DisplayEvenementScreen extends StatelessWidget {
 Widget buildEventDetails(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+
   Container _buttonShare(Event ev) {
     return Container(
       padding: const EdgeInsets.all(8),
@@ -55,12 +57,22 @@ Widget buildEventDetails(
         children: [
           Container(
             padding: const EdgeInsets.only(bottom: 8),
-            child: IconButton(
-              icon: const Icon(Icons.share),
-              color: Colors.black,
-              onPressed: () {
-                Share.share("Je participe à " + ev.title + " c'est à " + ev.city + " le " + readTimestamptoDate(ev.startDate.millisecondsSinceEpoch), subject: 'Je participe à ' + ev.title);
-              },
+            child: FutureBuilder<Uri>(
+                future: _dynamicLinkService.createDynamicLink(ev.id),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData) {
+                    Uri? uri = snapshot.data;
+                    print(uri.toString());
+                    return IconButton(
+                      icon: const Icon(Icons.share),
+                      color: Colors.black,
+                      onPressed: () => Share.share(uri.toString()),
+                    );
+                  } else {
+                    return Container();
+                  }
+
+                }
             ),
           ),
           Text("Share",
