@@ -18,11 +18,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
+    //await user.populateUserInfoFromFirebase();
     print("MyAppBar - user = " + user.toString());
     // TODO: implement build
     return AppBar(
       title: Text(this.title),
       backgroundColor: Colors.brown[400],
+      //backgroundColor: (user!.isServiceProvider ? Colors.orange[400] : Colors.brown[400]),
     );
   }
 }

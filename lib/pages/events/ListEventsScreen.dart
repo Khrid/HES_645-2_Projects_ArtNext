@@ -15,6 +15,8 @@ export 'ListEventsScreen.dart';
 class ListEventsScreen extends StatelessWidget {
   static const routeName = '/events';
 
+
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
@@ -57,7 +59,6 @@ class ListEventsScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
         elevation:0.0,
         onPressed: () {
           Navigator.pushNamed(context, CreateEvenementScreen.routeName);

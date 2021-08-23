@@ -39,6 +39,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   late Timer _timerLink;
 
+  Color? _primaryColor = Colors.brown[100];
+  Color? _accentColor = Colors.brown[400];
+
   void initializeFlutterFire() async {
     log('initializeFlutterFire - start');
     try {
@@ -104,6 +107,31 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         child: MaterialApp(
             title: 'NextArt',
             //theme: ThemeData.light(),
+            theme: ThemeData(
+              brightness: Brightness.light,
+              primaryColor: _primaryColor,
+              accentColor: _accentColor,
+
+                // Button
+              buttonTheme: ButtonThemeData(
+                buttonColor: _accentColor,
+                textTheme: ButtonTextTheme.primary
+              ),
+
+              // ElevatedButton
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  primary: _accentColor,
+                  onPrimary: Colors.white
+                ),
+              ),
+
+              // FloatingActionButton
+              floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: _accentColor
+              )
+
+            ),
             debugShowCheckedModeBanner: false,
             // Start the app with the "/" named route. In this case, the app starts
             // on the FirstScreen widget.

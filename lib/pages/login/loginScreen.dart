@@ -1,8 +1,7 @@
 import 'dart:developer';
 
-import 'package:artnext/services/AuthenticationService.dart';
 import 'package:artnext/models/myuser.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,16 +17,23 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final AuthenticationService _auth =
-      AuthenticationService();
-  TextEditingController usernameController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  final AuthenticationService _auth = AuthenticationService();
+  TextEditingController usernameController =
+      new TextEditingController(text: "user@artnext.ch");
+  TextEditingController passwordController =
+      new TextEditingController(text: "test123");
+
+  var errorMessage = "";
+
+  void changeErrorMessage(String message) {
+    setState(() {
+      errorMessage = message;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    log("LoginScreen - build - start");
-    usernameController.text = "user@artnext.ch";
-    passwordController.text = "test123";
+    print("LoginScreen - build - start");
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
@@ -103,14 +109,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             }),
                         SizedBox(height: 20),
+                        Text(
+                          '$errorMessage',
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 20),
                         ElevatedButton(
-                            style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15.0),
-                                        side: BorderSide(
-                                            color: Colors.teal, width: 2.0)))),
 
                             // Within the `FirstScreen` widget
                             onPressed: () async {
@@ -120,8 +125,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     password: passwordController.text);
                                 if (result is MyUser) {
                                   // result is user => login successful
-                                  log(result.uid);
-                                } else {}
+                                  print("LoginScreen - ElevatedButton onPressed - result.uid = " +result.uid);
+                                  changeErrorMessage("");
+                                } else {
+                                  changeErrorMessage(result.toString());
+                                }
                               }
 
                               /*Provider.of<User>(context, listen: false);
