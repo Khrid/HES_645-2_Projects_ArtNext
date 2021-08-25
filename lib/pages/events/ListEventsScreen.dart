@@ -1,8 +1,8 @@
 
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
-import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
+import 'package:artnext/pages/common/MyFilterBar.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,26 +23,9 @@ class ListEventsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.brown[100],
 
-      appBar: MyAppBar("Events"),
+      appBar: MyFilterBar("Events"),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Filter by'),
-                ),
-                SizedBox(width: 30),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Sort by'),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: SizedBox(
               height: 200.0,
