@@ -36,7 +36,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   bool _initialized = false;
   bool _error = false;
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+  // final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   late Timer _timerLink;
 
   Color? _primaryColor = Colors.brown[100];
@@ -74,7 +74,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         const Duration(milliseconds: 1000),
             () {
           log("calling retrieveDynamicLink");
-          _dynamicLinkService.retrieveDynamicLink(context);
+          // _dynamicLinkService.initDynamicLinks(context);
         },
       );
     }
