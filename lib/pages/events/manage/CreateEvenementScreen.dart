@@ -1,5 +1,4 @@
 import 'dart:developer' as dev;
-import 'dart:math';
 
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/event.dart';
@@ -404,6 +403,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                 if (_formKey.currentState!.validate()) {
                                   Timestamp startDate = Timestamp.fromDate(startDateTimeEvent);
                                   Timestamp endDate = Timestamp.fromDate(endDateTimeEvent);
+                                  List<String> listAttendees = [];
                                   Event e = new Event(
                                       title: eventTitleController.text,
                                       city: eventCityController.text,
@@ -417,9 +417,11 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                       details: eventDetailsController.text,
                                       organizer: user!.uid,
                                       address: eventAddressController.text,
-                                      geopoint: new GeoPoint(0, 0));
+                                      geopoint: new GeoPoint(0, 0),
+                                      listAttendees: listAttendees);
 
                                   addEvent(e);
+
                                   // Navigate to the second screen using a named route.
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
