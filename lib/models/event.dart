@@ -2,7 +2,6 @@
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 
 export 'event.dart';
@@ -20,7 +19,7 @@ class Event {
     required this.endDate,
     required this.address,
     required this.geopoint,
-    //required this.organizer
+    required this.organizer
   });
 
   /// Creates an event from json data
@@ -54,15 +53,14 @@ class Event {
       geopoint: (json.data()['geopoint'] != null
           ? json.data()['geopoint']
           : new GeoPoint(0, 0)) as GeoPoint,
-      //organizer: (json.data()['organizer'] != null
-      //    ? json.data()['organizer']
-      //    : null) as DocumentReference
+      organizer: (json.data()['organizer'] != null
+          ? json.data()['organizer']
+          : null) as String
   );
 
   /// Technical ID of firestore document
   late final String id;
   /// Event title
-  @JsonValue("title")
   final String title;
   /// Event type
   final EventTypeEnum type;
@@ -75,7 +73,7 @@ class Event {
   /// Event geopoint (lat/lon)
   final GeoPoint geopoint;
   /// Event organizer (users collection reference)
-  //final DocumentReference organizer;
+  final String organizer;
   /// Event image
   final String image;
   /// Event start date
@@ -93,7 +91,7 @@ class Event {
       'city': city,
       'address': address,
       'geopoint': geopoint,
-      //'organizer': organizer,
+      'organizer': organizer,
       'image': image,
       'startDate': startDate,
       'endDate': endDate,

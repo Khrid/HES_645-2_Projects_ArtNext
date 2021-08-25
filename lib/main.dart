@@ -1,15 +1,19 @@
 import 'dart:developer';
 
-import 'package:artnext/pages/events/CreateEvenementScreen.dart';
+import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
+import 'package:artnext/pages/events/ListEventsScreen.dart';
+import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
+import 'package:artnext/pages/events/manage/MyEvents.dart';
+import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
+import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
+import 'package:artnext/pages/wrapper.dart';
+import 'package:artnext/services/AuthenticationService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
-
-import 'pages/ListEventsScreen.dart';
-import 'pages/loginScreen.dart';
+import 'package:provider/provider.dart';
 
 /**
  * Flutterfire init guide =>
@@ -29,6 +33,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   bool _initialized = false;
   bool _error = false;
+
+  Color? _primaryColor = Colors.brown[100];
+  Color? _accentColor = Colors.brown[400];
 
   void initializeFlutterFire() async {
     log('initializeFlutterFire - start');
@@ -56,7 +63,6 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     if (_error) {
       // TODO: handle error
@@ -66,41 +72,57 @@ class _AppState extends State<App> {
       // TODO: handle initialization error
     }
 
-    return MaterialApp(
-      title: 'NextArt',
-      theme: ThemeData.light(),
-      debugShowCheckedModeBanner: false,
-      // Start the app with the "/" named route. In this case, the app starts
-      // on the FirstScreen widget.
-      initialRoute: LoginScreen.routeName,
-      routes: {
-        /**
-           * Réflexion pour les routes
-           * /
-           * /login
-           *
-           * /events => pour la liste des évenements
-           * /events/id => le détail d'un event
-           * /events/id/attendees => liste des gens qui viennent à un event
-           * /events/create
-           * /events/modify/id ou /events/id/modify
-           *
-           * /account/ => info utilisateur
-           * /account/upgrade => pour passer en premium
-           *
-           * /search => pour chercher quelqu'un
-           * /user/id/attendencyHistory => historique de participation d'un user (à voir pour le nom)
-           *
-           * */
-        LoginScreen.routeName: (context) => LoginScreen(),
-        // /login
-        ListEventsScreen.routeName: (context) => ListEventsScreen(),
-        // /events
-        DisplayEvenementScreen.routeName: (context) => DisplayEvenementScreen(),
-        // /events/details
-        CreateEvenementScreen.routeName: (context) => CreateEvenementScreen(),
-        UpdateEvenementScreen.routeName: (context) => UpdateEvenementScreen()
-      },
-    );
+    return StreamProvider<MyUser?>.value(
+        value: AuthenticationService().user,
+        initialData: null,
+        catchError: (_, __) => null,
+        child: MaterialApp(
+            title: 'NextArt',
+            //theme: ThemeData.light(),
+            theme: ThemeData(
+              brightness: Brightness.light,
+              primaryColor: _primaryColor,
+              accentColor: _accentColor,
+
+                // Button
+              buttonTheme: ButtonThemeData(
+                buttonColor: _accentColor,
+                textTheme: ButtonTextTheme.primary
+              ),
+
+              // ElevatedButton
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  primary: _accentColor,
+                  onPrimary: Colors.white
+                ),
+              ),
+
+              // FloatingActionButton
+              floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: _accentColor
+              )
+
+            ),
+            debugShowCheckedModeBanner: false,
+            // Start the app with the "/" named route. In this case, the app starts
+            // on the FirstScreen widget.
+            //initialRoute: LoginScreen.routeName,
+            home: Wrapper(),
+            routes: {
+              LoginScreen.routeName: (context) => LoginScreen(),
+              // /login
+              ListEventsScreen.routeName: (context) => ListEventsScreen(),
+              // /events
+              DisplayEvenementScreen.routeName: (context) =>
+                  DisplayEvenementScreen(),
+              // /events/details
+              CreateEvenementScreen.routeName: (context) =>
+                  CreateEvenementScreen(),
+              UpdateEvenementScreen.routeName: (context) =>
+                  UpdateEvenementScreen(),
+              UserInfo.routeName: (context) => UserInfo(),
+              MyEvents.routeName: (context) => MyEvents()
+            }));
   }
 }

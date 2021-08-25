@@ -1,13 +1,15 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/widget/favoriteWidget.dart';
-import 'package:artnext/pages/events/UpdateEvenementScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:transparent_image/transparent_image.dart';
+
 export 'DisplayEvenementScreen.dart';
 
 class DisplayEvenementScreen extends StatelessWidget {
@@ -21,9 +23,7 @@ class DisplayEvenementScreen extends StatelessWidget {
     //log(event!.id);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Event detail'),
-      ),
+      appBar: MyAppBar("Event detail"),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
@@ -47,13 +47,11 @@ Widget buildEventDetails(
   //Widget for buttons Share and participate
   Widget buttonSection = Container(
       padding: const EdgeInsets.all(8),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildButtonColumn(Colors.black, Icons.share, "Share"),
-            SizedBox(width: 30),
-            FavoriteWidget(),
-          ]));
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        _buildButtonColumn(Colors.black, Icons.share, "Share"),
+        SizedBox(width: 30),
+        FavoriteWidget(),
+      ]));
 
   if (!snapshot.hasData) {
     return Center(child: CircularProgressIndicator());
@@ -62,137 +60,137 @@ Widget buildEventDetails(
     Event e = Event.fromJson(event);
     //return new Text(e.title + " - " + e.city);
     return Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: FadeInImage.memoryNetwork(
-              image: (e.image),
-              fit: BoxFit.cover,
-              placeholder: kTransparentImage,
-            ),
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: FadeInImage.memoryNetwork(
+            image: (e.image),
+            fit: BoxFit.cover,
+            placeholder: kTransparentImage,
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.only(left:10, right:10),
-              height: MediaQuery.of(context).size.height * 0.6,
-              width: MediaQuery.of(context).size.width,
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            height: MediaQuery.of(context).size.height * 0.6,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(.2),
+                      offset: Offset(0, -4),
+                      blurRadius: 8)
+                ]),
+            child: SingleChildScrollView(
+                child: Column(
+              children: [
+                Text(
+                  e.title,
+                  style: GoogleFonts.ptSans(
+                    fontSize: 36.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
 
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.2),
-                        offset: Offset(0, -4),
-                        blurRadius: 8
-                    )
-                  ]
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    e.title,
-                    style: GoogleFonts.ptSans(
-                        fontSize: 36.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-
-                  // Image.asset("assets/images/login.png")],
-                  Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 30,left: 30,right: 10),
-                          child: Text(
-                            "Details :\n\n" + e.details,
-                            textAlign: TextAlign.justify,
-                            softWrap: true,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                // Image.asset("assets/images/login.png")],
+                Container(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 30, left: 30, right: 10),
+                        child: Text(
+                          "Details :\n\n" + e.details,
+                          textAlign: TextAlign.justify,
+                          softWrap: true,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Container(
-                            padding: const EdgeInsets.only(top: 30),
-                            child: Text("Lieu : " + e.city,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Text(
+                          "Lieu : " + e.city,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  buttonSection,
-                  Text(
-                    "Attendees : ",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w400,
-                    ),
+                ),
+                buttonSection,
+                Text(
+                  "Attendees : ",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w400,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child:
-                    /*Column(
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  child:
+                      /*Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [*/
-                    StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("events")
-                          .doc(e.id)
-                          .collection("attendees")
-                          .snapshots(),
-                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            return Center(child: CircularProgressIndicator());
-                          default:
+                      StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("events")
+                        .doc(e.id)
+                        .collection("attendees")
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(child: CircularProgressIndicator());
+                        default:
                           //return Column();
-                            if (snapshot.data!.docs.length > 0) {
-                              return ListView.builder(
-                                  padding: EdgeInsets.all(8.0),
-                                  // physics: NeverScrollableScrollPhysics(),
+                          if (snapshot.data!.docs.length > 0) {
+                            return ListView.builder(
+                                padding: EdgeInsets.all(8.0),
+                                // physics: NeverScrollableScrollPhysics(),
 
-                                  ///
-                                  shrinkWrap: true,
+                                ///
+                                shrinkWrap: true,
 
-                                  ///
-                                  scrollDirection: Axis.horizontal,
+                                ///
+                                scrollDirection: Axis.horizontal,
 
-                                  ///
+                                ///
 
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (context, index) {
-                                    log(snapshot.data!.docs[index]["ref"].id);
-                                    //return Container();
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  log(snapshot.data!.docs[index]["ref"].id);
+                                  //return Container();
 
-                                    return StreamBuilder(
-                                        stream: FirebaseFirestore.instance
-                                            .collection("users")
-                                            .doc(snapshot.data!.docs[index]["ref"].id)
-                                            .snapshots(),
-                                        builder: buildAttendeeInfo);
-                                  });
-                            } else {
-                              return Text("No attendees yet :(");
-                            }
-                        }
-                      },
-                    ),
-                    //_buildAttendees(e),
-                  )
-
-                ],
-              ),
-            ),
+                                  return StreamBuilder(
+                                      stream: FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(snapshot
+                                              .data!.docs[index]["ref"].id)
+                                          .snapshots(),
+                                      builder: buildAttendeeInfo);
+                                });
+                          } else {
+                            return Text("No attendees yet :(");
+                          }
+                      }
+                    },
+                  ),
+                  //_buildAttendees(e),
+                )
+              ],
+            )),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 }
 
@@ -232,14 +230,15 @@ Widget buildAttendeeInfo(
                 fit: BoxFit.fill),
           ),
         ),
-        Text(attendee!["firstname"].toString().substring(0,1) + ". "+attendee["lastname"].toString())
+        Text(attendee!["firstname"].toString().substring(0, 1) +
+            ". " +
+            attendee["lastname"].toString())
       ],
     );
   } else {
     return Column();
   }
 }
-
 
 // Column _buildAttendees(Event e) {
 //   return Column(
@@ -260,7 +259,6 @@ Widget buildAttendeeInfo(
 //     ],
 //   );
 // }
-
 
 // Widget buildEventsList(
 //     BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
