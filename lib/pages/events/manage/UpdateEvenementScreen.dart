@@ -424,6 +424,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                           startDateTimeEvent);
                                       Timestamp endDate =
                                           Timestamp.fromDate(endDateTimeEvent);
+                                      List listAttendees = _event!.listAttendees;
                                       Event e = new Event(
                                         id: _event!.id,
                                         title: eventTitleController.text,
@@ -436,7 +437,8 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                         geopoint: _event!.geopoint,
                                         endDate: endDate,
                                         address: eventAddressController.text,
-                                        organizer: _event!.organizer
+                                        organizer: _event!.organizer,
+                                        listAttendees: listAttendees
                                       );
 
                                       _event = e;

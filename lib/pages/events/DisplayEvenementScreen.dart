@@ -160,7 +160,7 @@ Widget buildEventDetails(
                                 shrinkWrap: true,
 
                                 ///
-                                scrollDirection: Axis.horizontal,
+                                scrollDirection: Axis.vertical,
 
                                 ///
 

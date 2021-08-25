@@ -85,7 +85,7 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Events'),
+            title: const Text('Event calendar'),
             onTap: () async {
               // Update the state of the app.
               // ...
