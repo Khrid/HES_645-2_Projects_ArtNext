@@ -52,6 +52,41 @@ Widget buildEventDetails(
         SizedBox(width: 30),
         ParticipateWidget(),
       ]));
+      /*child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: FutureBuilder<Uri>(
+                future: _dynamicLinkService.createDynamicLink(ev.id),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData) {
+                    Uri? uri = snapshot.data;
+                    print(uri.toString());
+                    return IconButton(
+                      icon: const Icon(Icons.share),
+                      color: Colors.black,
+                      onPressed: () => Share.share("Je participe à ce super évènement bientôt à " + ev.city + "\nInscris-toi aussi ! " + uri.toString()),
+                    );
+                  } else {
+                    return Container();
+                  }
+
+                }
+            ),
+          ),
+          Text("Share",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              )),
+        ],
+      ),
+
+
+    );
+  }*/
 
   if (!snapshot.hasData) {
     return Center(child: CircularProgressIndicator());
@@ -133,6 +168,7 @@ Widget buildEventDetails(
                       ),
                     ),
                     Container(
+ 
                         padding: const EdgeInsets.all(8),
                         child: e.listAttendees.length>0 ? GridView.builder(
                           padding: EdgeInsets.all(8.0),
@@ -159,6 +195,39 @@ Widget buildEventDetails(
                         ) : Text("No attendees Yet !")
                     )
 
+/*
+                      padding: const EdgeInsets.all(8),
+                      child:
+                      /*Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [*/
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("events")
+                            .doc(e.id)
+                            .collection("attendees")
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(child: CircularProgressIndicator());
+                            default:
+                            //return Column();
+                              if (snapshot.data!.docs.length > 0) {
+                                return ListView.builder(
+                                    padding: EdgeInsets.all(8.0),
+                                    // physics: NeverScrollableScrollPhysics(),
+
+                                    ///
+                                    shrinkWrap: true,
+
+                                   ///
+                                    scrollDirection: Axis.horizontal,
+
+
+                                    ///
+*/
 
 
                   ],

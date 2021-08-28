@@ -85,9 +85,9 @@ class _UserInfoState extends State<UserInfo> {
                   ),
                 ),
               ],
-            )
-            //const SizedBox(height: 48),
-            //buildAbout(user),
+            ),
+            const SizedBox(height: 24),
+            buildMyEventsTitle(),
           ],
         )
 
@@ -134,6 +134,29 @@ class _UserInfoState extends State<UserInfo> {
           onPrimary: Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         ),
+        );
+  }
+
+  Widget buildName(MyUser user) => Column(
+        children: [
+          Text(
+            user.firstname + " " + user.lastname,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            user.uid,
+            style: TextStyle(color: Colors.grey),
+          )
+        ],
+      );
+
+  Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: StadiumBorder(),
+          onPrimary: Colors.white,
+          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+        ),
         child: Text(isPremium ? "Downgrade to CLASSIC" : "Upgrade to PREMIUM"),
         onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -141,4 +164,13 @@ class _UserInfoState extends State<UserInfo> {
               duration: Duration(seconds: 2)));
         },
       );
+
+  Widget buildMyEventsTitle()  => Column(
+    children: [
+      Text(
+        "My attendency history",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+    ],
+  );
 }
