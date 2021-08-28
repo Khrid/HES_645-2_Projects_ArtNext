@@ -128,28 +128,6 @@ class _UserInfoState extends State<UserInfo> {
         ],
       );
 
-  Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: StadiumBorder(),
-          onPrimary: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-        ),
-        );
-  }
-
-  Widget buildName(MyUser user) => Column(
-        children: [
-          Text(
-            user.firstname + " " + user.lastname,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            user.uid,
-            style: TextStyle(color: Colors.grey),
-          )
-        ],
-      );
 
   Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
         style: ElevatedButton.styleFrom(
