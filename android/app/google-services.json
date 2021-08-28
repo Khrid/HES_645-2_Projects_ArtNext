@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "556430102597-m92d2h71e2udfemq4e196fdnsqe19451.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.hevs.students.artnext.grp2",
+            "certificate_hash": "aaf2bf913e2900ccd3b69d239ec6eed405a9adb7"
+          }
+        },
+        {
           "client_id": "556430102597-hqv1bgakr1i0ioqtkbn6kafhroja57j7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -39,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:556430102597:android:ee4e44f8dbf37d8e26932c",
         "android_client_info": {
-          "package_name": "ch.hevs.students.artnext.grp2"
+          "package_name": "com.example.startup_namer"
         }
       },
       "oauth_client": [

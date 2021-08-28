@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
@@ -10,7 +11,9 @@ import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
+import 'package:artnext/services/DynamicLinkService.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +33,11 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   bool _initialized = false;
   bool _error = false;
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+  late Timer _timerLink;
 
   Color? _primaryColor = Colors.brown[100];
   Color? _accentColor = Colors.brown[400];
@@ -59,6 +64,29 @@ class _AppState extends State<App> {
     initializeFlutterFire();
     Intl.defaultLocale = 'fr_CH';
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _timerLink = new Timer(
+        const Duration(milliseconds: 1000),
+            () {
+          log("calling retrieveDynamicLink");
+          _dynamicLinkService.retrieveDynamicLink(context);
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    if (_timerLink != null) {
+      _timerLink.cancel();
+    }
+    super.dispose();
   }
 
   @override
