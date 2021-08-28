@@ -16,8 +16,9 @@ class AuthenticationService {
   // create user object base on FirebaseUser
   MyUser? _userFromFirebaseUser(User user) {
     if(user == null) return null;
-    MyUser myUser = MyUser(uid: user.uid);
-    myUser.populateUserInfoFromFirebase();
+    MyUser myUser = MyUser();
+    myUser.setUid( user.uid);
+    myUser.populateUserInfoFromFirestore();
     return myUser;
   }
 
@@ -53,13 +54,17 @@ class AuthenticationService {
     }
   }
 
-/*Future<String?> signUp({required String email, required String password}) async{
+Future signUp({required String email, required String password, required MyUser myUser}) async{
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      return "Signed up";
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      //MyUser user = MyUser(uid: result.user!.uid);
+      myUser.setUid(result.user!.uid);
+      print(myUser);
+      await myUser.saveToFirestore();
+      return myUser;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
-  }*/
+  }
 
 }
