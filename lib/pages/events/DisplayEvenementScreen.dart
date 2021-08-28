@@ -202,8 +202,9 @@ Widget buildEventDetails(
                                     ///
                                     shrinkWrap: true,
 
-                                    ///
+                                   ///
                                     scrollDirection: Axis.horizontal,
+
 
                                     ///
 

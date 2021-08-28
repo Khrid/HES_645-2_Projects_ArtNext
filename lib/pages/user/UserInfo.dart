@@ -85,32 +85,15 @@ class _UserInfoState extends State<UserInfo> {
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 24),
+            buildMyEventsTitle(),
             //const SizedBox(height: 48),
             //buildAbout(user),
           ],
         )
 
-        /*Align(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Container(
-                padding: EdgeInsets.only(left: 60, right: 60),
-                height: constraints.maxHeight,
-                width: constraints.maxWidth,
-                child: Column(
-                  children: [
-                    Text("uid : " + user!.uid),
-                    Text("lastname : " + user.lastname),
-                    Text("firstname : " + user.firstname),
-                    Text("isPremium : " + user.isPremium.toString()),
-                    Text("isServiceProvider : " + user.isServiceProvider.toString()),
-                    Text("image : " + user.image),
-                  ],
-                ));
-          },
-        ),
-      ),*/
+
         );
   }
 
@@ -141,4 +124,13 @@ class _UserInfoState extends State<UserInfo> {
               duration: Duration(seconds: 2)));
         },
       );
+
+  Widget buildMyEventsTitle()  => Column(
+    children: [
+      Text(
+        "My attendency history",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+    ],
+  );
 }

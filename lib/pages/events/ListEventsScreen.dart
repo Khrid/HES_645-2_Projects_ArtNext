@@ -16,7 +16,6 @@ class ListEventsScreen extends StatelessWidget {
   static const routeName = '/events';
 
 
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
@@ -48,107 +47,122 @@ class ListEventsScreen extends StatelessWidget {
             child: SizedBox(
               height: 200.0,
               child: StreamBuilder(stream: FirebaseFirestore.instance
-                    .collection('events')
-                    .orderBy('endDate')
+                  .collection('events')
+                  .orderBy('endDate')
                   .where('endDate', isGreaterThan: DateTime.now())
-                    .snapshots(),
+                  .snapshots(),
                 builder: buildEventsList,
               ),
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        elevation:0.0,
+      floatingActionButton: user!.isServiceProvider ? FloatingActionButton(
+        elevation: 0.0,
         onPressed: () {
           Navigator.pushNamed(context, CreateEvenementScreen.routeName);
         },
         child: const Icon(Icons.add),
-      ),
+      ) : Container(),
       drawer: MyDrawer(""),
     );
   }
-}
 
 
+  Widget buildEventsList(BuildContext context,
+      AsyncSnapshot<QuerySnapshot> snapshot) {
+    if (snapshot.hasData) {
+      return Column(
+        children: <Widget>[
+          Text(readTimestampYear(Event
+              .fromJson(snapshot.data!.docs[0])
+              .startDate
+              .millisecondsSinceEpoch),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot eventFromFirebase = snapshot.data!
+                      .docs[index];
+                  //log(event.reference.id);
+                  Event event = Event.fromJson(eventFromFirebase);
+                  // log("ListEventsScreen - buildEventsList - event #" +
+                  //     index.toString() +
+                  //     " = " +
+                  //     event.id);
 
-Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  if (snapshot.hasData) {
-    return Column(
-      children: <Widget>[
-        Text(readTimestampYear(Event.fromJson(snapshot.data!.docs[0]).startDate.millisecondsSinceEpoch),
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
-                //log(event.reference.id);
-                Event event = Event.fromJson(eventFromFirebase);
-                // log("ListEventsScreen - buildEventsList - event #" +
-                //     index.toString() +
-                //     " = " +
-                //     event.id);
+                  var datum = readTimestamptoDate(
+                      event.startDate.millisecondsSinceEpoch);
+                  var eventTypeTransform = event.type.toString().toLowerCase()
+                      .replaceAll('eventtypeenum.', '');
 
-                var datum = readTimestamptoDate(event.startDate.millisecondsSinceEpoch);
-                var eventTypeTransform = event.type.toString().toLowerCase()
-                    .replaceAll('eventtypeenum.','');
-
-                return Card(
-                  elevation: 5,
-                  child: ListTile(
-                    title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
-                      child: Text(eventTypeTransform.substring(0,1).toUpperCase()+eventTypeTransform.substring(1,)),
-                    ),
-                    leading:  SizedBox(
-                      height: 100.0,
-                      width: 100.0,
-                      child: ClipRRect(
+                  return Card(
+                    elevation: 5,
+                    child: ListTile(
+                      title: Text(
+                          (event.title.length > 100) ? event.title.substring(
+                              0, 100) + ("[...]") : event.title),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 3.0),
+                        child: Text(eventTypeTransform.substring(0, 1)
+                            .toUpperCase() + eventTypeTransform.substring(1,)),
+                      ),
+                      leading: SizedBox(
+                        height: 100.0,
+                        width: 100.0,
+                        child: ClipRRect(
                           // borderRadius: BorderRadius.all(Radius.circular(4.0)),
                             child: FadeInImage(
                               image: NetworkImage(event.image),
-                              placeholder: AssetImage('assets/images/placeholder.jpg'),
-                              imageErrorBuilder: (BuildContext context, Object exception, StackTrace? stacktrace) {
+                              placeholder: AssetImage(
+                                  'assets/images/placeholder.jpg'),
+                              imageErrorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stacktrace) {
                                 return Container(
                                   child: FadeInImage(
-                                    image: AssetImage('assets/images/placeholder.jpg'), placeholder: AssetImage('assets/images/placeholder.jpg'),
+                                    image: AssetImage(
+                                        'assets/images/placeholder.jpg'),
+                                    placeholder: AssetImage(
+                                        'assets/images/placeholder.jpg'),
                                   ),
                                 );
                               },
                             )),
+                      ),
+                      onTap: () =>
+                      {
+                        Navigator.pushNamed(
+                            context, DisplayEvenementScreen.routeName,
+                            arguments: event)
+                      },
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 3.0),
+                            child: Text(datum),
+                          ),
+                          Text(event.city),
+                        ],
+                      ),
+                      isThreeLine: true,
                     ),
-                      onTap: () => {
-                      Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
-                          arguments: event)
-                    },
-                    trailing: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
-                          child: Text( datum),
-                        ),
-                        Text( event.city),
-                      ],
-                    ),
-                    isThreeLine: true,
-                  ),
-                );
-              }),
-        ),
-      ],
-    );
-  } else if (snapshot.connectionState == ConnectionState.done &&
-      !snapshot.hasData) {
-    // Handle no data
-    return Center(
-      child: Text("No events found."),
-    );
-  } else {
-    // Still loading
-    return Center(child: CircularProgressIndicator());
+                  );
+                }),
+          ),
+        ],
+      );
+    } else if (snapshot.connectionState == ConnectionState.done &&
+        !snapshot.hasData) {
+      // Handle no data
+      return Center(
+        child: Text("No events found."),
+      );
+    } else {
+      // Still loading
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
