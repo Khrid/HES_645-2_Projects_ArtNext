@@ -51,7 +51,7 @@ class ListEventsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildEventsList(BuildContext context,
+  /*Widget buildEventsList(BuildContext context,
       AsyncSnapshot<QuerySnapshot> snapshot) {
     if (snapshot.hasData) {
       return Column(
@@ -74,7 +74,7 @@ class ListEventsScreen extends StatelessWidget {
                   //     index.toString() +
                   //     " = " +
                   //     event.id);
-
+*/
 
   Widget buildEventsList(BuildContext context,
       AsyncSnapshot<QuerySnapshot> snapshot) {

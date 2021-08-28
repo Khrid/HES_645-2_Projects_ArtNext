@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/widget/participateWidget.dart';
@@ -8,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 export 'DisplayEvenementScreen.dart';
@@ -18,19 +20,23 @@ class DisplayEvenementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
+    final user = Provider.of<MyUser?>(context);
     //Event? event = args.event;
     log("DisplayEvenementScreen - event from args = " + event.toString());
     //log(event!.id);
 
+    bool canEdit = false;
+    if((user!.uid == event.organizer) && user.isServiceProvider) canEdit = true;
+
     return Scaffold(
       appBar: MyAppBar("Event detail"),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: canEdit ? FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
               arguments: event);
         },
         child: Icon(Icons.edit),
-      ),
+      ) : Container(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('events')
