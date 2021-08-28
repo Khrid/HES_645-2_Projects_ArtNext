@@ -66,7 +66,7 @@ Widget buildEventDetails(
                     return IconButton(
                       icon: const Icon(Icons.share),
                       color: Colors.black,
-                      onPressed: () => Share.share(uri.toString()),
+                      onPressed: () => Share.share("Je participe à ce super évènement bientôt à " + ev.city + "\nInscris-toi aussi ! " + uri.toString()),
                     );
                   } else {
                     return Container();
