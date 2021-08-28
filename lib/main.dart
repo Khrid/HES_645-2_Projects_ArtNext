@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
@@ -150,7 +151,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               UpdateEvenementScreen.routeName: (context) =>
                   UpdateEvenementScreen(),
               UserInfo.routeName: (context) => UserInfo(),
-              MyEvents.routeName: (context) => MyEvents()
+              MyEvents.routeName: (context) => MyEvents(),
+              ListAttendeesScreen.routeName: (context) => ListAttendeesScreen(),
             }));
   }
 }

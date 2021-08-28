@@ -18,7 +18,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    print("MyDrawer - user = " + user.toString());
+    // print("MyDrawer - user = " + user.toString());
     // TODO: implement build
     return Drawer(
       child: ListView(

@@ -19,7 +19,7 @@ class ListEventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    print("ListEventScreen - user = " + user.toString());
+    // print("ListEventScreen - user = " + user.toString());
     return Scaffold(
       backgroundColor: Colors.brown[100],
 

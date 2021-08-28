@@ -19,7 +19,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
     //await user.populateUserInfoFromFirebase();
-    print("MyAppBar - user = " + user.toString());
+    // print("MyAppBar - user = " + user.toString());
     // TODO: implement build
     return AppBar(
       title: Text(this.title),

@@ -2,12 +2,15 @@ import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/widget/participateWidget.dart';
+import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 export 'DisplayEvenementScreen.dart';
@@ -44,14 +47,43 @@ class DisplayEvenementScreen extends StatelessWidget {
 
 Widget buildEventDetails(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-  //Widget for buttons Share and participate
-  Widget buttonSection = Container(
+
+  // Widget buttonSection = Container(
+  //     padding: const EdgeInsets.all(8),
+  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+  //       _buildButtonColumn(Colors.black, Icons.share, "Share"),
+  //       SizedBox(width: 30),
+  //       ParticipateWidget(eventId: snapshot.data!.id),
+  //     ]));
+
+  Container _buttonShare(Event ev) {
+    return Container(
       padding: const EdgeInsets.all(8),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        _buildButtonColumn(Colors.black, Icons.share, "Share"),
-        SizedBox(width: 30),
-        ParticipateWidget(),
-      ]));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: IconButton(
+              icon: const Icon(Icons.share),
+              color: Colors.black,
+              onPressed: () {
+                Share.share("Je participe à " + ev.title + " c'est à " + ev.city + " le " + readTimestamptoDate(ev.startDate.millisecondsSinceEpoch), subject: 'Je participe à ' + ev.title);
+              },
+            ),
+          ),
+          Text("Share",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              )),
+        ],
+      ),
+
+
+    );
+  }
 
   if (!snapshot.hasData) {
     return Center(child: CircularProgressIndicator());
@@ -124,7 +156,9 @@ Widget buildEventDetails(
                         ],
                       ),
                     ),
-                    buttonSection,
+                    _buttonShare(e),
+                    SizedBox(width: 30),
+                    ParticipateWidget(eventId: snapshot.data!.id),
                     Text(
                       "Attendees : ",
                       style: TextStyle(
@@ -134,18 +168,19 @@ Widget buildEventDetails(
                     ),
                     Container(
                         padding: const EdgeInsets.all(8),
-                        child: e.listAttendees.length>0 ? GridView.builder(
+                        child: e.listAttendees.length>0 ?
+                        GridView.builder(
                           padding: EdgeInsets.all(8.0),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          itemCount: e.listAttendees.length,
+                          itemCount: (e.listAttendees.length) < 3 ? e.listAttendees.length : 3,
                           itemBuilder: (context, index) {
-                            log("nombre d'index :" + index.toString());
-                            log("Quentin Test " +  e.listAttendees[index].toString());
+                            // log("nombre d'index :" + index.toString());
+                            // log("Quentin Test " +  e.listAttendees[index].toString());
 
                             return StreamBuilder(
                                 stream: FirebaseFirestore.instance
-                                    .collection("users")
+                                    .collection('users')
                                     .doc(
                                     e.listAttendees[index].toString())
                                     .snapshots(),
@@ -157,10 +192,14 @@ Widget buildEventDetails(
                           mainAxisSpacing: 5.0,
                         ),
                         ) : Text("No attendees Yet !")
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, ListAttendeesScreen.routeName,
+                            arguments: e);
+                      },
+                      child: Icon(Icons.add),
                     )
-
-
-
                   ],
                 )),
           ),

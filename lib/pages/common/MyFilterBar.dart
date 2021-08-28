@@ -19,7 +19,6 @@ class MyFilterBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    print("MyAppBar - user = " + user.toString());
     // TODO: implement build
     return AppBar(
       title: Text(this.title),
