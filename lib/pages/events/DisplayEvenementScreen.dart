@@ -1,15 +1,15 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
-import 'package:artnext/services/DynamicLinkService.dart';
 import 'package:artnext/widget/participateWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:share_plus/share_plus.dart';
+
 export 'DisplayEvenementScreen.dart';
 
 class DisplayEvenementScreen extends StatelessWidget {
@@ -23,9 +23,7 @@ class DisplayEvenementScreen extends StatelessWidget {
     //log(event!.id);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Event detail'),
-      ),
+      appBar: MyAppBar("Event detail"),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
@@ -46,13 +44,15 @@ class DisplayEvenementScreen extends StatelessWidget {
 
 Widget buildEventDetails(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
-
-  Container _buttonShare(Event ev) {
-    return Container(
+  //Widget for buttons Share and participate
+  Widget buttonSection = Container(
       padding: const EdgeInsets.all(8),
-      child: Column(
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        _buildButtonColumn(Colors.black, Icons.share, "Share"),
+        SizedBox(width: 30),
+        ParticipateWidget(),
+      ]));
+      /*child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
@@ -86,7 +86,7 @@ Widget buildEventDetails(
 
 
     );
-  }
+  }*/
 
   if (!snapshot.hasData) {
     return Center(child: CircularProgressIndicator());
@@ -159,15 +159,7 @@ Widget buildEventDetails(
                         ],
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buttonShare(e),
-                        SizedBox(width: 30),
-                        ParticipateWidget(),
-                      ],
-                    ),
-
+                    buttonSection,
                     Text(
                       "Attendees : ",
                       style: TextStyle(
@@ -176,6 +168,34 @@ Widget buildEventDetails(
                       ),
                     ),
                     Container(
+ 
+                        padding: const EdgeInsets.all(8),
+                        child: e.listAttendees.length>0 ? GridView.builder(
+                          padding: EdgeInsets.all(8.0),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: e.listAttendees.length,
+                          itemBuilder: (context, index) {
+                            log("nombre d'index :" + index.toString());
+                            log("Quentin Test " +  e.listAttendees[index].toString());
+
+                            return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(
+                                    e.listAttendees[index].toString())
+                                    .snapshots(),
+                                builder: buildAttendeeInfo);
+
+                          },  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 4.0,
+                          mainAxisSpacing: 5.0,
+                        ),
+                        ) : Text("No attendees Yet !")
+                    )
+
+/*
                       padding: const EdgeInsets.all(8),
                       child:
                       /*Column(
@@ -207,28 +227,9 @@ Widget buildEventDetails(
 
 
                                     ///
+*/
 
-                                    itemCount: snapshot.data!.docs.length,
-                                    itemBuilder: (context, index) {
-                                      log(snapshot.data!.docs[index]["ref"].id);
-                                      //return Container();
 
-                                      return StreamBuilder(
-                                          stream: FirebaseFirestore.instance
-                                              .collection("users")
-                                              .doc(snapshot
-                                              .data!.docs[index]["ref"].id)
-                                              .snapshots(),
-                                          builder: buildAttendeeInfo);
-                                    });
-                              } else {
-                                return Text("No attendees yet :(");
-                              }
-                          }
-                        },
-                      ),
-                      //_buildAttendees(e),
-                    )
                   ],
                 )),
           ),
@@ -238,6 +239,24 @@ Widget buildEventDetails(
   }
 }
 
+
+//Button share
+Column _buildButtonColumn(Color color, IconData icon, String label) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Icon(icon, color: color)),
+      Text(label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: color,
+          ))
+    ],
+  );
+}
 
 Widget buildAttendeeInfo(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -266,23 +285,3 @@ Widget buildAttendeeInfo(
     return Column();
   }
 }
-
-// Column _buildAttendees(Event e) {
-//   return Column(
-//     children: [
-//       Container(
-//         width: 50,
-//         height: 50,
-//         decoration: BoxDecoration(
-//           shape: BoxShape.circle,
-//           image: DecorationImage(
-//               image: NetworkImage((e.image.contains("http")
-//                   ? e.image
-//                   : "https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png")),
-//               fit: BoxFit.fill),
-//         ),
-//       ),
-//       Text("Le nom")
-//     ],
-//   );
-// }
