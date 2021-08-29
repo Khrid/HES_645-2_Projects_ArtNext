@@ -1,6 +1,7 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
+import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,14 @@ class MyDrawer extends StatelessWidget {
               // Update the state of the app.
               // ...
               Navigator.pushNamed(context, ListEventsScreen.routeName);
+            },
+          ),
+          ListTile(
+            title: const Text('Search a user'),
+            onTap: () async {
+              // Update the state of the app.
+              // ...
+              Navigator.pushNamed(context, SearchUser.routeName);
             },
           ),
           user.isServiceProvider
