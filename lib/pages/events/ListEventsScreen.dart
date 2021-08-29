@@ -1,6 +1,7 @@
 
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/common/MyFilterBar.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
@@ -23,7 +24,7 @@ class ListEventsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.brown[100],
 
-      appBar: MyFilterBar("Events"),
+      appBar: MyAppBar("Events", true),
       body: Column(
         children: [
           Expanded(

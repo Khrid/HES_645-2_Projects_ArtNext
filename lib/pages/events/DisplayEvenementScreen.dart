@@ -29,7 +29,7 @@ class DisplayEvenementScreen extends StatelessWidget {
     if((user!.uid == event.organizer) && user.isServiceProvider) canEdit = true;
 
     return Scaffold(
-      appBar: MyAppBar("Event detail"),
+      appBar: MyAppBar("Event detail", false),
       floatingActionButton: canEdit ? FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
