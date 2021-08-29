@@ -7,6 +7,7 @@ class MyUser {
   bool isPremium;
   bool isServiceProvider;
   String image;
+  late List attendingTo = [];
 
   MyUser(
       {
@@ -31,6 +32,8 @@ class MyUser {
         isServiceProvider.toString() +
         ",image:" +
         image +
+        ",attendingTo:" +
+        attendingTo.toString() +
         "}";
   }
 
@@ -41,7 +44,8 @@ class MyUser {
       'lastname': lastname,
       'image': image,
       'isPremium': isPremium,
-      'isServiceProvider': isServiceProvider
+      'isServiceProvider': isServiceProvider,
+      'attendingTo': attendingTo,
     };
   }
 
@@ -60,11 +64,22 @@ class MyUser {
           ? snap.data()!["isServiceProvider"]
           : false);
       image = (snap.data()!["image"] != null ? snap.data()!["image"] : "");
+      attendingTo = (snap.data()!['attendingTo'] != null ? List.from(snap.data()!['attendingTo'].toSet()) : []);
     }
   }
 
   Future<void> saveToFirestore() async {
     await FirebaseFirestore.instance.collection("users").doc(uid).set(toJson());
+  }
+
+  removeAttendingTo(String eventId) async {
+    attendingTo.remove(eventId);
+    await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
+  }
+
+  addAttendingTo(String eventId) async {
+    attendingTo.add(eventId);
+    await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
   }
 
   void setUid(String uid) {
