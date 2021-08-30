@@ -141,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("Would you like to offer events from this account?"),
+                              Text("Would you like to offer events?"),
                               Container(
                                 child: buildAndroidSwitch(),
                               )
