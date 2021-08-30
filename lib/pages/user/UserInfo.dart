@@ -1,5 +1,8 @@
+import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +91,6 @@ class _UserInfoState extends State<UserInfo> {
             ),
             const SizedBox(height: 24),
             buildMyEventsTitle(),
-            ),
             const SizedBox(height: 24),
             Expanded(
               child: SizedBox(

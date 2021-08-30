@@ -57,7 +57,7 @@ class _SearchUser extends State<SearchUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar("Search a user"),
+        appBar: MyAppBar("Search a user", false),
         body: Container(
           child: Column(
           children: [
