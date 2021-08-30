@@ -74,15 +74,18 @@ class MyUser {
 
   removeAttendingTo(String eventId) async {
     attendingTo.remove(eventId);
-    await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
+    //await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
+    saveToFirestore();
   }
 
   addAttendingTo(String eventId) async {
     attendingTo.add(eventId);
-    await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
+    //await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
+    saveToFirestore();
   }
 
   void setUid(String uid) {
     this.uid = uid;
   }
+
 }
