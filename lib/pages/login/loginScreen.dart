@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/services/AuthenticationService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -85,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             obscureText: false,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: 'User',
+                              labelText: 'Email',
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -125,81 +124,36 @@ class _LoginScreenState extends State<LoginScreen> {
                                     password: passwordController.text);
                                 if (result is MyUser) {
                                   // result is user => login successful
-                                  print("LoginScreen - ElevatedButton onPressed - result.uid = " +result.uid);
+                                  print(
+                                      "LoginScreen - Login ElevatedButton onPressed - result.uid = " +
+                                          result.uid);
                                   changeErrorMessage("");
                                 } else {
                                   changeErrorMessage(result.toString());
                                 }
                               }
-
-                              /*Provider.of<User>(context, listen: false);
-
-                          log("LoginScreen - connection");
-
-                          // TODO : voir pourquoi la ligne suivante ne remonte pas l'UID de l'utilisateur
-
-                          //context.read<AuthenticationService>().signIn(email: "sylvain.meyer@students.hevs.ch", password: "Qwertz.1234");
-                          context.read<AuthenticationService>().signIn(
-                              email: "david.crittin@students.hevs.ch",
-                              password: "testtest");
-
-                          final firebaseUser = context.watch<User?>();
-
-                          if (firebaseUser != null) {
-                            log("LoginScreen - Signed in");
-
-                            // Navigate to the second screen using a named route.
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                ListEventsScreen.routeName, (_) => false);
-                          } else {
-                            log("LoginScreen - Not signed in");
-                          }*/
                             },
                             child: Text('Connexion')),
+                          SizedBox(height: 20),
+                        ElevatedButton(
+
+                          // Within the `FirstScreen` widget
+                            onPressed: () async {
+
+                              // Pour le test en attendant l'écran de création de compte
+                              MyUser myUser = MyUser(firstname: "TestAccount", lastname: "Lastname", isPremium: true);
+                              Object? result = await _auth.signUp(email: "testaccount2@gmail.com", password: "mypassword", myUser: myUser);
+                              if (result is MyUser) {
+                                print("LoginScreen - Register ElevatedButton onPressed - user = " + result.toString());
+                              }
+                              // A remplacer par un Navigator.pushNamed(.....)
+                            },
+                            child: Text('Register'))
                       ],
                     ));
               },
             ),
           ),
-
-          /*Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, //Center Column contents vertically,
-            crossAxisAlignment: CrossAxisAlignment.center, //Center Column contents horizontally,
-          children: [
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/login.png'), //   <--- image
-              ],
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  // Within the `FirstScreen` widget
-                    onPressed: () {
-                      // Navigate to the second screen using a named route.
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          ListEventsScreen.routeName, (_) => false);
-                    },
-                    child: Text('Connexion (fake)')
-                )
-              ],
-            )
-          ],
-        ),
-
-        /*ElevatedButton(
-        // Within the `FirstScreen` widget
-        onPressed: () {
-          // Navigate to the second screen using a named route.
-          Navigator.pushNamedAndRemoveUntil(context, ListEventsScreen.routeName, (_) => false);
-        },
-        child: Text('Connexion (fake)'),*/
-      )*/
         ));
   }
 }
