@@ -1,8 +1,5 @@
-import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
-import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +8,6 @@ class UserInfo extends StatefulWidget {
   static const routeName = '/user/info';
 
   _UserInfoState createState() => _UserInfoState();
-
 }
 
 class _UserInfoState extends State<UserInfo> {
@@ -20,7 +16,7 @@ class _UserInfoState extends State<UserInfo> {
     final user = Provider.of<MyUser?>(context);
     // TODO: implement build
     return Scaffold(
-        appBar: MyAppBar("User info"),
+        appBar: MyAppBar("User info", false),
         body: ListView(
           physics: BouncingScrollPhysics(),
           children: [
@@ -91,6 +87,9 @@ class _UserInfoState extends State<UserInfo> {
               ],
             ),
             const SizedBox(height: 24),
+            buildMyEventsTitle(),
+            ),
+            const SizedBox(height: 24),
             Expanded(
               child: SizedBox(
                 height: 400.0,
@@ -144,7 +143,6 @@ class _UserInfoState extends State<UserInfo> {
         ],
       );
 
-
   Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: StadiumBorder(),
@@ -152,12 +150,21 @@ class _UserInfoState extends State<UserInfo> {
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         ),
         child: Text(isPremium ? "Downgrade to CLASSIC" : "Upgrade to PREMIUM"),
-        onPressed: () async {
+        onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: const Text('Not implemented yet 😉'),
               duration: Duration(seconds: 2)));
         },
       );
+
+  Widget buildMyEventsTitle()  => Column(
+    children: [
+      Text(
+        "My attendency history",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+    ],
+  );
 }
 
 Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

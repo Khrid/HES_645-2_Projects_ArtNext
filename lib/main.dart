@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/pages/events/ListAttendees.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
@@ -37,7 +38,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   bool _initialized = false;
   bool _error = false;
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+  // final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   late Timer _timerLink;
 
   Color? _primaryColor = Colors.brown[100];
@@ -75,7 +76,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         const Duration(milliseconds: 1000),
             () {
           log("calling retrieveDynamicLink");
-          _dynamicLinkService.retrieveDynamicLink(context);
+          // _dynamicLinkService.initDynamicLinks(context);
         },
       );
     }
@@ -150,6 +151,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                   CreateEvenementScreen(),
               UpdateEvenementScreen.routeName: (context) =>
                   UpdateEvenementScreen(),
+              ListAttendees.routeName: (context) => ListAttendees(),
               UserInfo.routeName: (context) => UserInfo(),
               MyEvents.routeName: (context) => MyEvents(),
               SearchUser.routeName: (context) => SearchUser()
