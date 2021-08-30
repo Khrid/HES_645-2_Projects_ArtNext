@@ -86,7 +86,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
     // TODO: implement build
     return Scaffold(
 
-        appBar: MyAppBar("Create event"),
+        appBar: MyAppBar("Create event", false),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(

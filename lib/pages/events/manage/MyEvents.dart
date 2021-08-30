@@ -26,7 +26,7 @@ class _MyEventsState extends State<MyEvents> {*/
     user = Provider.of<MyUser?>(context);
     print("MyEvents - user = " + user.toString());
     return Scaffold(
-      appBar: MyAppBar("My events"),
+      appBar: MyAppBar("My events", false),
       body: Column(
         children: [
           Padding(

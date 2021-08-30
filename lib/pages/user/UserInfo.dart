@@ -16,7 +16,7 @@ class _UserInfoState extends State<UserInfo> {
     final user = Provider.of<MyUser?>(context);
     // TODO: implement build
     return Scaffold(
-        appBar: MyAppBar("User info"),
+        appBar: MyAppBar("User info", false),
         body: ListView(
           physics: BouncingScrollPhysics(),
           children: [

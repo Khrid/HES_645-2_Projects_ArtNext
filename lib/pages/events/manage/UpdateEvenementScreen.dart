@@ -98,7 +98,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
     // TODO: implement build
     return Scaffold(
 
-        appBar: MyAppBar("Edit event"),
+        appBar: MyAppBar("Edit event", false),
         body: Form(
             key: _formKey,
             child: SingleChildScrollView(

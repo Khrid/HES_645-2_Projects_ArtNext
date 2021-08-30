@@ -1,6 +1,7 @@
 
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
 import 'dart:convert';
@@ -60,7 +61,7 @@ class Event {
           ? json.data()['organizer']
           : null) as String,
       listAttendees: (json.data()['listAttendees'] != null
-          ? List.from(json.data()['listAttendees'])
+          ? List.from(json.data()['listAttendees'].toSet())
           : null) as List);
 
   /// Technical ID of firestore document
@@ -106,6 +107,16 @@ class Event {
     };
   }
 
+  removeAttendee(String attendeeUid) async {
+    listAttendees.remove(attendeeUid);
+    await FirebaseFirestore.instance.collection("events").doc(id).update(toJson());
+  }
+
+  addAttendee(String attendeeUid) async {
+    listAttendees.add(attendeeUid);
+    await FirebaseFirestore.instance.collection("events").doc(id).update(toJson());
+  }
+
   @override
   String toString() {
     // TODO: implement toString
@@ -118,4 +129,5 @@ class Event {
         "image:" + image + ", " +
         "startDate:" + startDate.toDate().toString() + "}";
   }
+
 }
