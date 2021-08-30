@@ -12,6 +12,7 @@ class SearchUser extends StatefulWidget {
 
 class _SearchUser extends State<SearchUser> {
   List _resultsList = [];
+  var showResults = [];
   TextEditingController _searchController = TextEditingController();
 
   @override
@@ -26,7 +27,6 @@ class _SearchUser extends State<SearchUser> {
 
   searchResultList() {
     // TODO A implémenter, tests Sylvain
-    var showResults = [];
     if (_searchController.text != ""){
       print("Il y a des paramètres");
       showResults.add("Test");
