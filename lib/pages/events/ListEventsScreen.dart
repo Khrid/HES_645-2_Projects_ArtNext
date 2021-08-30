@@ -51,6 +51,30 @@ class ListEventsScreen extends StatelessWidget {
     );
   }
 
+  /*Widget buildEventsList(BuildContext context,
+      AsyncSnapshot<QuerySnapshot> snapshot) {
+    if (snapshot.hasData) {
+      return Column(
+        children: <Widget>[
+          Text(readTimestampYear(Event
+              .fromJson(snapshot.data!.docs[0])
+              .startDate
+              .millisecondsSinceEpoch),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot eventFromFirebase = snapshot.data!
+                      .docs[index];
+                  //log(event.reference.id);
+                  Event event = Event.fromJson(eventFromFirebase);
+                  // log("ListEventsScreen - buildEventsList - event #" +
+                  //     index.toString() +
+                  //     " = " +
+                  //     event.id);
+*/
 
   Widget buildEventsList(BuildContext context,
       AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -85,9 +85,9 @@ class _UserInfoState extends State<UserInfo> {
                   ),
                 ),
               ],
-            )
-            //const SizedBox(height: 48),
-            //buildAbout(user),
+            ),
+            const SizedBox(height: 24),
+            buildMyEventsTitle(),
           ],
         )
 
@@ -128,6 +128,7 @@ class _UserInfoState extends State<UserInfo> {
         ],
       );
 
+
   Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: StadiumBorder(),
@@ -141,4 +142,13 @@ class _UserInfoState extends State<UserInfo> {
               duration: Duration(seconds: 2)));
         },
       );
+
+  Widget buildMyEventsTitle()  => Column(
+    children: [
+      Text(
+        "My attendency history",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+    ],
+  );
 }

@@ -1,16 +1,15 @@
 import 'dart:developer';
 
 import 'package:artnext/models/event.dart';
+import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
-import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/widget/participateWidget.dart';
-import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 export 'DisplayEvenementScreen.dart';
@@ -21,19 +20,23 @@ class DisplayEvenementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
+    final user = Provider.of<MyUser?>(context);
     //Event? event = args.event;
     log("DisplayEvenementScreen - event from args = " + event.toString());
     //log(event!.id);
 
+    bool canEdit = false;
+    if((user!.uid == event.organizer) && user.isServiceProvider) canEdit = true;
+
     return Scaffold(
       appBar: MyAppBar("Event detail"),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: canEdit ? FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
               arguments: event);
         },
         child: Icon(Icons.edit),
-      ),
+      ) : Container(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('events')
@@ -47,29 +50,35 @@ class DisplayEvenementScreen extends StatelessWidget {
 
 Widget buildEventDetails(
     BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-  // Widget buttonSection = Container(
-  //     padding: const EdgeInsets.all(8),
-  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //       _buildButtonColumn(Colors.black, Icons.share, "Share"),
-  //       SizedBox(width: 30),
-  //       ParticipateWidget(eventId: snapshot.data!.id),
-  //     ]));
-
-  Container _buttonShare(Event ev) {
-    return Container(
+  //Widget for buttons Share and participate
+  Widget buttonSection = Container(
       padding: const EdgeInsets.all(8),
-      child: Column(
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        _buildButtonColumn(Colors.black, Icons.share, "Share"),
+        SizedBox(width: 30),
+        ParticipateWidget(),
+      ]));
+      /*child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.only(bottom: 8),
-            child: IconButton(
-              icon: const Icon(Icons.share),
-              color: Colors.black,
-              onPressed: () {
-                Share.share("Je participe à " + ev.title + " c'est à " + ev.city + " le " + readTimestamptoDate(ev.startDate.millisecondsSinceEpoch), subject: 'Je participe à ' + ev.title);
-              },
+            child: FutureBuilder<Uri>(
+                future: _dynamicLinkService.createDynamicLink(ev.id),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData) {
+                    Uri? uri = snapshot.data;
+                    print(uri.toString());
+                    return IconButton(
+                      icon: const Icon(Icons.share),
+                      color: Colors.black,
+                      onPressed: () => Share.share("Je participe à ce super évènement bientôt à " + ev.city + "\nInscris-toi aussi ! " + uri.toString()),
+                    );
+                  } else {
+                    return Container();
+                  }
+
+                }
             ),
           ),
           Text("Share",
@@ -83,7 +92,7 @@ Widget buildEventDetails(
 
 
     );
-  }
+  }*/
 
   if (!snapshot.hasData) {
     return Center(child: CircularProgressIndicator());
@@ -156,9 +165,7 @@ Widget buildEventDetails(
                         ],
                       ),
                     ),
-                    _buttonShare(e),
-                    SizedBox(width: 30),
-                    ParticipateWidget(eventId: snapshot.data!.id),
+                    buttonSection,
                     Text(
                       "Attendees : ",
                       style: TextStyle(
@@ -167,20 +174,20 @@ Widget buildEventDetails(
                       ),
                     ),
                     Container(
+ 
                         padding: const EdgeInsets.all(8),
-                        child: e.listAttendees.length>0 ?
-                        GridView.builder(
+                        child: e.listAttendees.length>0 ? GridView.builder(
                           padding: EdgeInsets.all(8.0),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          itemCount: (e.listAttendees.length) < 3 ? e.listAttendees.length : 3,
+                          itemCount: e.listAttendees.length,
                           itemBuilder: (context, index) {
-                            // log("nombre d'index :" + index.toString());
-                            // log("Quentin Test " +  e.listAttendees[index].toString());
+                            log("nombre d'index :" + index.toString());
+                            log("Quentin Test " +  e.listAttendees[index].toString());
 
                             return StreamBuilder(
                                 stream: FirebaseFirestore.instance
-                                    .collection('users')
+                                    .collection("users")
                                     .doc(
                                     e.listAttendees[index].toString())
                                     .snapshots(),
@@ -192,14 +199,43 @@ Widget buildEventDetails(
                           mainAxisSpacing: 5.0,
                         ),
                         ) : Text("No attendees Yet !")
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, ListAttendeesScreen.routeName,
-                            arguments: e);
-                      },
-                      child: Icon(Icons.add),
                     )
+
+/*
+                      padding: const EdgeInsets.all(8),
+                      child:
+                      /*Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [*/
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("events")
+                            .doc(e.id)
+                            .collection("attendees")
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(child: CircularProgressIndicator());
+                            default:
+                            //return Column();
+                              if (snapshot.data!.docs.length > 0) {
+                                return ListView.builder(
+                                    padding: EdgeInsets.all(8.0),
+                                    // physics: NeverScrollableScrollPhysics(),
+
+                                    ///
+                                    shrinkWrap: true,
+
+                                   ///
+                                    scrollDirection: Axis.horizontal,
+
+
+                                    ///
+*/
+
+
                   ],
                 )),
           ),
