@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/events/ListAttendees.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/widget/participateWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,8 +28,7 @@ class DisplayEvenementScreen extends StatelessWidget {
     //log(event!.id);
 
     bool canEdit = false;
-    if ((user.uid == event.organizer) && user.isServiceProvider)
-      canEdit = true;
+    if ((user.uid == event.organizer) && user.isServiceProvider) canEdit = true;
 
     return Scaffold(
       appBar: MyAppBar("Event detail", false),
@@ -61,10 +61,75 @@ class DisplayEvenementScreen extends StatelessWidget {
 //Widget for buttons Share and participate
       Widget shareAndParticipateButtons = Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _buildButtonColumn(Colors.black, Icons.share, "Share"),
-            SizedBox(width: 30),
-            ParticipateWidget(user, e),
-          ]));
+        _buildButtonColumn(Colors.black, Icons.share, "Share"),
+        SizedBox(width: 30),
+        ParticipateWidget(user, e),
+      ]));
+
+      var attendees;
+      // si on a bien des attendees
+      if (e.listAttendees.length > 0) {
+        attendees = GridView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: e.listAttendees.length,
+          itemBuilder: (context, index) {
+            // si on a 3 ou moins attendees, on affiche tout
+            if (e.listAttendees.length <= 3) {
+              return StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(e.listAttendees[index].toString())
+                      .snapshots(),
+                  builder: buildAttendeeInfo);
+            } else {
+              // si on en a plus, on affiche les trois premiers et un bouton "more"
+              // on travaille avec l'index
+              // si index 0 1 2 on affiche
+              if (index <= 2) {
+                return StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(e.listAttendees[index].toString())
+                        .snapshots(),
+                    builder: buildAttendeeInfo);
+              } else if (index == 3) {
+                // si on est à l'index 3 => bouton "more"
+                int howManyMore = e.listAttendees.length - index;
+                return Container(
+                    padding: EdgeInsets.all(8.0),
+                    alignment: Alignment.topCenter,
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, ListAttendees.routeName,
+                              arguments: e);
+                        },
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: Text(
+                            "+" + howManyMore.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.brown[400],
+                        )));
+              } else {
+                // pour les suivants, on ne fait plus rien
+                return Container();
+              }
+            }
+          },
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            //crossAxisSpacing: 4.0,
+            //mainAxisSpacing: 5.0,
+          ),
+        );
+      } else {
+        attendees = Text("No attendees yet");
+      }
 
       return Stack(
         children: [
@@ -124,7 +189,7 @@ class DisplayEvenementScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.only(top: 30),
                           child: Text(
-                            "Lieu : " + e.city,
+                            "Location :\n\n" + e.city,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -132,6 +197,7 @@ class DisplayEvenementScreen extends StatelessWidget {
                     ),
                   ),
                   shareAndParticipateButtons,
+                  const SizedBox(height: 24),
                   Text(
                     "Attendees : ",
                     style: TextStyle(
@@ -139,34 +205,7 @@ class DisplayEvenementScreen extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Container(
-                      padding: const EdgeInsets.all(8),
-                      child: e.listAttendees.length > 0
-                          ? GridView.builder(
-                              padding: EdgeInsets.all(8.0),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: e.listAttendees.length,
-                              itemBuilder: (context, index) {
-                                /*log("nombre d'index :" + index.toString());
-                                log("Quentin Test " +
-                                    e.listAttendees[index].toString());*/
-
-                                return StreamBuilder(
-                                    stream: FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(e.listAttendees[index].toString())
-                                        .snapshots(),
-                                    builder: buildAttendeeInfo);
-                              },
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 4.0,
-                                mainAxisSpacing: 5.0,
-                              ),
-                            )
-                          : Text("No attendees Yet !"))
+                  Container(padding: const EdgeInsets.all(4), child: attendees)
 
 /*
                       padding: const EdgeInsets.all(8),
@@ -215,8 +254,7 @@ class DisplayEvenementScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-            child: Icon(icon, color: color)),
+        Container(child: Icon(icon, color: color)),
         Text(label,
             style: TextStyle(
               fontSize: 16,
@@ -234,9 +272,16 @@ class DisplayEvenementScreen extends StatelessWidget {
       return Column(
         children: [
           Container(
+              padding: EdgeInsets.all(8.0),
+              alignment: Alignment.topCenter,
+              //aligns CircleAvatar to Top Center.
+              child: CircleAvatar(
+                radius: 25, //radius is 50
+                backgroundImage: NetworkImage(
+                    "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
+              )),
+          /*Container(
             padding: EdgeInsets.all(16.0),
-            width: 50,
-            height: 50,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -244,10 +289,12 @@ class DisplayEvenementScreen extends StatelessWidget {
                       "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
                   fit: BoxFit.fill),
             ),
-          ),
+          ),*/
           Text(attendee!["firstname"].toString().substring(0, 1) +
               ". " +
-              attendee["lastname"].toString())
+              ((attendee["lastname"].toString().length > 5)
+                  ? attendee["lastname"].toString().substring(0, 5) + "..."
+                  : attendee["lastname"].toString()))
         ],
       );
     } else {
