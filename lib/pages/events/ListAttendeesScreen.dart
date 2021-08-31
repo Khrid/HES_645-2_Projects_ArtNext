@@ -20,7 +20,7 @@ class ListAttendeesScreen extends StatelessWidget {
     // print("ListAttendees - user = " + user.toString() + " " + event.toString());
     return Scaffold(
       backgroundColor: Colors.brown[100],
-      appBar: MyAppBar("Attendees"),
+      appBar: MyAppBar("Attendees", false),
       body: Column(
         children: [
           Expanded(

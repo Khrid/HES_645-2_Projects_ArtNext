@@ -3,11 +3,13 @@ import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'ListEventsFilteredScreen.dart';
 import 'manage/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
@@ -26,9 +28,9 @@ class ListEventsScreenState extends State<ListEventsScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    print("ListEventScreen - user = " + user.toString());
-    print("ListEventScreen - selectedOrderBy = " + widget.selectedOrderBy);
-    print("ListEventScreen - orderByFirebase = " + widget.orderByFirebase);
+    // print("ListEventScreen - user = " + user.toString());
+    // print("ListEventScreen - selectedOrderBy = " + widget.selectedOrderBy);
+    // print("ListEventScreen - orderByFirebase = " + widget.orderByFirebase);
     return Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
@@ -185,8 +187,10 @@ class ListEventsScreenState extends State<ListEventsScreen> {
         builder: (BuildContext context) {
           //return StatefulBuilder(
           //    builder: (BuildContext builder, StateSetter setState) {
+
+          if(value.toString() == 'Sorted by'){
           return AlertDialog(
-            title: Text('Sort events'),
+            title: Text(value.toString()),
             content: Container(
               child: Row(
                 children: [
@@ -221,6 +225,74 @@ class ListEventsScreenState extends State<ListEventsScreen> {
               ),
             ),
           );
+          }else{
+            return AlertDialog(
+              title: Text(value.toString()),
+              content: Container(
+                child: Wrap(
+                  children: [
+                    ElevatedButton(onPressed: (){
+                      Navigator.pushNamed(
+                          context, ListEventsFilteredScreen.routeName,
+                          arguments: 'concert');
+                    },
+                        child: Text('concert')),
+                    SizedBox(width: 5),
+                    ElevatedButton(onPressed: (){
+                      Navigator.pushNamed(
+                          context, ListEventsFilteredScreen.routeName,
+                          arguments: 'undefined');
+                    },
+                        child: Text('undefined')),
+                    SizedBox(width: 5),
+                    ElevatedButton(onPressed: (){
+                      Navigator.pushNamed(
+                          context, ListEventsFilteredScreen.routeName,
+                          arguments: 'opening');
+                    },
+                        child: Text('opening')),
+                    SizedBox(width: 5),
+                    ElevatedButton(onPressed: (){
+                      Navigator.pushNamed(
+                          context, ListEventsFilteredScreen.routeName,
+                          arguments: 'exhibition');
+                    },
+                        child: Text('exhibition')),
+
+                    // DropdownButton<String>(
+                    //   value: widget.selectedOrderBy,
+                    //   items: <String>['Start date', 'End date', 'Title']
+                    //       .map((String value) {
+                    //     return DropdownMenuItem<String>(
+                    //       value: value,
+                    //       child: new Text(value),
+                    //     );
+                    //   }).toList(),
+                    //   onChanged: (value) {
+                    //     setState(() {
+                    //       widget.selectedOrderBy = value!;
+                    //       switch (value) {
+                    //         case 'Start date':
+                    //           widget.orderByFirebase = 'startDate';
+                    //           break;
+                    //         case 'End date':
+                    //           widget.orderByFirebase = 'endDate';
+                    //           break;
+                    //         case 'Title':
+                    //           widget.orderByFirebase = 'title';
+                    //           break;
+                    //       }
+                    //     });
+                    //     Navigator.of(context).pop();
+                    //   },
+                    // )
+                  ],
+                ),
+              ),
+            );
+          }
+
+
           //});
         });
   }

@@ -34,12 +34,12 @@ class DisplayEvenementScreen extends StatelessWidget {
       appBar: MyAppBar("Event detail", false),
       floatingActionButton: canEdit
           ? FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
-                    arguments: event);
-              },
-              child: Icon(Icons.edit),
-            )
+        onPressed: () {
+          Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
+              arguments: event);
+        },
+        child: Icon(Icons.edit),
+      )
           : Container(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -61,10 +61,10 @@ class DisplayEvenementScreen extends StatelessWidget {
 //Widget for buttons Share and participate
       Widget shareAndParticipateButtons = Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        _buildButtonColumn(Colors.black, Icons.share, "Share"),
-        SizedBox(width: 30),
-        ParticipateWidget(user, e),
-      ]));
+            _buildButtonColumn(Colors.black, Icons.share, "Share"),
+            SizedBox(width: 30),
+            ParticipateWidget(user, e),
+          ]));
 
       var attendees;
       // si on a bien des attendees
@@ -162,50 +162,50 @@ class DisplayEvenementScreen extends StatelessWidget {
                   ]),
               child: SingleChildScrollView(
                   child: Column(
-                children: [
-                  Text(
-                    e.title,
-                    style: GoogleFonts.ptSans(
-                      fontSize: 36.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                    children: [
+                      Text(
+                        e.title,
+                        style: GoogleFonts.ptSans(
+                          fontSize: 36.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
 
-                  // Image.asset("assets/images/login.png")],
-                  Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 30, left: 30, right: 10),
-                          child: Text(
-                            "Details :\n\n" + e.details,
-                            textAlign: TextAlign.justify,
-                            softWrap: true,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                      // Image.asset("assets/images/login.png")],
+                      Container(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 30, left: 30, right: 10),
+                              child: Text(
+                                "Details :\n\n" + e.details,
+                                textAlign: TextAlign.justify,
+                                softWrap: true,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Text(
+                                "Location :\n\n" + e.city,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 30),
-                          child: Text(
-                            "Location :\n\n" + e.city,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      shareAndParticipateButtons,
+                      const SizedBox(height: 24),
+                      Text(
+                        "Attendees : ",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ],
-                    ),
-                  ),
-                  shareAndParticipateButtons,
-                  const SizedBox(height: 24),
-                  Text(
-                    "Attendees : ",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Container(padding: const EdgeInsets.all(4), child: attendees)
+                      ),
+                      Container(padding: const EdgeInsets.all(4), child: attendees)
 
 /*
                       padding: const EdgeInsets.all(8),
@@ -240,8 +240,8 @@ class DisplayEvenementScreen extends StatelessWidget {
 
                                     ///
 */
-                ],
-              )),
+                    ],
+                  )),
             ),
           ),
         ],
