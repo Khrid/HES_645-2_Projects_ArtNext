@@ -42,7 +42,7 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('events')
-                    .where('type', isEqualTo: filter)
+                    .where('city', isEqualTo: filter)
                     .snapshots(),
                 builder: buildEventsList,
               ),

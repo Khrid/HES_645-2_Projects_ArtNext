@@ -3,7 +3,6 @@ import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ class ListEventsScreen extends StatefulWidget {
   static const routeName = '/events';
   var selectedOrderBy = "Start date";
   var orderByFirebase = "startDate";
+  List<String> myList = [];
 
   ListEventsScreenState createState() {
     return ListEventsScreenState();
@@ -25,6 +25,7 @@ class ListEventsScreen extends StatefulWidget {
 }
 
 class ListEventsScreenState extends State<ListEventsScreen> {
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
@@ -57,7 +58,8 @@ class ListEventsScreenState extends State<ListEventsScreen> {
               height: 200.0,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('events')
+                    .collection(''
+                    'events')
                     .orderBy(widget.orderByFirebase)
                     //.where('endDate', isGreaterThan: DateTime.now())
                     .snapshots(),
@@ -83,6 +85,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
   Widget buildEventsList(
       BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
     if (snapshot.hasData) {
+      // List<String> myList = [];
       return Column(
         children: <Widget>[
           Text(
@@ -111,6 +114,14 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                       .toLowerCase()
                       .replaceAll('eventtypeenum.', '');
 
+
+                  if(!widget.myList.contains(event.city.toString())){
+                    widget.myList.add(event.city.toString());
+                  }else{
+                    // print(event.city.toString());
+                  }
+
+                  // print("MA LISTE <<" + widget.myList.toString());
                   return Card(
                     elevation: 5,
                     child: ListTile(
@@ -231,6 +242,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
               content: Container(
                 child: Wrap(
                   children: [
+                    // TODO Faire une boucle pour créer le bouton plus simplement
                     ElevatedButton(onPressed: (){
                       Navigator.pushNamed(
                           context, ListEventsFilteredScreen.routeName,
@@ -258,34 +270,21 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                           arguments: 'exhibition');
                     },
                         child: Text('exhibition')),
+                    DropdownButton<String>(
+                      items: widget.myList
+                        .map((String citylist){
 
-                    // DropdownButton<String>(
-                    //   value: widget.selectedOrderBy,
-                    //   items: <String>['Start date', 'End date', 'Title']
-                    //       .map((String value) {
-                    //     return DropdownMenuItem<String>(
-                    //       value: value,
-                    //       child: new Text(value),
-                    //     );
-                    //   }).toList(),
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       widget.selectedOrderBy = value!;
-                    //       switch (value) {
-                    //         case 'Start date':
-                    //           widget.orderByFirebase = 'startDate';
-                    //           break;
-                    //         case 'End date':
-                    //           widget.orderByFirebase = 'endDate';
-                    //           break;
-                    //         case 'Title':
-                    //           widget.orderByFirebase = 'title';
-                    //           break;
-                    //       }
-                    //     });
-                    //     Navigator.of(context).pop();
-                    //   },
-                    // )
+                      return DropdownMenuItem<String>(
+                        value: citylist,
+                        child: Text(citylist),
+                      );
+                    }).toList(),
+                      onChanged: (citylist) {
+                        Navigator.pushNamed(
+                                  context, ListEventsFilteredScreen.routeName,
+                                  arguments: citylist);
+                      },
+                    )
                   ],
                 ),
               ),
