@@ -11,6 +11,7 @@ import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
+import 'package:artnext/pages/user/UserDisplay.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
@@ -156,6 +157,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               UserInfo.routeName: (context) => UserInfo(),
               MyEvents.routeName: (context) => MyEvents(),
               SearchUser.routeName: (context) => SearchUser(),
+              UserDisplay.routeName: (context) => UserDisplay(),
               ListEventsFilteredScreen.routeName: (context) => ListEventsFilteredScreen(),
             }));
   }

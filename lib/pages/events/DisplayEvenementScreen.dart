@@ -255,7 +255,8 @@ class DisplayEvenementScreen extends StatelessWidget {
                   backgroundImage: NetworkImage(
                       "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
                 ),
-              )),
+              )
+          ),
           Text(attendee!["firstname"].toString().substring(0, 1) +
               ". " +
               ((attendee["lastname"].toString().length > 5)
