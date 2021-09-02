@@ -11,12 +11,11 @@ import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
+import 'package:artnext/pages/login/registerScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
-import 'package:artnext/services/DynamicLinkService.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -143,6 +142,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             routes: {
               LoginScreen.routeName: (context) => LoginScreen(),
               // /login
+              RegisterScreen.routeName: (context) => RegisterScreen(),
+              // /register
               ListEventsScreen.routeName: (context) => ListEventsScreen(),
               // /events
               DisplayEvenementScreen.routeName: (context) =>

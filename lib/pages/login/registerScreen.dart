@@ -1,26 +1,33 @@
 import 'package:artnext/models/myuser.dart';
-import 'package:artnext/pages/login/registerScreen.dart';
+import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 export 'loginScreen.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const routeName = '/login';
+class RegisterScreen extends StatefulWidget {
+  static const routeName = '/register';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
 
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  bool isServiceProvider = false;
+
   final _formKey = GlobalKey<FormState>();
   final AuthenticationService _auth = AuthenticationService();
+
+  TextEditingController lastnameController =
+  new TextEditingController(text: "Lastname");
+  TextEditingController firstnameController =
+  new TextEditingController(text: "Firstname");
   TextEditingController usernameController =
-      new TextEditingController(text: "user@artnext.ch");
+  new TextEditingController(text: "user@artnext.ch");
   TextEditingController passwordController =
-      new TextEditingController(text: "test123");
+  new TextEditingController(text: "test123");
 
   var errorMessage = "";
 
@@ -32,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("LoginScreen - build - start");
+    print("RegisterScreen - build - start");
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
@@ -45,15 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.only(left: 60, right: 60),
                     height: constraints.maxHeight,
                     width: constraints.maxWidth,
-                    /*decoration: BoxDecoration(
-                      color: const Color(0xffa3a3a3),
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/login.png'),
-                        fit: BoxFit.fill,
-                        colorFilter: new ColorFilter.mode(
-                            Colors.black.withOpacity(0.4), BlendMode.dstATop),
-                      ),
-                    ),*/
+
                     child: Column(
                       children: [
                         SizedBox(height: 75),
@@ -79,6 +78,37 @@ class _LoginScreenState extends State<LoginScreen> {
                               )
                             ]),
 
+
+                        TextFormField(
+                            controller: lastnameController,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Lastname',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the lastname';
+                              }
+                              return null;
+                            }),
+
+                        SizedBox(height: 20),
+                        TextFormField(
+                            controller: firstnameController,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Firstname',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter the firstname';
+                              }
+                              return null;
+                            }),
+
+                        SizedBox(height: 20),
                         TextFormField(
                             controller: usernameController,
                             obscureText: false,
@@ -88,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter the username';
+                                return 'Please enter an username';
                               }
                               return null;
                             }),
@@ -103,10 +133,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter the password';
+                                return 'Please enter a password';
                               }
                               return null;
                             }),
+                        SizedBox(height: 20),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("Would you like to offer events?"),
+                              Container(
+                                child: buildAndroidSwitch(),
+                              )
+                            ]),
                         SizedBox(height: 20),
                         Text(
                           '$errorMessage',
@@ -115,31 +154,31 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(height: 20),
                         ElevatedButton(
-
-                            // Within the `FirstScreen` widget
                             onPressed: () async {
+
                               if (_formKey.currentState!.validate()) {
-                                Object? result = await _auth.signIn(
+                                MyUser myUser = MyUser(
+                                    firstname: firstnameController.text,
+                                    lastname: lastnameController.text,
+                                    isServiceProvider: isServiceProvider);
+                                Object? result = await _auth.signUp(
                                     email: usernameController.text,
-                                    password: passwordController.text);
+                                    password: passwordController.text,
+                                    myUser: myUser);
+
+                                // result is user => register successful
                                 if (result is MyUser) {
-                                  // result is user => login successful
                                   print(
-                                      "LoginScreen - Login ElevatedButton onPressed - result.uid = " +
-                                          result.uid);
+                                      "RegisterScreen - Register ElevatedButton onPressed - user = " +
+                                          result.toString());
                                   changeErrorMessage("");
-                                } else {
+                                  Navigator.pushNamed(
+                                      context, ListEventsScreen.routeName);
+                                }
+                                else {
                                   changeErrorMessage(result.toString());
                                 }
                               }
-                            },
-                            child: Text('Connexion')),
-                          SizedBox(height: 20),
-                        ElevatedButton(
-
-                          // Within the `FirstScreen` widget
-                            onPressed: () async {
-                              Navigator.pushNamed(context, RegisterScreen.routeName);
                             },
                             child: Text('Register'))
                       ],
@@ -149,4 +188,14 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ));
   }
+
+  Widget buildAndroidSwitch() => Transform.scale(
+    scale: 1,
+    child: Switch(
+        value: isServiceProvider,
+        onChanged: (value) => setState(() => this.isServiceProvider = value),
+    ),
+  );
+
+
 }
