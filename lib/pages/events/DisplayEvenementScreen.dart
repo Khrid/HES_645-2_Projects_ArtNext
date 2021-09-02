@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
-import 'package:artnext/pages/events/ListAttendees.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/widget/participateWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:artnext/widget/readTimeStamp.dart';
 
 export 'DisplayEvenementScreen.dart';
 
@@ -23,10 +23,6 @@ class DisplayEvenementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
     user = Provider.of<MyUser>(context);
-    //Event? event = args.event;
-    log("DisplayEvenementScreen - event from args = " + event.toString());
-    //log(event!.id);
-
     bool canEdit = false;
     if ((user.uid == event.organizer) && user.isServiceProvider) canEdit = true;
 
@@ -58,7 +54,8 @@ class DisplayEvenementScreen extends StatelessWidget {
     } else {
       var event = snapshot.data;
       Event e = Event.fromJson(event);
-//Widget for buttons Share and participate
+
+      //Buttons
       Widget shareAndParticipateButtons = Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             _buildButtonColumn(Colors.black, Icons.share, "Share"),
@@ -123,8 +120,6 @@ class DisplayEvenementScreen extends StatelessWidget {
           },
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
-            //crossAxisSpacing: 4.0,
-            //mainAxisSpacing: 5.0,
           ),
         );
       } else {
@@ -171,14 +166,23 @@ class DisplayEvenementScreen extends StatelessWidget {
                           color: Colors.black,
                         ),
                       ),
-
-                      // Image.asset("assets/images/login.png")],
                       Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(
-                                  top: 30, left: 30, right: 10),
+                                  top: 20),
+                              child: Text(
+                                "Du : " + readTimestamptoDate(e.startDate.millisecondsSinceEpoch) + " au " + readTimestamptoDate(e.endDate.millisecondsSinceEpoch),
+                                textAlign: TextAlign.justify,
+                                softWrap: true,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 30),
                               child: Text(
                                 "Details :\n\n" + e.details,
                                 textAlign: TextAlign.justify,
@@ -206,40 +210,6 @@ class DisplayEvenementScreen extends StatelessWidget {
                         ),
                       ),
                       Container(padding: const EdgeInsets.all(4), child: attendees)
-
-/*
-                      padding: const EdgeInsets.all(8),
-                      child:
-                      /*Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [*/
-                      StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("events")
-                            .doc(e.id)
-                            .collection("attendees")
-                            .snapshots(),
-                        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(child: CircularProgressIndicator());
-                            default:
-                            //return Column();
-                              if (snapshot.data!.docs.length > 0) {
-                                return ListView.builder(
-                                    padding: EdgeInsets.all(8.0),
-                                    // physics: NeverScrollableScrollPhysics(),
-
-                                    ///
-                                    shrinkWrap: true,
-
-                                   ///
-                                    scrollDirection: Axis.horizontal,
-
-
-                                    ///
-*/
                     ],
                   )),
             ),
@@ -275,21 +245,17 @@ class DisplayEvenementScreen extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               alignment: Alignment.topCenter,
               //aligns CircleAvatar to Top Center.
-              child: CircleAvatar(
-                radius: 25, //radius is 50
-                backgroundImage: NetworkImage(
-                    "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
-              )),
-          /*Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  image: NetworkImage(
+              child: GestureDetector(
+                onTap: () {
+                  //TODO Est ce qu'il faut pouvoir atteindre les infos de l'utilisateur ? Quentin
+                  // Navigator.pushNamed(context, UserInfo.routeName, arguments: attendee);
+                },
+                child: CircleAvatar(
+                  radius: 25, //radius is 50
+                  backgroundImage: NetworkImage(
                       "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
-                  fit: BoxFit.fill),
-            ),
-          ),*/
+                ),
+              )),
           Text(attendee!["firstname"].toString().substring(0, 1) +
               ". " +
               ((attendee["lastname"].toString().length > 5)

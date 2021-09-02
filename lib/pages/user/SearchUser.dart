@@ -1,5 +1,6 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +26,25 @@ class _SearchUser extends State<SearchUser> {
     searchResultList();
   }
 
+  CollectionReference _collectionRef =
+  FirebaseFirestore.instance.collection('users');
+
+  Future searchByName(String text) {
+    return _collectionRef
+        .where('firstname', isEqualTo: 'TestAccount')
+        .get();
+  }
+
   searchResultList() {
     // TODO A implémenter, tests Sylvain
     if (_searchController.text != ""){
       print("Il y a des paramètres");
-      showResults.add("Test");
+      final temp = searchByName('toto');
+      // showResults.add(searchByName(_searchController.text.toString()));
+      // searchByName(_searchController.text).then((QuerySnapshot docs ) => showResults.add(docs.docs.toString()));
+
+      showResults.add("-");
+
     }else{
       print("Il n'y a pas de paramètre");
       showResults.clear();
@@ -102,6 +117,9 @@ class _SearchUser extends State<SearchUser> {
       )
     );
   }
+
+
+
 
 
 }

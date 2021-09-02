@@ -7,7 +7,6 @@ import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'ListEventsFilteredScreen.dart';
 import 'manage/CreateEvenementScreen.dart';
 
@@ -61,7 +60,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                     .collection(''
                     'events')
                     .orderBy(widget.orderByFirebase)
-                    //.where('endDate', isGreaterThan: DateTime.now())
+                //.where('endDate', isGreaterThan: DateTime.now())
                     .snapshots(),
                 builder: buildEventsList,
               ),
@@ -71,12 +70,12 @@ class ListEventsScreenState extends State<ListEventsScreen> {
       ),
       floatingActionButton: user!.isServiceProvider
           ? FloatingActionButton(
-              elevation: 0.0,
-              onPressed: () {
-                Navigator.pushNamed(context, CreateEvenementScreen.routeName);
-              },
-              child: const Icon(Icons.add),
-            )
+        elevation: 0.0,
+        onPressed: () {
+          Navigator.pushNamed(context, CreateEvenementScreen.routeName);
+        },
+        child: const Icon(Icons.add),
+      )
           : Container(),
       drawer: MyDrawer(""),
     );
@@ -99,13 +98,8 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot eventFromFirebase =
-                      snapshot.data!.docs[index];
-                  //log(event.reference.id);
+                  snapshot.data!.docs[index];
                   Event event = Event.fromJson(eventFromFirebase);
-                  // log("ListEventsScreen - buildEventsList - event #" +
-                  //     index.toString() +
-                  //     " = " +
-                  //     event.id);
 
                   var datum = readTimestamptoDate(
                       event.startDate.millisecondsSinceEpoch);
@@ -121,7 +115,6 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                     // print(event.city.toString());
                   }
 
-                  // print("MA LISTE <<" + widget.myList.toString());
                   return Card(
                     elevation: 5,
                     child: ListTile(
@@ -140,23 +133,23 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                         height: 100.0,
                         width: 100.0,
                         child: ClipRRect(
-                            // borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                          // borderRadius: BorderRadius.all(Radius.circular(4.0)),
                             child: FadeInImage(
-                          image: NetworkImage(event.image),
-                          placeholder:
+                              image: NetworkImage(event.image),
+                              placeholder:
                               AssetImage('assets/images/placeholder.jpg'),
-                          imageErrorBuilder: (BuildContext context,
-                              Object exception, StackTrace? stacktrace) {
-                            return Container(
-                              child: FadeInImage(
-                                image:
+                              imageErrorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stacktrace) {
+                                return Container(
+                                  child: FadeInImage(
+                                    image:
                                     AssetImage('assets/images/placeholder.jpg'),
-                                placeholder:
+                                    placeholder:
                                     AssetImage('assets/images/placeholder.jpg'),
-                              ),
-                            );
-                          },
-                        )),
+                                  ),
+                                );
+                              },
+                            )),
                       ),
                       onTap: () => {
                         Navigator.pushNamed(
@@ -192,6 +185,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
     }
   }
 
+
   void showSortDialog(BuildContext context, String value) {
     showDialog(
         context: context,
@@ -200,99 +194,132 @@ class ListEventsScreenState extends State<ListEventsScreen> {
           //    builder: (BuildContext builder, StateSetter setState) {
 
           if(value.toString() == 'Sorted by'){
-          return AlertDialog(
-            title: Text(value.toString()),
-            content: Container(
-              child: Row(
-                children: [
-                  DropdownButton<String>(
-                    value: widget.selectedOrderBy,
-                    items: <String>['Start date', 'End date', 'Title']
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        widget.selectedOrderBy = value!;
-                        switch (value) {
-                          case 'Start date':
-                            widget.orderByFirebase = 'startDate';
-                            break;
-                          case 'End date':
-                            widget.orderByFirebase = 'endDate';
-                            break;
-                          case 'Title':
-                            widget.orderByFirebase = 'title';
-                            break;
-                        }
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ),
-            ),
-          );
-          }else{
             return AlertDialog(
               title: Text(value.toString()),
               content: Container(
-                child: Wrap(
+                child: Row(
                   children: [
-                    // TODO Faire une boucle pour créer le bouton plus simplement
-                    ElevatedButton(onPressed: (){
-                      Navigator.pushNamed(
-                          context, ListEventsFilteredScreen.routeName,
-                          arguments: 'concert');
-                    },
-                        child: Text('concert')),
-                    SizedBox(width: 5),
-                    ElevatedButton(onPressed: (){
-                      Navigator.pushNamed(
-                          context, ListEventsFilteredScreen.routeName,
-                          arguments: 'undefined');
-                    },
-                        child: Text('undefined')),
-                    SizedBox(width: 5),
-                    ElevatedButton(onPressed: (){
-                      Navigator.pushNamed(
-                          context, ListEventsFilteredScreen.routeName,
-                          arguments: 'opening');
-                    },
-                        child: Text('opening')),
-                    SizedBox(width: 5),
-                    ElevatedButton(onPressed: (){
-                      Navigator.pushNamed(
-                          context, ListEventsFilteredScreen.routeName,
-                          arguments: 'exhibition');
-                    },
-                        child: Text('exhibition')),
                     DropdownButton<String>(
-                      items: widget.myList
-                        .map((String citylist){
-
-                      return DropdownMenuItem<String>(
-                        value: citylist,
-                        child: Text(citylist),
-                      );
-                    }).toList(),
-                      onChanged: (citylist) {
-                        Navigator.pushNamed(
-                                  context, ListEventsFilteredScreen.routeName,
-                                  arguments: citylist);
+                      value: widget.selectedOrderBy,
+                      items: <String>['Start date', 'End date', 'Title']
+                          .map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          widget.selectedOrderBy = value!;
+                          switch (value) {
+                            case 'Start date':
+                              widget.orderByFirebase = 'startDate';
+                              break;
+                            case 'End date':
+                              widget.orderByFirebase = 'endDate';
+                              break;
+                            case 'Title':
+                              widget.orderByFirebase = 'title';
+                              break;
+                          }
+                        });
+                        Navigator.of(context).pop();
                       },
                     )
                   ],
                 ),
               ),
             );
-          }
+          }else{
+            return AlertDialog(
+              title: Text(value.toString()),
+              content: Container(
+                child: Wrap(
+                  children: [
+                    Row(
+                        children: [
+                          Text("Type of event:", style: TextStyle(fontWeight: FontWeight.bold),),
+                        ]
+                    ),
+                    //For create a list of button with all parameters for filter type
+                    getFilterType(context, 'type',Constants.eventTypes),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                          children: [
+                            Text("By city: ", style: TextStyle(fontWeight: FontWeight.bold),),
+                          ]
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      items: widget.myList
+                          .map((String citylist){
 
+                        return DropdownMenuItem<String>(
+                            value: citylist,
+                            child: Text(citylist));
+                      }).toList(),
+                      onChanged: (citylist) {
+                        Navigator.pushNamed(
+                            context, ListEventsFilteredScreen.routeName,
+                            arguments: ScreenArguments(
+                                'city',
+                                citylist!
+                            ) );
+                      },
+                      value: widget.myList[0],
 
-          //});
-        });
-  }
+                    ),
+                    SizedBox(width: 200),
+                  ],
+                ),
+              ),
+            );
+          }});}}
+
+class ScreenArguments {
+  final String type;
+  final String recherche;
+
+  ScreenArguments(this.type, this.recherche);
+}
+
+Container _buildButton(BuildContext context, String type, String recherche) {
+  return Container(
+      child: Row(
+        children: [
+          ElevatedButton(onPressed: (){
+            Navigator.pushNamed(
+                context, ListEventsFilteredScreen.routeName,
+                arguments: ScreenArguments(
+                    type,
+                    recherche
+                ) );
+          }, child: Text(recherche),
+          ),
+        ],
+      )
+  );
+}
+
+Widget getFilterType(BuildContext context, String type, List<String> strings)
+{
+  return Wrap(
+    children:
+        strings.map((item) =>
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(onPressed: (){
+                Navigator.pushNamed(
+                    context, ListEventsFilteredScreen.routeName,
+                    arguments: ScreenArguments(
+                        type,
+                        item
+                    ) );
+              }, child: Text(item),
+              ),
+            ),
+        ).toList()
+  );
+
 }

@@ -6,6 +6,7 @@ import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'ListEventsScreen.dart';
 import 'manage/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
@@ -27,13 +28,14 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
     final filter = ModalRoute
         .of(context)!
         .settings
-        .arguments as String;
-    print("Mon filtre " + filter);
+        .arguments as ScreenArguments;
+
 
     final user = Provider.of<MyUser?>(context);
+    print("MON argument :" + filter.recherche);
 
     return Scaffold(
-      appBar: MyAppBar("Events filter by " + filter, false),
+      appBar: MyAppBar("Events filter by " + filter.recherche, false),
       body: Column(
         children: [
           Expanded(
@@ -42,7 +44,7 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('events')
-                    .where('city', isEqualTo: filter)
+                    .where(filter.type, isEqualTo: filter.recherche)
                     .snapshots(),
                 builder: buildEventsList,
               ),
@@ -59,8 +61,6 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
         child: const Icon(Icons.add),
       )
           : Container(),
-      // TODO Voir nécessité d'un filtre dans un filtre avec le groupe
-      // drawer: MyDrawer(""),
 
     );
   }

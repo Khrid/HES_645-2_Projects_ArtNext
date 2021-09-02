@@ -6,4 +6,8 @@ class Constants{
     Sortedby,
     Filterby
   ];
+
+  static const List<String> eventTypes = <String>[
+    'concert', 'undefined', 'opening', 'exhibition'
+  ];
 }

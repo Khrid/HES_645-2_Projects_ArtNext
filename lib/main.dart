@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:artnext/pages/events/ListAttendees.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/ListEventsFilteredScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
