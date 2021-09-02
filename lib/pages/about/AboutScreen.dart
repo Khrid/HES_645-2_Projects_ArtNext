@@ -1,0 +1,142 @@
+import 'dart:html';
+
+import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:flutter/material.dart';
+
+class AboutScreen extends StatelessWidget {
+  static const routeName = '/about';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.brown[100],
+        appBar: MyAppBar("About", false),
+        body: SingleChildScrollView(
+            child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Text("ArtNext",
+                        style: TextStyle(
+                            fontSize: 105.0,
+                            color: Colors.white,
+                            fontFamily: 'RichieBrusher')),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'HES 645-2 Flutter project',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Students',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Micaela Da Rocha, scrum master',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )),
+                      ),
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Quentin Beeckmans',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )),
+                      ),
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'David Crittin',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )),
+                      ),
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Sylvain Meyer',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )),
+                      ),
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Samuel Wenger',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Special thanks to',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Gaetano Manzo 😇',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        window.open(
+                            "https://github.com/hes-6452-gr2/HES_645-2_Projects_ArtNext",
+                            "GitHub");
+                      }, // handle your image tap here
+                      child: Image.asset(
+                        'assets/images/github.png',
+                        fit: BoxFit.cover, // this is the solution for border
+                      ),
+                    ),
+                  ],
+                ))));
+  }
+}

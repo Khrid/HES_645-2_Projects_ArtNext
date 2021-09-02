@@ -37,7 +37,7 @@ dependencies:
   datetime_picker_formfield: ^2.0.0   # plugin pour date et time picker
   intl: ^0.17.0                       # plugin pour l'internationalisation
   google_fonts: ^2.1.0                # utilisation des Google Fonts
-  font_awesome_flutter: ^9.1.0
+  font_awesome_flutter: ^9.1.0        # pour de jolis picto
   share_plus: ^2.1.4
   firebase_dynamic_links: ^2.0.8
 
@@ -64,7 +64,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - assets/images/login.png
+  - assets/images/github.png
   - assets/images/placeholder.jpg
   #   - images/a_dot_ham.jpeg
 
