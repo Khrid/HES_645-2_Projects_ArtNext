@@ -21,3 +21,4 @@ String getEventTypeText(EventTypeEnum eventType) {
       return "undefined";
   }
 }
+

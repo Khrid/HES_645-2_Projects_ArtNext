@@ -3,11 +3,14 @@ import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
+import 'package:artnext/pages/events/ListEventsFilteredScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
@@ -149,8 +152,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                   CreateEvenementScreen(),
               UpdateEvenementScreen.routeName: (context) =>
                   UpdateEvenementScreen(),
+              ListAttendees.routeName: (context) => ListAttendees(),
               UserInfo.routeName: (context) => UserInfo(),
-              MyEvents.routeName: (context) => MyEvents()
+              MyEvents.routeName: (context) => MyEvents(),
+              SearchUser.routeName: (context) => SearchUser(),
+              ListEventsFilteredScreen.routeName: (context) => ListEventsFilteredScreen(),
             }));
   }
 }

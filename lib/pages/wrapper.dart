@@ -12,11 +12,11 @@ class Wrapper extends StatelessWidget {
     print("Wrapper - user = " + user.toString());
     // return Home or Authenticate widget
     if (user == null) {
-      print("Wrapper - user is null, display Authenticate widget");
+      // print("Wrapper - user is null, display Authenticate widget");
       return Authenticate();
     }
 
-    print("Wrapper - user is not null, display ListEventsScreen widget");
+    // print("Wrapper - user is not null, display ListEventsScreen widget");
     return ListEventsScreen();
   }
 }

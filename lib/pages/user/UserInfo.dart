@@ -1,5 +1,8 @@
+import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +19,7 @@ class _UserInfoState extends State<UserInfo> {
     final user = Provider.of<MyUser?>(context);
     // TODO: implement build
     return Scaffold(
-        appBar: MyAppBar("User info"),
+        appBar: MyAppBar("User info", false),
         body: ListView(
           physics: BouncingScrollPhysics(),
           children: [
@@ -88,6 +91,20 @@ class _UserInfoState extends State<UserInfo> {
             ),
             const SizedBox(height: 24),
             buildMyEventsTitle(),
+            const SizedBox(height: 24),
+            Expanded(
+              child: SizedBox(
+                height: 400.0,
+                child: StreamBuilder(stream: FirebaseFirestore.instance
+                    .collection('events')
+                    .where('listAttendees', arrayContains: user.uid)
+                    .snapshots(),
+                  builder: buildEventsList,
+                ),
+              ),
+            ),
+            //const SizedBox(height: 48),
+            //buildAbout(user),
           ],
         )
 
@@ -128,7 +145,6 @@ class _UserInfoState extends State<UserInfo> {
         ],
       );
 
-
   Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: StadiumBorder(),
@@ -151,4 +167,44 @@ class _UserInfoState extends State<UserInfo> {
       ),
     ],
   );
+}
+
+Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  if (snapshot.hasData) {
+    return Column(
+      children: <Widget>[
+        Text("History",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+        Expanded(
+          child: ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
+                //log(event.reference.id);
+                Event event = Event.fromJson(eventFromFirebase);
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
+                    onTap: () => {
+                      Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
+                          arguments: event)
+                    },
+                  ),
+                );
+              }),
+        ),
+      ],
+    );
+  } else if (snapshot.connectionState == ConnectionState.done &&
+      !snapshot.hasData) {
+    // Handle no data
+    return Center(
+      child: Text("No events found."),
+    );
+  } else {
+    // Still loading
+    return Center(child: CircularProgressIndicator());
+  }
 }
