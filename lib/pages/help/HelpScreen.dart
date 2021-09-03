@@ -164,7 +164,7 @@ class HelpScreenState extends State<HelpScreen> {
                 _feedbackType = v!;
               });
             }),
-        Text('Questiions')
+        Text('Questions')
       ],
     );
   }
