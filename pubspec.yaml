@@ -40,10 +40,7 @@ dependencies:
   font_awesome_flutter: ^9.1.0        # pour de jolis picto
   mailto:                             # pour envoyer des emails
   url_launcher:                       # pour ouvrir des liens
-
   share_plus: ^2.1.4
-  firebase_dynamic_links: ^2.0.8
-  url_launcher: ^6.0.10
 
 dev_dependencies:
   flutter_test:

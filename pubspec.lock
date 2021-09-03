@@ -141,13 +141,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  feedback:
-    dependency: "direct main"
-    description:
-      name: feedback
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   ffi:
     dependency: transitive
     description:
@@ -211,13 +204,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.2.0"
-  firebase_dynamic_links:
-    dependency: "direct main"
-    description:
-      name: firebase_dynamic_links
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.8"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -237,13 +223,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.2"
-  flutter_email_sender:
-    dependency: "direct main"
-    description:
-      name: flutter_email_sender
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.2"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -251,11 +230,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.1"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -336,13 +310,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
-  json_annotation:
+  mailto:
     dependency: "direct main"
     description:
-      name: json_annotation
+      name: mailto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "2.0.0"
   matcher:
     dependency: transitive
     description:
@@ -386,7 +360,7 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
