@@ -36,15 +36,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
-        body: Form(
+        body: SingleChildScrollView(
+            child: Form(
           key: _formKey,
           child: Align(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return Container(
                     padding: EdgeInsets.only(left: 60, right: 60),
-                    height: constraints.maxHeight,
-                    width: constraints.maxWidth,
                     /*decoration: BoxDecoration(
                       color: const Color(0xffa3a3a3),
                       image: DecorationImage(
@@ -75,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: const EdgeInsets.only(top: 250),
+                                margin: const EdgeInsets.only(top: 50),
                               )
                             ]),
 
@@ -134,10 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                             child: Text('Connexion')),
-                          SizedBox(height: 20),
+                        SizedBox(height: 20),
                         ElevatedButton(
-
-                          // Within the `FirstScreen` widget
+                            // Within the `FirstScreen` widget
                             onPressed: () async {
                               Navigator.pushNamed(context, RegisterScreen.routeName);
                             },
@@ -147,6 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
           ),
-        ));
+        )));
   }
 }
