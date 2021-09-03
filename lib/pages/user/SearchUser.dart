@@ -15,8 +15,6 @@ class _SearchUser extends State<SearchUser> {
   var ListResults = [];
   late MyUser userfind;
 
-  late Map test;
-
   TextEditingController _searchController = TextEditingController();
 
   @override
@@ -37,7 +35,8 @@ class _SearchUser extends State<SearchUser> {
       querySnapshot.docs.forEach((value) {
         var temp = value.data();
         userfind = MyUser.fromJson(temp);
-        print("TEST " + userfind.firstname);
+
+        //TODO But de Passer userfind comme objet User dans le pushname du bas
         print("TEST " + userfind.firstname);
 
         //test=value.data(); // >>>> fonctionne mais n'est pas un objet mais une map
@@ -56,8 +55,8 @@ class _SearchUser extends State<SearchUser> {
 
           if(result.data()["firstname"]== _searchController.text){
             if(!ListResults.contains(_searchController.text)){
-              //print("TEST" + result.data()["firstname"]);
-              //TODO Faire en sorte de récupérer le user ou le uuid en fonction du firstname
+
+              //method pour get le USER dans firestore
               getUidByName(result.data()["firstname"]);
 
               showResults.add(result.data()["firstname"] + " " + result.data()["lastname"]);
