@@ -5,12 +5,11 @@ import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/about/AboutScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
+import 'package:artnext/pages/help/HelpScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/services/AuthenticationService.dart';
-import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -269,6 +268,7 @@ class MyDrawer extends StatelessWidget {
                         leading: Icon(Icons.help),
                         title: Text('Help and Feedback'),
                         onTap: () {
+                          Navigator.pushNamed(context, HelpScreen.routeName);
                         },
                       )
                     ],

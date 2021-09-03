@@ -44,8 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
               builder: (BuildContext context, BoxConstraints constraints) {
                 return Container(
                     padding: EdgeInsets.only(left: 60, right: 60),
-                    height: constraints.maxHeight,
-                    width: constraints.maxWidth,
                     /*decoration: BoxDecoration(
                       color: const Color(0xffa3a3a3),
                       image: DecorationImage(
@@ -57,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),*/
                     child: Column(
                       children: [
-                        SizedBox(height: 50),
+                        SizedBox(height: 75),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: const EdgeInsets.only(top: 250),
+                                margin: const EdgeInsets.only(top: 50),
                               )
                             ]),
 

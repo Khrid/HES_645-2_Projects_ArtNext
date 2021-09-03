@@ -21,13 +21,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final AuthenticationService _auth = AuthenticationService();
 
   TextEditingController lastnameController =
-  new TextEditingController(text: "Lastname");
+      new TextEditingController(text: "Lastname");
   TextEditingController firstnameController =
-  new TextEditingController(text: "Firstname");
+      new TextEditingController(text: "Firstname");
   TextEditingController usernameController =
-  new TextEditingController(text: "user@artnext.ch");
+      new TextEditingController(text: "user@artnext.ch");
   TextEditingController passwordController =
-  new TextEditingController(text: "test123");
+      new TextEditingController(text: "test123");
 
   var errorMessage = "";
 
@@ -43,16 +43,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
-        body: Form(
+        body: SingleChildScrollView(
+            child: Form(
           key: _formKey,
           child: Align(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return Container(
                     padding: EdgeInsets.only(left: 60, right: 60),
-                    height: constraints.maxHeight,
-                    width: constraints.maxWidth,
-
                     child: Column(
                       children: [
                         SizedBox(height: 75),
@@ -74,10 +72,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: const EdgeInsets.only(top: 250),
+                                margin: const EdgeInsets.only(top: 50),
                               )
                             ]),
-
 
                         TextFormField(
                             controller: lastnameController,
@@ -155,7 +152,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(height: 20),
                         ElevatedButton(
                             onPressed: () async {
-
                               if (_formKey.currentState!.validate()) {
                                 MyUser myUser = MyUser(
                                     firstname: firstnameController.text,
@@ -174,8 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   changeErrorMessage("");
                                   Navigator.pushNamed(
                                       context, ListEventsScreen.routeName);
-                                }
-                                else {
+                                } else {
                                   changeErrorMessage(result.toString());
                                 }
                               }
@@ -186,16 +181,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             ),
           ),
-        ));
+        )));
   }
 
   Widget buildAndroidSwitch() => Transform.scale(
-    scale: 1,
-    child: Switch(
-        value: isServiceProvider,
-        onChanged: (value) => setState(() => this.isServiceProvider = value),
-    ),
-  );
-
-
+        scale: 1,
+        child: Switch(
+          value: isServiceProvider,
+          onChanged: (value) => setState(() => this.isServiceProvider = value),
+        ),
+      );
 }
