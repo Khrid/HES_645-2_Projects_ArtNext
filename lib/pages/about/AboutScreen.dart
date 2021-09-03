@@ -1,7 +1,6 @@
-import 'dart:html';
-
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
   static const routeName = '/about';
@@ -126,10 +125,8 @@ class AboutScreen extends StatelessWidget {
                       height: 25,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        window.open(
-                            "https://github.com/hes-6452-gr2/HES_645-2_Projects_ArtNext",
-                            "GitHub");
+                      onTap: () async {
+                        await launch("https://github.com/hes-6452-gr2/HES_645-2_Projects_ArtNext");
                       }, // handle your image tap here
                       child: Image.asset(
                         'assets/images/github.png',

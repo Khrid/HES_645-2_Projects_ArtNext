@@ -1,5 +1,6 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +130,7 @@ class _SearchUser extends State<SearchUser> {
                       onTap: () {
                         print("J'ai bien cliqué ");
                         Navigator.pushNamed(
-                            context, UserDisplay.routeName,
+                            context, UserInfo.routeName,
                             arguments:  _list);
                       },
                       child: Text(_list),
