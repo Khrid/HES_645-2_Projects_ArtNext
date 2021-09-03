@@ -39,8 +39,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   bool _initialized = false;
   bool _error = false;
-  // final DynamicLinkService _dynamicLinkService = DynamicLinkService();
-  late Timer _timerLink;
 
   Color? _primaryColor = Colors.brown[100];
   Color? _accentColor = Colors.brown[400];
@@ -67,29 +65,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     initializeFlutterFire();
     Intl.defaultLocale = 'fr_CH';
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _timerLink = new Timer(
-        const Duration(milliseconds: 1000),
-            () {
-          log("calling retrieveDynamicLink");
-          // _dynamicLinkService.initDynamicLinks(context);
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    if (_timerLink != null) {
-      _timerLink.cancel();
-    }
-    super.dispose();
   }
 
   @override
