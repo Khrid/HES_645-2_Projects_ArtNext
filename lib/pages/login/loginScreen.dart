@@ -36,7 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
-        body: Form(
+        body: SingleChildScrollView(
+            child: Form(
           key: _formKey,
           child: Align(
             child: LayoutBuilder(
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),*/
                     child: Column(
                       children: [
-                        SizedBox(height: 75),
+                        SizedBox(height: 50),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,10 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                             child: Text('Connexion')),
-                          SizedBox(height: 20),
+                        SizedBox(height: 20),
                         ElevatedButton(
-
-                          // Within the `FirstScreen` widget
+                            // Within the `FirstScreen` widget
                             onPressed: () async {
                               Navigator.pushNamed(context, RegisterScreen.routeName);
                             },
@@ -147,6 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
           ),
-        ));
+        )));
   }
 }
