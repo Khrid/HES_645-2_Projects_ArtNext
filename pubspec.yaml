@@ -38,6 +38,8 @@ dependencies:
   intl: ^0.17.0                       # plugin pour l'internationalisation
   google_fonts: ^2.1.0                # utilisation des Google Fonts
   font_awesome_flutter: ^9.1.0        # pour de jolis picto
+  mailto:                             # pour envoyer des emails
+  url_launcher:                       # pour ouvrir des liens
 
   share_plus: ^2.1.4
   firebase_dynamic_links: ^2.0.8

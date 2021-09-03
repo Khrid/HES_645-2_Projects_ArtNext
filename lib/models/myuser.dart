@@ -8,14 +8,15 @@ class MyUser {
   bool isServiceProvider;
   String image;
   late List attendingTo = [];
+  String? email;
 
   MyUser(
-      {
-      this.firstname = "",
+      {this.firstname = "",
       this.lastname = "",
       this.isPremium = false,
       this.isServiceProvider = false,
-      this.image = ""});
+      this.image = "",
+      this.email});
 
   @override
   String toString() {
@@ -64,7 +65,9 @@ class MyUser {
           ? snap.data()!["isServiceProvider"]
           : false);
       image = (snap.data()!["image"] != null ? snap.data()!["image"] : "");
-      attendingTo = (snap.data()!['attendingTo'] != null ? List.from(snap.data()!['attendingTo'].toSet()) : []);
+      attendingTo = (snap.data()!['attendingTo'] != null
+          ? List.from(snap.data()!['attendingTo'].toSet())
+          : []);
     }
   }
 
@@ -88,4 +91,7 @@ class MyUser {
     this.uid = uid;
   }
 
+  void setEmail(String email) {
+    this.email = email;
+  }
 }
