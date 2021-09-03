@@ -1,6 +1,5 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/services/AuthenticationService.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
-        body: Form(
+        body: SingleChildScrollView(
+            child: Form(
           key: _formKey,
           child: Align(
             child: LayoutBuilder(
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),*/
                     child: Column(
                       children: [
-                        SizedBox(height: 75),
+                        SizedBox(height: 50),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,17 +134,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                             child: Text('Connexion')),
-                          SizedBox(height: 20),
+                        SizedBox(height: 20),
                         ElevatedButton(
 
-                          // Within the `FirstScreen` widget
+                            // Within the `FirstScreen` widget
                             onPressed: () async {
-
                               // Pour le test en attendant l'écran de création de compte
-                              MyUser myUser = MyUser(firstname: "TestAccount", lastname: "Lastname", isPremium: true);
-                              Object? result = await _auth.signUp(email: "testaccount2@gmail.com", password: "mypassword", myUser: myUser);
+                              MyUser myUser = MyUser(
+                                  firstname: "TestAccount",
+                                  lastname: "Lastname",
+                                  isPremium: true);
+                              Object? result = await _auth.signUp(
+                                  email: "testaccount2@gmail.com",
+                                  password: "mypassword",
+                                  myUser: myUser);
                               if (result is MyUser) {
-                                print("LoginScreen - Register ElevatedButton onPressed - user = " + result.toString());
+                                print(
+                                    "LoginScreen - Register ElevatedButton onPressed - user = " +
+                                        result.toString());
                               }
                               // A remplacer par un Navigator.pushNamed(.....)
                             },
@@ -154,6 +161,6 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
           ),
-        ));
+        )));
   }
 }
