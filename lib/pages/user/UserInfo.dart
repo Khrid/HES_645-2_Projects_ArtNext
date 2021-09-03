@@ -81,7 +81,7 @@ class _UserInfoState extends State<UserInfo> {
                       Text(
                         user.isServiceProvider
                             ? "Service provider"
-                            : "Classic account",
+                            : "User account",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -119,7 +119,7 @@ class _UserInfoState extends State<UserInfo> {
           ),
           const SizedBox(height: 4),
           Text(
-            user.uid,
+            user.email!+"",
             style: TextStyle(color: Colors.grey),
           )
         ],
@@ -153,9 +153,6 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
   if (snapshot.hasData) {
     return Column(
       children: <Widget>[
-        Text("History",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
         Expanded(
           child: ListView.builder(
               itemCount: snapshot.data!.docs.length,

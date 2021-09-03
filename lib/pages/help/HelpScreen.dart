@@ -1,5 +1,9 @@
+import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:mailto/mailto.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpScreen extends StatefulWidget {
   static const routeName = '/help';
@@ -20,10 +24,14 @@ class HelpScreenState extends State<HelpScreen> {
   bool hasError = false;
   String message = "";
 
-  String _feedbackType = 'COMMENT';
+  String _feedbackType = 'Comments';
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MyUser?>(context);
+    _emailController.text = user!.email!;
+    _firstNameController.text = user.firstname;
+    _lastNameController.text = user.lastname;
     return Scaffold(
         backgroundColor: Colors.brown[100],
         appBar: MyAppBar("Help & feedback", false),
@@ -42,7 +50,7 @@ class HelpScreenState extends State<HelpScreen> {
                     children: <Widget>[
                       Text("Feedback Type"),
                       _buildFeedbackType(),
-                      SizedBox(
+                      /*SizedBox(
                         height: _minValue * 3,
                       ),
                       _buildFirstName(),
@@ -53,16 +61,13 @@ class HelpScreenState extends State<HelpScreen> {
                       SizedBox(
                         height: _minValue * 3,
                       ),
-                      _buildEmail(),
+                      _buildEmail(),*/
                       SizedBox(
                         height: _minValue * 3,
                       ),
                       _buildDescription(),
                       SizedBox(
                         height: _minValue * 3,
-                      ),
-                      SizedBox(
-                        height: _minValue * 4,
                       ),
                     ],
                   )),
@@ -82,7 +87,7 @@ class HelpScreenState extends State<HelpScreen> {
               EdgeInsets.symmetric(vertical: _minValue, horizontal: _minValue),
           labelText: 'First Name',
           hintText: 'First Name',
-          labelStyle: TextStyle(fontSize: 16.0, color: Colors.black87)),
+          labelStyle: TextStyle(fontSize: 16.0,)),
     );
   }
 
@@ -118,8 +123,9 @@ class HelpScreenState extends State<HelpScreen> {
   Widget _buildDescription() {
     return TextFormField(
       controller: _messageController,
-      keyboardType: TextInputType.text,
-      maxLines: 2,
+      minLines: 5,
+      maxLines: 5,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
           labelText: 'Description',
           border: OutlineInputBorder(),
@@ -133,7 +139,7 @@ class HelpScreenState extends State<HelpScreen> {
     return Row(
       children: <Widget>[
         Radio<String>(
-            value: 'COMMENT',
+            value: 'Comments',
             groupValue: _feedbackType,
             onChanged: (String? v) {
               setState(() {
@@ -145,19 +151,19 @@ class HelpScreenState extends State<HelpScreen> {
           width: _minValue,
         ),
         Radio<String>(
-            value: 'BUG',
+            value: 'Bug',
             groupValue: _feedbackType,
             onChanged: (String? v) {
               setState(() {
                 _feedbackType = v!;
               });
             }),
-        Text('Bug Reports'),
+        Text('Bug'),
         SizedBox(
           width: _minValue,
         ),
         Radio<String>(
-            value: 'QUESTION',
+            value: 'Questions',
             groupValue: _feedbackType,
             onChanged: (String? v) {
               setState(() {
@@ -173,12 +179,29 @@ class HelpScreenState extends State<HelpScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: _minValue * 3),
       child: RaisedButton(
-        onPressed: () => null,
-        padding: EdgeInsets.symmetric(vertical: _minValue * 2),
-        elevation: 0.0,
-        color: Theme.of(context).primaryColor,
-        textColor: Colors.white,
-        child: Text('SAVE'),
+        onPressed: () async {
+          final mailtoLink = Mailto(
+            to: ['6452.gr2@gmail.com'],
+            subject: 'ArtNext user feedback',
+            body: 'Feedback type : ' +
+                _feedbackType +
+                '\n\n' +
+                'Description : \n' +
+                _messageController.text +
+                '\n\n' +
+                'Contact info : \n' +
+                _firstNameController.text +
+                " " +
+                _lastNameController.text +
+                ", " +
+                _emailController.text,
+          );
+          // Convert the Mailto instance into a string.
+          // Use either Dart's string interpolation
+          // or the toString() method.
+          await launch('$mailtoLink');
+        },
+        child: Text('Send feedback'),
       ),
     );
   }
