@@ -4,13 +4,17 @@ import 'dart:developer';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/about/AboutScreen.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
-import 'package:artnext/pages/events/ListAttendees.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
+import 'package:artnext/pages/events/ListEventsFilteredScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/help/HelpScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/user/SearchUser.dart';
+import 'package:artnext/pages/user/UserDisplay.dart';
+import 'package:artnext/pages/login/registerScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/pages/wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
@@ -136,6 +140,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             routes: {
               LoginScreen.routeName: (context) => LoginScreen(),
               // /login
+              RegisterScreen.routeName: (context) => RegisterScreen(),
+              // /register
               ListEventsScreen.routeName: (context) => ListEventsScreen(),
               // /events
               DisplayEvenementScreen.routeName: (context) =>
@@ -150,6 +156,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               MyEvents.routeName: (context) => MyEvents(),
               AboutScreen.routeName: (context) => AboutScreen(),
               HelpScreen.routeName: (context) => HelpScreen()
+              SearchUser.routeName: (context) => SearchUser(),
+              UserDisplay.routeName: (context) => UserDisplay(),
+              ListEventsFilteredScreen.routeName: (context) => ListEventsFilteredScreen(),
             }));
   }
 }

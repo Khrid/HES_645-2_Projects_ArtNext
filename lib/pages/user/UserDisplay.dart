@@ -7,16 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class UserInfo extends StatefulWidget {
-  static const routeName = '/user/info';
+class UserDisplay extends StatefulWidget {
+  static const routeName = '/user/display';
 
-  _UserInfoState createState() => _UserInfoState();
+  _UserDisplayState createState() => _UserDisplayState();
 }
 
-class _UserInfoState extends State<UserInfo> {
+class _UserDisplayState extends State<UserDisplay> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
+    final userFind = ModalRoute.of(context)!.settings.arguments as String;
+    print("DANS MON USER DISPLAY J AI " + userFind);
     // TODO: implement build
     return Scaffold(
         appBar: MyAppBar("User info", false),
@@ -108,6 +110,26 @@ class _UserInfoState extends State<UserInfo> {
           ],
         )
 
+        /*Align(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Container(
+                padding: EdgeInsets.only(left: 60, right: 60),
+                height: constraints.maxHeight,
+                width: constraints.maxWidth,
+                child: Column(
+                  children: [
+                    Text("uid : " + user!.uid),
+                    Text("lastname : " + user.lastname),
+                    Text("firstname : " + user.firstname),
+                    Text("isPremium : " + user.isPremium.toString()),
+                    Text("isServiceProvider : " + user.isServiceProvider.toString()),
+                    Text("image : " + user.image),
+                  ],
+                ));
+          },
+        ),
+      ),*/
         );
   }
 
