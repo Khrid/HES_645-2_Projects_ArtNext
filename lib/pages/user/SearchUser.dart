@@ -1,16 +1,11 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
 import 'UserDisplay.dart';
 
 class SearchUser extends StatefulWidget {
   static const routeName = '/user/search';
-
   _SearchUser createState() => _SearchUser();
 }
 
@@ -18,7 +13,10 @@ class _SearchUser extends State<SearchUser> {
   List _resultsList = [];
   var showResults = [];
   var ListResults = [];
-  late MyUser user;
+  late MyUser userfind;
+
+  late Map test;
+
   TextEditingController _searchController = TextEditingController();
 
   @override
@@ -30,18 +28,27 @@ class _SearchUser extends State<SearchUser> {
   _onSearchChanged() {
     searchResultList();
   }
-
   // CollectionReference _collectionRef =
   // FirebaseFirestore.instance.collection('users');
 
-  getUidByName(String firstname) {
-    return FirebaseFirestore.instance.collection('users').where('firstname', isEqualTo: 'David')
-        .snapshots();
+  Future<void>getUidByName(String firstname) async{
+        FirebaseFirestore.instance.collection("users").where('firstname', isEqualTo: 'David').get()
+            .then((querySnapshot) {
+      querySnapshot.docs.forEach((value) {
+        var temp = value.data();
+        userfind = MyUser.fromJson(temp);
+        print("TEST " + userfind.firstname);
+        print("TEST " + userfind.firstname);
+
+        //test=value.data(); // >>>> fonctionne mais n'est pas un objet mais une map
+        // print("MON RESULTAT" + result.data().toString());
+      });
+    });
   }
 
 
+
   searchResultList() {
-    // TODO A implémenter, tests Sylvain
     if (_searchController.text != ""){
       FirebaseFirestore.instance.collection('users').get()
           .then((querySnapshot){
@@ -50,18 +57,13 @@ class _SearchUser extends State<SearchUser> {
           if(result.data()["firstname"]== _searchController.text){
             if(!ListResults.contains(_searchController.text)){
               //print("TEST" + result.data()["firstname"]);
-
               //TODO Faire en sorte de récupérer le user ou le uuid en fonction du firstname
-              // user=getUidByName(result.data()["firstname"]) as MyUser;
-              // print("Mon USER " + user.uid);
+              getUidByName(result.data()["firstname"]);
 
               showResults.add(result.data()["firstname"] + " " + result.data()["lastname"]);
               ListResults.add(_searchController.text);
-
-
             }
           }
-
         });
       });
     }else{
@@ -126,13 +128,13 @@ class _SearchUser extends State<SearchUser> {
               Row(
                   children: <Widget>[
                     GestureDetector(
+                      child: Text(_list),
                       onTap: () {
                         print("J'ai bien cliqué ");
                         Navigator.pushNamed(
                             context, UserDisplay.routeName,
-                            arguments:  _list);
+                            arguments: userfind);
                       },
-                      child: Text(_list),
                     )
                     // Expanded(
                     //   flex: 3,

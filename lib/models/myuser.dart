@@ -17,6 +17,30 @@ class MyUser {
       this.isServiceProvider = false,
       this.image = ""});
 
+
+
+
+  /// Creates an user from json data
+  MyUser.fromJson(json)
+      : this(
+      firstname: (json.data()['firstname'] != null
+          ? json.data()['firstname']
+          : "<emptyfirstname>") as String,
+      lastname: (json.data()['lastname'] != null
+          ? json.data()['lastname']
+      isPremium: (json.data()['isPremium'] != null
+          ? json.data()['isPremium']
+          : "<emptyisPremium>") as bool,
+      isServiceProvider: (json.data()['isServiceProvider'] != null
+          ? json.data()['isServiceProvider']
+          : "<emptyCity>") as bool,
+      image: (json.data()['image'] != null
+          ? json.data()['image']
+          : "<emptyimage>") as String);
+
+
+
+
   @override
   String toString() {
     // TODO: implement toString

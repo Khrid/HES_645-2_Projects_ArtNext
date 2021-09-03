@@ -16,9 +16,14 @@ class UserDisplay extends StatefulWidget {
 class _UserDisplayState extends State<UserDisplay> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<MyUser?>(context);
-    final userFind = ModalRoute.of(context)!.settings.arguments as String;
-    print("DANS MON USER DISPLAY J AI " + userFind);
+    final usertemp = Provider.of<MyUser?>(context);
+    final user = ModalRoute.of(context)!.settings.arguments as MyUser;
+    //
+    // userFind.keys.forEach((element) {
+    //   print("hooooooooooo");
+    // });
+
+
     // TODO: implement build
     return Scaffold(
         appBar: MyAppBar("User info", false),
@@ -26,7 +31,7 @@ class _UserDisplayState extends State<UserDisplay> {
           physics: BouncingScrollPhysics(),
           children: [
             const SizedBox(height: 24),
-            buildName(user!),
+            buildName(user),
             const SizedBox(height: 24),
             Center(child: buildUpgradeButton(user.isPremium)),
             const SizedBox(height: 24),
