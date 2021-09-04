@@ -1,5 +1,6 @@
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'UserDisplay.dart';

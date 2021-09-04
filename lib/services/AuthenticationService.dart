@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +17,7 @@ class AuthenticationService {
   MyUser? _userFromFirebaseUser(User user) {
     if(user == null) return null;
     MyUser myUser = MyUser();
+    myUser.setEmail(_auth.currentUser!.email.toString());
     myUser.setUid( user.uid);
     myUser.populateUserInfoFromFirestore();
     return myUser;
@@ -39,6 +40,8 @@ class AuthenticationService {
           email: email, password: password);
       User? user = result.user;
       print("AuthenticationService - signIn - returned user uid = " + user!.uid);
+      //MyUser? tmp = ;
+      //tmp!.setEmail(email);
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
       print("AuthenticationService - signIn - FireBaseAuthException message = " +e.message.toString());

@@ -81,7 +81,7 @@ class _UserInfoState extends State<UserInfo> {
                       Text(
                         user.isServiceProvider
                             ? "Service provider"
-                            : "Classic account",
+                            : "User account",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -108,26 +108,6 @@ class _UserInfoState extends State<UserInfo> {
           ],
         )
 
-        /*Align(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Container(
-                padding: EdgeInsets.only(left: 60, right: 60),
-                height: constraints.maxHeight,
-                width: constraints.maxWidth,
-                child: Column(
-                  children: [
-                    Text("uid : " + user!.uid),
-                    Text("lastname : " + user.lastname),
-                    Text("firstname : " + user.firstname),
-                    Text("isPremium : " + user.isPremium.toString()),
-                    Text("isServiceProvider : " + user.isServiceProvider.toString()),
-                    Text("image : " + user.image),
-                  ],
-                ));
-          },
-        ),
-      ),*/
         );
   }
 
@@ -139,7 +119,7 @@ class _UserInfoState extends State<UserInfo> {
           ),
           const SizedBox(height: 4),
           Text(
-            user.uid,
+            user.email!+"",
             style: TextStyle(color: Colors.grey),
           )
         ],
@@ -173,9 +153,6 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
   if (snapshot.hasData) {
     return Column(
       children: <Widget>[
-        Text("History",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
         Expanded(
           child: ListView.builder(
               itemCount: snapshot.data!.docs.length,

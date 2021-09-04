@@ -10,8 +10,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:artnext/widget/readTimeStamp.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 export 'DisplayEvenementScreen.dart';
 
@@ -58,7 +60,8 @@ class DisplayEvenementScreen extends StatelessWidget {
       //Buttons
       Widget shareAndParticipateButtons = Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _buildButtonColumn(Colors.black, Icons.share, "Share"),
+            _buildButtonShare(e.city),
+            _buildButtonDirection(e.address + ", " + e.city),
             SizedBox(width: 30),
             ParticipateWidget(user, e),
           ]));
@@ -191,12 +194,12 @@ class DisplayEvenementScreen extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.only(top: 30),
-                              child: Text(
-                                "Location :\n\n" + e.city,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  "Location :\n\n" + e.city,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -220,18 +223,45 @@ class DisplayEvenementScreen extends StatelessWidget {
   }
 
 //Button share
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(child: Icon(icon, color: color)),
-        Text(label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ))
-      ],
+  GestureDetector _buildButtonShare(String city) {
+    return GestureDetector(
+      onTap: () async {
+        Share.share("Je participe bientôt à un super évènement à " + city + " ! \nRejoins-moi par ici !\n\nhttps://artnext.page.link/openapp");
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(child: Icon(Icons.share, color: Colors.black)),
+          Text("Share",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ))
+        ],
+      ),
+    );
+  }
+
+  GestureDetector _buildButtonDirection(String address) {
+    return GestureDetector(
+      onTap: () async {
+        String query = Uri.encodeComponent(address);
+        String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
+        await launch(googleUrl);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(child: Icon(Icons.directions, color: Colors.black)),
+          Text("Directions",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ))
+        ],
+      ),
     );
   }
 
