@@ -26,26 +26,23 @@ class _SearchUser extends State<SearchUser> {
   _onSearchChanged() {
     searchResultList();
   }
-  // CollectionReference _collectionRef =
-  // FirebaseFirestore.instance.collection('users');
 
   Future<void>getUidByName(String firstname) async{
-        FirebaseFirestore.instance.collection("users").where('firstname', isEqualTo: 'David').get()
-            .then((querySnapshot) {
+    FirebaseFirestore.instance.collection("users").where('firstname', isEqualTo: firstname).get()
+        .then((querySnapshot) {
       querySnapshot.docs.forEach((value) {
-        var temp = value.data();
-        userfind = MyUser.fromJson(temp);
-
-        //TODO But de Passer userfind comme objet User dans le pushname du bas
-        print("TEST " + userfind.firstname);
-
-        //test=value.data(); // >>>> fonctionne mais n'est pas un objet mais une map
-        // print("MON RESULTAT" + result.data().toString());
+        userfind = MyUser(
+          firstname: value.data()["firstname"],
+          lastname: value.data()["lastname"],
+          isPremium: value.data()["isPremium"],
+          isServiceProvider: value.data()["isServiceProvider"],
+          image: value.data()["image"],
+        );
+        userfind.setUid(value.id);
+        print("test " + userfind.firstname);
       });
     });
   }
-
-
 
   searchResultList() {
     if (_searchController.text != ""){
@@ -115,39 +112,18 @@ class _SearchUser extends State<SearchUser> {
   }
 
   _listItem(context, _list){
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: Colors.brown[400],
-        ),
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-            children: <Widget>[
-              Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Text(_list),
-                      onTap: () {
-                        print("J'ai bien cliqué ");
-                        Navigator.pushNamed(
-                            context, UserDisplay.routeName,
-                            arguments: userfind);
-                      },
-                    )
-                    // Expanded(
-                    //   flex: 3,
-                    //   child: Text(_list),
-                    // )
-                  ]
-              )
-            ]
-        )
+    return Card(
+      elevation: 5,
+      child: ListTile(
+        leading: Icon(Icons.person),
+        title: Text(_list),
+        onTap: () => {
+          Navigator.pushNamed(
+              context, UserDisplay.routeName,
+              arguments: userfind),
+          _searchController.clear(),
+        },
+      ),
     );
   }
-
-
-
-
-
 }
