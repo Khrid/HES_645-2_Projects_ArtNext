@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/about/AboutScreen.dart';
 import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/ListEventsFilteredScreen.dart';
@@ -9,6 +10,7 @@ import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
+import 'package:artnext/pages/help/HelpScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserDisplay.dart';
@@ -39,8 +41,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   bool _initialized = false;
   bool _error = false;
-  // final DynamicLinkService _dynamicLinkService = DynamicLinkService();
-  late Timer _timerLink;
 
   Color? _primaryColor = Colors.brown[100];
   Color? _accentColor = Colors.brown[400];
@@ -67,29 +67,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     initializeFlutterFire();
     Intl.defaultLocale = 'fr_CH';
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _timerLink = new Timer(
-        const Duration(milliseconds: 1000),
-            () {
-          log("calling retrieveDynamicLink");
-          // _dynamicLinkService.initDynamicLinks(context);
-        },
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    if (_timerLink != null) {
-      _timerLink.cancel();
-    }
-    super.dispose();
   }
 
   @override
@@ -157,6 +134,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               ListAttendees.routeName: (context) => ListAttendees(),
               UserInfo.routeName: (context) => UserInfo(),
               MyEvents.routeName: (context) => MyEvents(),
+              AboutScreen.routeName: (context) => AboutScreen(),
+              HelpScreen.routeName: (context) => HelpScreen(),
               SearchUser.routeName: (context) => SearchUser(),
               UserDisplay.routeName: (context) => UserDisplay(),
               ListEventsFilteredScreen.routeName: (context) => ListEventsFilteredScreen(),
