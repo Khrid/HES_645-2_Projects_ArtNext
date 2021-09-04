@@ -5,7 +5,6 @@ import 'package:artnext/pages/events/DisplayEvenementScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 
 class UserDisplay extends StatefulWidget {
   static const routeName = '/user/display';
@@ -16,17 +15,15 @@ class UserDisplay extends StatefulWidget {
 class _UserDisplayState extends State<UserDisplay> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<MyUser?>(context);
-    final userFind = ModalRoute.of(context)!.settings.arguments as String;
-    print("DANS MON USER DISPLAY J AI " + userFind);
-    // TODO: implement build
+    final user = ModalRoute.of(context)!.settings.arguments as MyUser;
+
     return Scaffold(
         appBar: MyAppBar("User info", false),
         body: ListView(
           physics: BouncingScrollPhysics(),
           children: [
             const SizedBox(height: 24),
-            buildName(user!),
+            buildName(user),
             const SizedBox(height: 24),
             Center(child: buildUpgradeButton(user.isPremium)),
             const SizedBox(height: 24),
@@ -43,13 +40,13 @@ class _UserDisplayState extends State<UserDisplay> {
                     children: <Widget>[
                       user.isPremium
                           ? FaIcon(
-                              FontAwesomeIcons.solidStar,
-                              size: 24,
-                            )
+                        FontAwesomeIcons.solidStar,
+                        size: 24,
+                      )
                           : FaIcon(
-                              FontAwesomeIcons.star,
-                              size: 24,
-                            ),
+                        FontAwesomeIcons.star,
+                        size: 24,
+                      ),
                       SizedBox(height: 2),
                       Text(
                         user.isPremium ? "Premium" : "Not premium",
@@ -72,13 +69,13 @@ class _UserDisplayState extends State<UserDisplay> {
                     children: <Widget>[
                       user.isServiceProvider
                           ? FaIcon(
-                              FontAwesomeIcons.palette,
-                              size: 24,
-                            )
+                        FontAwesomeIcons.palette,
+                        size: 24,
+                      )
                           : FaIcon(
-                              FontAwesomeIcons.user,
-                              size: 24,
-                            ),
+                        FontAwesomeIcons.user,
+                        size: 24,
+                      ),
                       SizedBox(height: 2),
                       Text(
                         user.isServiceProvider
@@ -105,61 +102,38 @@ class _UserDisplayState extends State<UserDisplay> {
                 ),
               ),
             ),
-            //const SizedBox(height: 48),
-            //buildAbout(user),
           ],
         )
-
-        /*Align(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Container(
-                padding: EdgeInsets.only(left: 60, right: 60),
-                height: constraints.maxHeight,
-                width: constraints.maxWidth,
-                child: Column(
-                  children: [
-                    Text("uid : " + user!.uid),
-                    Text("lastname : " + user.lastname),
-                    Text("firstname : " + user.firstname),
-                    Text("isPremium : " + user.isPremium.toString()),
-                    Text("isServiceProvider : " + user.isServiceProvider.toString()),
-                    Text("image : " + user.image),
-                  ],
-                ));
-          },
-        ),
-      ),*/
-        );
+    );
   }
 
   Widget buildName(MyUser user) => Column(
-        children: [
-          Text(
-            user.firstname + " " + user.lastname,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            user.uid,
-            style: TextStyle(color: Colors.grey),
-          )
-        ],
-      );
+    children: [
+      Text(
+        user.firstname + " " + user.lastname,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        user.uid,
+        style: TextStyle(color: Colors.grey),
+      )
+    ],
+  );
 
   Widget buildUpgradeButton(bool isPremium) => ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: StadiumBorder(),
-          onPrimary: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-        ),
-        child: Text(isPremium ? "Downgrade to CLASSIC" : "Upgrade to PREMIUM"),
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Text('Not implemented yet 😉'),
-              duration: Duration(seconds: 2)));
-        },
-      );
+    style: ElevatedButton.styleFrom(
+      shape: StadiumBorder(),
+      onPrimary: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+    ),
+    child: Text(isPremium ? "Downgrade to CLASSIC" : "Upgrade to PREMIUM"),
+    onPressed: () {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Not implemented yet 😉'),
+          duration: Duration(seconds: 2)));
+    },
+  );
 
   Widget buildMyEventsTitle()  => Column(
     children: [
@@ -183,7 +157,7 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 DocumentSnapshot eventFromFirebase = snapshot.data!.docs[index];
-                //log(event.reference.id);
+
                 Event event = Event.fromJson(eventFromFirebase);
                 return Card(
                   elevation: 5,

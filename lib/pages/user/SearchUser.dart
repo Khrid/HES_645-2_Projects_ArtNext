@@ -2,16 +2,11 @@ import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
 import 'UserDisplay.dart';
 
 class SearchUser extends StatefulWidget {
   static const routeName = '/user/search';
-
   _SearchUser createState() => _SearchUser();
 }
 
@@ -19,7 +14,8 @@ class _SearchUser extends State<SearchUser> {
   List _resultsList = [];
   var showResults = [];
   var ListResults = [];
-  late MyUser user;
+  late MyUser userfind;
+
   TextEditingController _searchController = TextEditingController();
 
   @override
@@ -32,17 +28,24 @@ class _SearchUser extends State<SearchUser> {
     searchResultList();
   }
 
-  // CollectionReference _collectionRef =
-  // FirebaseFirestore.instance.collection('users');
-
-  getUidByName(String firstname) {
-    return FirebaseFirestore.instance.collection('users').where('firstname', isEqualTo: 'David')
-        .snapshots();
+  Future<void>getUidByName(String firstname) async{
+    FirebaseFirestore.instance.collection("users").where('firstname', isEqualTo: firstname).get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((value) {
+        userfind = MyUser(
+          firstname: value.data()["firstname"],
+          lastname: value.data()["lastname"],
+          isPremium: value.data()["isPremium"],
+          isServiceProvider: value.data()["isServiceProvider"],
+          image: value.data()["image"],
+        );
+        userfind.setUid(value.id);
+        print("test " + userfind.firstname);
+      });
+    });
   }
 
-
   searchResultList() {
-    // TODO A implémenter, tests Sylvain
     if (_searchController.text != ""){
       FirebaseFirestore.instance.collection('users').get()
           .then((querySnapshot){
@@ -50,19 +53,14 @@ class _SearchUser extends State<SearchUser> {
 
           if(result.data()["firstname"]== _searchController.text){
             if(!ListResults.contains(_searchController.text)){
-              //print("TEST" + result.data()["firstname"]);
 
-              //TODO Faire en sorte de récupérer le user ou le uuid en fonction du firstname
-              // user=getUidByName(result.data()["firstname"]) as MyUser;
-              // print("Mon USER " + user.uid);
+              //method pour get le USER dans firestore
+              getUidByName(result.data()["firstname"]);
 
               showResults.add(result.data()["firstname"] + " " + result.data()["lastname"]);
               ListResults.add(_searchController.text);
-
-
             }
           }
-
         });
       });
     }else{
@@ -115,39 +113,18 @@ class _SearchUser extends State<SearchUser> {
   }
 
   _listItem(context, _list){
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: Colors.brown[400],
-        ),
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-            children: <Widget>[
-              Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        print("J'ai bien cliqué ");
-                        Navigator.pushNamed(
-                            context, UserInfo.routeName,
-                            arguments:  _list);
-                      },
-                      child: Text(_list),
-                    )
-                    // Expanded(
-                    //   flex: 3,
-                    //   child: Text(_list),
-                    // )
-                  ]
-              )
-            ]
-        )
+    return Card(
+      elevation: 5,
+      child: ListTile(
+        leading: Icon(Icons.person),
+        title: Text(_list),
+        onTap: () => {
+          Navigator.pushNamed(
+              context, UserDisplay.routeName,
+              arguments: userfind),
+          _searchController.clear(),
+        },
+      ),
     );
   }
-
-
-
-
-
 }

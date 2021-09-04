@@ -18,6 +18,7 @@ class MyUser {
       this.image = "",
       this.email});
 
+
   @override
   String toString() {
     // TODO: implement toString
