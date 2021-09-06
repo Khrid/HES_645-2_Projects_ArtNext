@@ -126,6 +126,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               RegisterScreen.routeName: (context) => RegisterScreen(),
               // /register
               ListEventsScreen.routeName: (context) => ListEventsScreen(),
+              // /
+              ListEventsFilteredScreen.routeName: (context) => ListEventsFilteredScreen(),
               // /events
               DisplayEvenementScreen.routeName: (context) =>
                   DisplayEvenementScreen(),
@@ -141,7 +143,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               HelpScreen.routeName: (context) => HelpScreen(),
               SearchUser.routeName: (context) => SearchUser(),
               UserDisplay.routeName: (context) => UserDisplay(),
-              ListEventsFilteredScreen.routeName: (context) => const ListEventsFilteredScreen(),
             }));
   }
 }

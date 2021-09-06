@@ -7,7 +7,6 @@ import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'ListEventsScreen.dart';
 import 'manage/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
@@ -16,7 +15,7 @@ class ListEventsFilteredScreen extends StatefulWidget {
 
   ListEventsFilteredScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/events';
+  static const routeName = '/eventsfilter';
 
   var selectedOrderBy = "Start date";
   var orderByFirebase = "startDate";

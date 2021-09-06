@@ -259,8 +259,6 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                                 newValue!
                             ) );
                       },
-
-
                     ),
                     SizedBox(width: 200),
                   ],
@@ -283,7 +281,7 @@ Widget getFilterType(BuildContext context, String type, List<String> myList)
                   arguments: ScreenArguments(
                       type,
                       item
-                  ) );
+                  ));
             }, child: Text(item),
             ),
           ),

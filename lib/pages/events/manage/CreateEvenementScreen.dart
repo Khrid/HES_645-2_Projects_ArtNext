@@ -35,6 +35,8 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
   TextEditingController eventStartTimeController = new TextEditingController();
   TextEditingController eventEndDateController = new TextEditingController();
   TextEditingController eventEndTimeController = new TextEditingController();
+  TextEditingController eventimageController = new TextEditingController();
+
   DateTime startDateTimeEvent = DateTime.now();
   DateTime endDateTimeEvent = DateTime.now();
   var eventTypeSelectedValue = getEventTypeText(EventTypeEnum.UNDEFINED);
@@ -194,7 +196,24 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                               });
                             },
                           ),
-
+                          /// image
+                          SizedBox(height: 10),
+                          TextFormField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: eventimageController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Image'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty || value.substring(0,4) != 'http') {
+                                  return 'Please enter the image url';
+                                }
+                                return null;
+                              }),
                           /// Start date
                           SizedBox(height: 10),
                           Row(
@@ -407,8 +426,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                                   Event e = new Event(
                                       title: eventTitleController.text,
                                       city: eventCityController.text,
-                                      image:
-                                          "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg",
+                                      image: eventimageController.text,
                                       type: getEventTypeEnum(
                                           eventTypeSelectedValue),
                                       startDate: startDate,
