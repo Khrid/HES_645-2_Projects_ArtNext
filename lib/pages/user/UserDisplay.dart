@@ -114,10 +114,10 @@ class _UserDisplayState extends State<UserDisplay> {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
       ),
       const SizedBox(height: 4),
-      Text(
-        user.uid,
-        style: TextStyle(color: Colors.grey),
-      )
+      // Text(
+      //   user.uid,
+      //   style: TextStyle(color: Colors.grey),
+      // )
     ],
   );
 

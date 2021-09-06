@@ -141,7 +141,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               HelpScreen.routeName: (context) => HelpScreen(),
               SearchUser.routeName: (context) => SearchUser(),
               UserDisplay.routeName: (context) => UserDisplay(),
-              ListEventsFilteredScreen.routeName: (context) => ListEventsFilteredScreen(),
+              ListEventsFilteredScreen.routeName: (context) => const ListEventsFilteredScreen(),
             }));
   }
 }

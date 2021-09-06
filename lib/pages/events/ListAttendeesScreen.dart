@@ -2,6 +2,7 @@ import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
+import 'package:artnext/pages/user/UserDisplay.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -86,16 +87,27 @@ Widget buildAttendeeCard(BuildContext context,
     AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
   if (snapshot.hasData) {
     var attendee = snapshot.data;
+    MyUser userfind = MyUser(
+      firstname: attendee!["firstname"],
+      lastname: attendee["lastname"],
+      isPremium: attendee["isPremium"],
+      isServiceProvider: attendee["isServiceProvider"],
+      image: attendee["image"],
+    );
+    userfind.setUid(attendee.id);
     return Card(
       elevation: 5,
       child: ListTile(
-        title: Text(attendee!["lastname"].toString() +
+        title: Text(attendee["lastname"].toString() +
             " " +
             attendee["firstname"].toString()),
         leading: SizedBox(
           height: 100.0,
           width: 100.0,
         ),
+        onTap: () {
+          Navigator.pushNamed(context, UserDisplay.routeName, arguments: userfind);
+        },
         //isThreeLine: true,
       ),
     );

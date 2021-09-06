@@ -3,7 +3,7 @@ import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
-import 'package:artnext/pages/user/UserInfo.dart';
+import 'package:artnext/pages/user/UserDisplay.dart';
 import 'package:artnext/widget/participateWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,12 +59,16 @@ class DisplayEvenementScreen extends StatelessWidget {
 
       //Buttons
       Widget shareAndParticipateButtons = Container(
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _buildButtonShare(e.city),
-            _buildButtonDirection(e.address + ", " + e.city),
-            SizedBox(width: 30),
-            ParticipateWidget(user, e),
-          ]));
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildButtonShare(e.city),
+                SizedBox(width: 30),
+                _buildButtonDirection(e.address + ", " + e.city),
+                SizedBox(width: 30),
+                ParticipateWidget(user, e),
+              ]));
 
       var attendees;
       // si on a bien des attendees
@@ -194,12 +198,12 @@ class DisplayEvenementScreen extends StatelessWidget {
                               ),
                             ),
                             Container(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Text(
-                                  "Location :\n\n" + e.city,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Text(
+                                "Location :\n\n" + e.city,
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
+                            ),
                           ],
                         ),
                       ),
@@ -231,7 +235,9 @@ class DisplayEvenementScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(child: Icon(Icons.share, color: Colors.black)),
+          Container(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.share, color: Colors.black)),
           Text("Share",
               style: TextStyle(
                 fontSize: 16,
@@ -253,7 +259,9 @@ class DisplayEvenementScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(child: Icon(Icons.directions, color: Colors.black)),
+          Container(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.directions, color: Colors.black)),
           Text("Directions",
               style: TextStyle(
                 fontSize: 16,
@@ -269,6 +277,15 @@ class DisplayEvenementScreen extends StatelessWidget {
       BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
     if (snapshot.hasData) {
       var attendee = snapshot.data;
+      MyUser userfind = MyUser(
+        firstname: attendee!["firstname"],
+        lastname: attendee["lastname"],
+        isPremium: attendee["isPremium"],
+        isServiceProvider: attendee["isServiceProvider"],
+        image: attendee["image"],
+      );
+      userfind.setUid(attendee.id);
+      print("RECHERCHE ERREUR" + userfind.toString());
       return Column(
         children: [
           Container(
@@ -277,17 +294,17 @@ class DisplayEvenementScreen extends StatelessWidget {
               //aligns CircleAvatar to Top Center.
               child: GestureDetector(
                 onTap: () {
-                  //TODO Est ce qu'il faut pouvoir atteindre les infos de l'utilisateur ? Quentin
-                  // Navigator.pushNamed(context, UserInfo.routeName, arguments: attendee);
+                  Navigator.pushNamed(context, UserDisplay.routeName, arguments: userfind);
                 },
                 child: CircleAvatar(
                   radius: 25, //radius is 50
                   backgroundImage: NetworkImage(
                       "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
+                  // backgroundImage: AssetImage("assets/images/profil.png"),
                 ),
               )
           ),
-          Text(attendee!["firstname"].toString().substring(0, 1) +
+          Text(attendee["firstname"].toString().substring(0, 1) +
               ". " +
               ((attendee["lastname"].toString().length > 5)
                   ? attendee["lastname"].toString().substring(0, 5) + "..."
