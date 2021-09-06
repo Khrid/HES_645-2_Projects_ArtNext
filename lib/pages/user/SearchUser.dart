@@ -115,34 +115,18 @@ class _SearchUser extends State<SearchUser> {
   }
 
   _listItem(context, _list){
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: Colors.brown[400],
-        ),
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-            children: <Widget>[
-              Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        print("J'ai bien cliqué ");
-                        Navigator.pushNamed(
-                            context, UserInfo.routeName,
-                            arguments:  _list);
-                      },
-                      child: Text(_list),
-                    )
-                    // Expanded(
-                    //   flex: 3,
-                    //   child: Text(_list),
-                    // )
-                  ]
-              )
-            ]
-        )
+    return Card(
+      elevation: 5,
+      child: ListTile(
+        leading: Icon(Icons.person),
+        title: Text(_list),
+        onTap: () => {
+          Navigator.pushNamed(
+              context, UserDisplay.routeName,
+              arguments: userfind),
+          _searchController.clear(),
+        },
+      ),
     );
   }
 
