@@ -41,7 +41,7 @@ dependencies:
   mailto:                             # pour envoyer des emails
   url_launcher:                       # pour ouvrir des liens
   share_plus: ^2.1.4
-  introduction_screen: ^2.1.0
+  introduction_screen: ^2.1.0         # pour afficher des images au démarage
 
 dev_dependencies:
   flutter_test:

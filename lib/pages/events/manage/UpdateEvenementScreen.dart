@@ -35,6 +35,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
   TextEditingController eventStartTimeController = new TextEditingController();
   TextEditingController eventEndDateController = new TextEditingController();
   TextEditingController eventEndTimeController = new TextEditingController();
+  TextEditingController eventimageController = new TextEditingController();
   var eventTypeSelectedValue;
 
   @override
@@ -64,6 +65,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
     eventCityController.text = _event!.city;
     eventAddressController.text = _event!.address;
     eventDetailsController.text = _event!.details;
+    eventimageController.text = _event!.image;
 
     // Dates
     initializeDateFormatting("fr", null).then((_) {
@@ -208,6 +210,24 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                               });
                             },
                           ),
+                          /// image
+                          SizedBox(height: 10),
+                          TextFormField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: eventimageController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'http://...'),
+                              validator: (value) {
+                                if (value == null || value.isEmpty || value.substring(0,4) != 'http') {
+                                  return 'Please enter the image url of a png';
+                                }
+                                return null;
+                              }),
 
                           /// Start date
                           SizedBox(height: 10),
@@ -432,7 +452,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                         type: getEventTypeEnum(
                                             eventTypeSelectedValue),
                                         startDate: startDate,
-                                        image: _event!.image,
+                                        image: eventimageController.text,
                                         details: eventDetailsController.text,
                                         geopoint: _event!.geopoint,
                                         endDate: endDate,

@@ -1,3 +1,5 @@
+
+
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
@@ -59,10 +61,11 @@ class DisplayEvenementScreen extends StatelessWidget {
 
       //Buttons
       Widget shareAndParticipateButtons = Container(
+
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 _buildButtonShare(e.city),
                 SizedBox(width: 30),
                 _buildButtonDirection(e.address + ", " + e.city),
@@ -164,11 +167,14 @@ class DisplayEvenementScreen extends StatelessWidget {
                   ]),
               child: SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      SizedBox(height: 10),
                       Text(
                         e.title,
                         style: GoogleFonts.ptSans(
-                          fontSize: 36.0,
+                          fontSize: 26.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -177,43 +183,68 @@ class DisplayEvenementScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20),
-                              child: Text(
-                                "Du : " + readTimestamptoDate(e.startDate.millisecondsSinceEpoch) + " au " + readTimestamptoDate(e.endDate.millisecondsSinceEpoch),
-                                textAlign: TextAlign.justify,
-                                softWrap: true,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.schedule),
+                                SizedBox(width: 10),
+                                Text(readTimestamptoDate(e.startDate.millisecondsSinceEpoch) + " to " + readTimestamptoDate(e.endDate.millisecondsSinceEpoch),
+                                  textAlign: TextAlign.justify,
+                                  softWrap: true,
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                )
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 30),
-                              child: Text(
-                                "Details :\n\n" + e.details,
-                                textAlign: TextAlign.justify,
-                                softWrap: true,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                            SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Details :\n\n" + e.details,
+                                    textAlign: TextAlign.justify,
+                                    softWrap: true,
+                                    style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              padding: const EdgeInsets.only(top: 30),
-                              child: Text(
-                                "Location :\n\n" + e.city,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                            SizedBox(height:15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.location_on),
+                                Text(e.city, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                              ],
                             ),
+                            SizedBox(height: 15.0),
                           ],
                         ),
                       ),
+                      Divider(
+                        height: 5,
+                        thickness: 2,
+                        indent: 60,
+                        endIndent: 60,
+                      ),
                       shareAndParticipateButtons,
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 25),
+                      Divider(
+                        height: 5,
+                        thickness: 2,
+                        indent: 60,
+                        endIndent: 60,
+                      ),
+                      const SizedBox(height: 10),
                       Text(
                         "Attendees : ",
                         style: TextStyle(
                           fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Container(padding: const EdgeInsets.all(4), child: attendees)

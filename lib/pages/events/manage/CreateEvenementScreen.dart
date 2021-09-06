@@ -1,5 +1,4 @@
 import 'dart:developer' as dev;
-
 import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
@@ -36,6 +35,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
   TextEditingController eventEndDateController = new TextEditingController();
   TextEditingController eventEndTimeController = new TextEditingController();
   TextEditingController eventimageController = new TextEditingController();
+
 
   DateTime startDateTimeEvent = DateTime.now();
   DateTime endDateTimeEvent = DateTime.now();
@@ -196,6 +196,7 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                               });
                             },
                           ),
+
                           /// image
                           SizedBox(height: 10),
                           TextFormField(
@@ -207,13 +208,14 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                               controller: eventimageController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'Image'),
+                                  labelText: 'http://...'),
                               validator: (value) {
-                                if (value == null || value.isEmpty || value.substring(0,4) != 'http') {
-                                  return 'Please enter the image url';
+                                if (value == null || value.isEmpty || value.substring(0,4) != 'http' || value.substring(value.length,3) != 'png') {
+                                  return 'Please enter the image url of a png';
                                 }
                                 return null;
                               }),
+
                           /// Start date
                           SizedBox(height: 10),
                           Row(
