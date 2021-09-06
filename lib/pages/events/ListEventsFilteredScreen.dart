@@ -32,7 +32,7 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
 
 
     final user = Provider.of<MyUser?>(context);
-    print("MON argument :" + filter.recherche);
+
 
     return Scaffold(
       appBar: MyAppBar("Events filter by " + filter.recherche, false),

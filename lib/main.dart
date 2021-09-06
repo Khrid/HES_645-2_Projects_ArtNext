@@ -12,6 +12,7 @@ import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/help/HelpScreen.dart';
 import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/overviewScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserDisplay.dart';
 import 'package:artnext/pages/login/registerScreen.dart';
@@ -80,6 +81,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       // TODO: handle initialization error
     }
 
+
     return StreamProvider<MyUser?>.value(
         value: AuthenticationService().user,
         initialData: null,
@@ -116,8 +118,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             // Start the app with the "/" named route. In this case, the app starts
             // on the FirstScreen widget.
             //initialRoute: LoginScreen.routeName,
-            home: Wrapper(),
+            home: overviewScreen(),
             routes: {
+              Wrapper.routeName: (context) => Wrapper(),
               LoginScreen.routeName: (context) => LoginScreen(),
               // /login
               RegisterScreen.routeName: (context) => RegisterScreen(),

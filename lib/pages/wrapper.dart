@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../models/myuser.dart';
 
 class Wrapper extends StatelessWidget {
+  static const routeName = '/introduction';
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
