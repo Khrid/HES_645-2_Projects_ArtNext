@@ -1,3 +1,4 @@
+import 'package:artnext/models/ScreenArguments.dart';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
@@ -6,13 +7,16 @@ import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'ListEventsScreen.dart';
 import 'manage/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
 
 class ListEventsFilteredScreen extends StatefulWidget {
-  static const routeName = '/events';
+
+  ListEventsFilteredScreen({Key? key}) : super(key: key);
+
+  static const routeName = '/eventsfilter';
+
   var selectedOrderBy = "Start date";
   var orderByFirebase = "startDate";
 
@@ -32,10 +36,10 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
 
 
     final user = Provider.of<MyUser?>(context);
-    print("MON argument :" + filter.recherche);
+
 
     return Scaffold(
-      appBar: MyAppBar("Events filter by " + filter.recherche, false),
+      appBar: MyAppBar("Events filter by " + filter.genre, false),
       body: Column(
         children: [
           Expanded(
@@ -44,7 +48,7 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('events')
-                    .where(filter.type, isEqualTo: filter.recherche)
+                    .where(filter.genre, isEqualTo: filter.recherche)
                     .snapshots(),
                 builder: buildEventsList,
               ),
@@ -61,14 +65,13 @@ class ListEventsFilteredScreenState extends State<ListEventsFilteredScreen> {
         child: const Icon(Icons.add),
       )
           : Container(),
-
     );
   }
 }
 
 Widget buildEventsList(
     BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  //Je teste ma longueur > 0 car snapshot.hasData return true
+
   if (snapshot.hasData && snapshot.data!.docs.length > 0) {
     return Column(
       children: <Widget>[

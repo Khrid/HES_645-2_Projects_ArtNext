@@ -1,4 +1,5 @@
 import 'package:artnext/common/Constants.dart';
+import 'package:artnext/models/ScreenArguments.dart';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyDrawer.dart';
@@ -28,9 +29,6 @@ class ListEventsScreenState extends State<ListEventsScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    // print("ListEventScreen - user = " + user.toString());
-    // print("ListEventScreen - selectedOrderBy = " + widget.selectedOrderBy);
-    // print("ListEventScreen - orderByFirebase = " + widget.orderByFirebase);
     return Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
@@ -60,7 +58,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                     .collection(''
                     'events')
                     .orderBy(widget.orderByFirebase)
-                //.where('endDate', isGreaterThan: DateTime.now())
+                    // .where('endDate', isGreaterThan: DateTime.now())
                     .snapshots(),
                 builder: buildEventsList,
               ),
@@ -100,7 +98,6 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                   DocumentSnapshot eventFromFirebase =
                   snapshot.data!.docs[index];
                   Event event = Event.fromJson(eventFromFirebase);
-
                   var datum = readTimestamptoDate(
                       event.startDate.millisecondsSinceEpoch);
                   var eventTypeTransform = event.type
@@ -108,11 +105,9 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                       .toLowerCase()
                       .replaceAll('eventtypeenum.', '');
 
-
+                  //Allow add only one instance of each city
                   if(!widget.myList.contains(event.city.toString())){
                     widget.myList.add(event.city.toString());
-                  }else{
-                    // print(event.city.toString());
                   }
 
                   return Card(
@@ -190,9 +185,6 @@ class ListEventsScreenState extends State<ListEventsScreen> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          //return StatefulBuilder(
-          //    builder: (BuildContext builder, StateSetter setState) {
-
           if(value.toString() == 'Sorted by'){
             return AlertDialog(
               title: Text(value.toString()),
@@ -252,23 +244,21 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                       ),
                     ),
                     DropdownButton<String>(
+                      value: widget.myList[0],
                       items: widget.myList
-                          .map((String citylist){
-
+                          .map((String cityList){
                         return DropdownMenuItem<String>(
-                            value: citylist,
-                            child: Text(citylist));
+                            value: cityList,
+                            child: Text(cityList));
                       }).toList(),
-                      onChanged: (citylist) {
+                      onChanged: (String? newValue) {
                         Navigator.pushNamed(
                             context, ListEventsFilteredScreen.routeName,
                             arguments: ScreenArguments(
                                 'city',
-                                citylist!
+                                newValue!
                             ) );
                       },
-                      value: widget.myList[0],
-
                     ),
                     SizedBox(width: 200),
                   ],
@@ -277,49 +267,27 @@ class ListEventsScreenState extends State<ListEventsScreen> {
             );
           }});}}
 
-class ScreenArguments {
-  final String type;
-  final String recherche;
-
-  ScreenArguments(this.type, this.recherche);
-}
-
-Container _buildButton(BuildContext context, String type, String recherche) {
-  return Container(
-      child: Row(
-        children: [
-          ElevatedButton(onPressed: (){
-            Navigator.pushNamed(
-                context, ListEventsFilteredScreen.routeName,
-                arguments: ScreenArguments(
-                    type,
-                    recherche
-                ) );
-          }, child: Text(recherche),
-          ),
-        ],
-      )
-  );
-}
-
-Widget getFilterType(BuildContext context, String type, List<String> strings)
+// For creating a list of filtering button from a list
+Widget getFilterType(BuildContext context, String type, List<String> myList)
 {
   return Wrap(
-    children:
-        strings.map((item) =>
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(onPressed: (){
-                Navigator.pushNamed(
-                    context, ListEventsFilteredScreen.routeName,
-                    arguments: ScreenArguments(
-                        type,
-                        item
-                    ) );
-              }, child: Text(item),
-              ),
+      children:
+      myList.map((item) =>
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(onPressed: (){
+              Navigator.pushNamed(
+                  context, ListEventsFilteredScreen.routeName,
+                  arguments: ScreenArguments(
+                      type,
+                      item
+                  ));
+            }, child: Text(item),
             ),
-        ).toList()
+          ),
+      ).toList()
   );
 
 }
+
+

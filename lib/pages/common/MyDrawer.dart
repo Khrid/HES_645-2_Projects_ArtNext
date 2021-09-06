@@ -239,7 +239,7 @@ class MyDrawer extends StatelessWidget {
                   onTap: () async {
                     // Update the state of the app.
                     // ...
-                    Navigator.pushReplacementNamed(context, "/");
+                    Navigator.pushReplacementNamed(context, "/introduction");
                     await _auth.signOut();
                   },
                 ),
