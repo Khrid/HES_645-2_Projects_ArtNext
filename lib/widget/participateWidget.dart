@@ -41,8 +41,8 @@ class _ParticipateWidgetState extends State<ParticipateWidget> {
       children: [
         IconButton(
           icon: participating
-              ? Icon(Icons.check)
-              : Icon(Icons.close),
+              ? Icon(Icons.close)
+              : Icon(Icons.check),
           color: Colors.black,
           onPressed: _toggleFavorite,
           padding: EdgeInsets.all(8.0),

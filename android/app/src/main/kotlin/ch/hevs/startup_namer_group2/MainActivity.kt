@@ -1,4 +1,4 @@
-package ch.hevs.students.artnext.grp2
+package ch.hevs.startup_namer_group2
 
 import io.flutter.embedding.android.FlutterActivity
 
