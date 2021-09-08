@@ -103,6 +103,15 @@ class MyDrawer extends StatelessWidget {
                     Navigator.pushNamed(context, ListEventsScreen.routeName);
                   },
                 ),
+                ListTile(
+                  leading: Icon(Icons.search_sharp),
+                  title: const Text('Search a user'),
+                  onTap: () async {
+                    // Update the state of the app.
+                    // ...
+                    Navigator.pushNamed(context, SearchUser.routeName);
+                  },
+                ),
                 user.isServiceProvider
                     ? ListTile(
                         leading: Icon(Icons.event_available),
