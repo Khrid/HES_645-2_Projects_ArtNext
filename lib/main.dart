@@ -11,13 +11,13 @@ import 'package:artnext/pages/events/manage/CreateEvenementScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/help/HelpScreen.dart';
-import 'package:artnext/pages/login/loginScreen.dart';
-import 'package:artnext/pages/overviewScreen.dart';
+import 'package:artnext/pages/login/LoginScreen.dart';
+import 'package:artnext/pages/OverviewScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserDisplay.dart';
-import 'package:artnext/pages/login/registerScreen.dart';
+import 'package:artnext/pages/login/RegisterScreen.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
-import 'package:artnext/pages/wrapper.dart';
+import 'package:artnext/pages/Wrapper.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -118,9 +118,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             // Start the app with the "/" named route. In this case, the app starts
             // on the FirstScreen widget.
             //initialRoute: LoginScreen.routeName,
-            home: overviewScreen(),
+            home: Wrapper(),
             routes: {
               Wrapper.routeName: (context) => Wrapper(),
+              OverviewScreen.routeName: (context) => OverviewScreen(),
               LoginScreen.routeName: (context) => LoginScreen(),
               // /login
               RegisterScreen.routeName: (context) => RegisterScreen(),

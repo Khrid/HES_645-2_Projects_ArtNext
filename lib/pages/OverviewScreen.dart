@@ -1,8 +1,8 @@
-import 'package:artnext/pages/wrapper.dart';
+import 'package:artnext/pages/Wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-class overviewScreen extends StatelessWidget{
+class OverviewScreen extends StatelessWidget{
 
   final pageDecoration = PageDecoration(
     titleTextStyle:
@@ -10,6 +10,8 @@ class overviewScreen extends StatelessWidget{
     bodyTextStyle: PageDecoration().bodyTextStyle.copyWith(color: Colors.black),
     contentMargin: const EdgeInsets.all(10),
   );
+
+  static String routeName = "introduction";
 
   List<PageViewModel> getPages() {
     return [

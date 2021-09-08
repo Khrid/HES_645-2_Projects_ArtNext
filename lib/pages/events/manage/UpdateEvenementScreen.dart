@@ -221,7 +221,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                               controller: eventimageController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'http://...'),
+                                  labelText: 'Image - http://...'),
                               validator: (value) {
                                 if (value == null || value.isEmpty || value.substring(0,4) != 'http') {
                                   return 'Please enter the image url of a png';

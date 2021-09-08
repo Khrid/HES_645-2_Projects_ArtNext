@@ -17,7 +17,7 @@ class _ParticipateWidgetState extends State<ParticipateWidget> {
   void _toggleFavorite() {
     var participating = (widget.e.listAttendees.contains(widget.user.uid));
     setState(() {
-      text = (participating) ? "I am not going" : "I am going";
+      text = (participating) ? "I am going" : "I am not going";
       if (participating) {
         widget.e.removeAttendee(widget.user.uid);
         widget.user.removeAttendingTo(widget.e.id);
@@ -33,7 +33,7 @@ class _ParticipateWidgetState extends State<ParticipateWidget> {
   @override
   Widget build(BuildContext context) {
     var participating = (widget.e.listAttendees.contains(widget.user.uid));
-    text = (participating) ? "I am not going" : "I am going";
+    text = (participating) ? "I am going" : "I am not going";
     return Container(
 
         child: Column(

@@ -1,4 +1,4 @@
-import 'package:artnext/pages/login/loginScreen.dart';
+import 'package:artnext/pages/login/LoginScreen.dart';
 import 'package:flutter/cupertino.dart';
 
 class Authenticate extends StatefulWidget {

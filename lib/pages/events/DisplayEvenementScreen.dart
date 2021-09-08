@@ -7,6 +7,7 @@ import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
 import 'package:artnext/pages/user/UserDisplay.dart';
 import 'package:artnext/widget/participateWidget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -141,10 +142,12 @@ class DisplayEvenementScreen extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.4,
-            child: FadeInImage.memoryNetwork(
-              image: (e.image),
+            child: CachedNetworkImage(
+              imageUrl: e.image,
               fit: BoxFit.cover,
-              placeholder: kTransparentImage,
+              placeholder: (context, url) => new CircularProgressIndicator(),
+              errorWidget: (context, url, error) => new Icon(Icons.error)
+              ,
             ),
           ),
           Align(
@@ -204,7 +207,7 @@ class DisplayEvenementScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    "Details :\n\n" + e.details,
+                                    e.details,
                                     textAlign: TextAlign.justify,
                                     softWrap: true,
                                     style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),

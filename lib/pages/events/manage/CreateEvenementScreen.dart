@@ -208,9 +208,9 @@ class CreateEvenementScreenState extends State<CreateEvenementScreen> {
                               controller: eventimageController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'http://...'),
+                                  labelText: 'Image - http://...'),
                               validator: (value) {
-                                if (value == null || value.isEmpty || value.substring(0,4) != 'http' || value.substring(value.length,3) != 'png') {
+                                if (value == null || value.isEmpty || !Uri.parse(value).isAbsolute) {
                                   return 'Please enter the image url of a png';
                                 }
                                 return null;
