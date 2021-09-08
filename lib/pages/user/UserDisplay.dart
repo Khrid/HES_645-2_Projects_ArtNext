@@ -91,7 +91,7 @@ class _UserDisplayState extends State<UserDisplay> {
             const SizedBox(height: 24),
             buildMyEventsTitle(),
             const SizedBox(height: 24),
-            Expanded(
+            Container(
               child: SizedBox(
                 height: 400.0,
                 child: StreamBuilder(stream: FirebaseFirestore.instance
