@@ -13,6 +13,7 @@ import '../ListEventsScreen.dart';
 
 export 'CreateEvenementScreen.dart';
 
+/// Screen for existing event edition
 class UpdateEvenementScreen extends StatefulWidget {
   static const routeName = '/events/event/update';
 
@@ -40,7 +41,6 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -97,9 +97,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
       _events.doc(e.id).update(e.toJson());
     }
 
-    // TODO: implement build
     return Scaffold(
-
         appBar: MyAppBar("Edit event", false),
         body: Form(
             key: _formKey,
@@ -210,6 +208,7 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                               });
                             },
                           ),
+
                           /// image
                           SizedBox(height: 10),
                           TextFormField(
@@ -223,7 +222,9 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                   border: OutlineInputBorder(),
                                   labelText: 'Image - http://...'),
                               validator: (value) {
-                                if (value == null || value.isEmpty || value.substring(0,4) != 'http') {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.substring(0, 4) != 'http') {
                                   return 'Please enter the image url of a png';
                                 }
                                 return null;
@@ -444,22 +445,22 @@ class UpdateEvenementScreenState extends State<UpdateEvenementScreen> {
                                           startDateTimeEvent);
                                       Timestamp endDate =
                                           Timestamp.fromDate(endDateTimeEvent);
-                                      List listAttendees = _event!.listAttendees;
+                                      List listAttendees =
+                                          _event!.listAttendees;
                                       Event e = new Event(
-                                        id: _event!.id,
-                                        title: eventTitleController.text,
-                                        city: eventCityController.text,
-                                        type: getEventTypeEnum(
-                                            eventTypeSelectedValue),
-                                        startDate: startDate,
-                                        image: eventimageController.text,
-                                        details: eventDetailsController.text,
-                                        geopoint: _event!.geopoint,
-                                        endDate: endDate,
-                                        address: eventAddressController.text,
-                                        organizer: _event!.organizer,
-                                        listAttendees: listAttendees
-                                      );
+                                          id: _event!.id,
+                                          title: eventTitleController.text,
+                                          city: eventCityController.text,
+                                          type: getEventTypeEnum(
+                                              eventTypeSelectedValue),
+                                          startDate: startDate,
+                                          image: eventimageController.text,
+                                          details: eventDetailsController.text,
+                                          geopoint: _event!.geopoint,
+                                          endDate: endDate,
+                                          address: eventAddressController.text,
+                                          organizer: _event!.organizer,
+                                          listAttendees: listAttendees);
 
                                       _event = e;
 

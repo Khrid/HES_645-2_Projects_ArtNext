@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 export 'LoginScreen.dart';
 
+/// Screen for displaying the registration form
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/register';
 
@@ -42,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     print("RegisterScreen - build - start");
 
     return Scaffold(
-        backgroundColor: Colors.brown[100],
+        backgroundColor: Theme.of(context).primaryColor,
         body: SingleChildScrollView(
             child: Form(
           key: _formKey,

@@ -1,4 +1,5 @@
 import 'package:artnext/models/myuser.dart';
+import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/login/RegisterScreen.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 
 export 'LoginScreen.dart';
 
+/// Screen for displaying the login form
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
 
@@ -35,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     print("LoginScreen - build - start");
 
     return Scaffold(
-        backgroundColor: Colors.brown[100],
+        backgroundColor: Theme.of(context).primaryColor,
         body: SingleChildScrollView(
             child: Form(
           key: _formKey,
@@ -132,12 +134,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               }
                             },
-                            child: Text('Connexion')),
+                            child: Text('Log in')),
                         SizedBox(height: 20),
                         ElevatedButton(
                             // Within the `FirstScreen` widget
                             onPressed: () async {
-                              Navigator.pushNamed(context, RegisterScreen.routeName);
+                              Navigator.pushNamed(
+                                  context, RegisterScreen.routeName);
                             },
                             child: Text('Register'))
                       ],

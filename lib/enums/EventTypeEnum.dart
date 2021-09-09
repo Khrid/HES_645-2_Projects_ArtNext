@@ -1,5 +1,7 @@
+// Event types enum
 enum EventTypeEnum { EXHIBITION, CONCERT, OPENING, UNDEFINED }
 
+/// Returns the enum value given a string
 EventTypeEnum getEventTypeEnum(String eventType) {
   for (EventTypeEnum current in EventTypeEnum.values) {
     if (eventType == getEventTypeText(current)) {
@@ -9,6 +11,7 @@ EventTypeEnum getEventTypeEnum(String eventType) {
   return EventTypeEnum.UNDEFINED;
 }
 
+/// Returns the String value of an EventTypeEnum object
 String getEventTypeText(EventTypeEnum eventType) {
   switch (eventType) {
     case EventTypeEnum.EXHIBITION:
@@ -21,4 +24,3 @@ String getEventTypeText(EventTypeEnum eventType) {
       return "undefined";
   }
 }
-

@@ -5,6 +5,7 @@ import 'package:mailto/mailto.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Screen for displaying the help form
 class HelpScreen extends StatefulWidget {
   static const routeName = '/help';
 
@@ -33,7 +34,7 @@ class HelpScreenState extends State<HelpScreen> {
     _firstNameController.text = user.firstname;
     _lastNameController.text = user.lastname;
     return Scaffold(
-        backgroundColor: Colors.brown[100],
+        backgroundColor: Theme.of(context).primaryColor,
         appBar: MyAppBar("Help & feedback", false),
         body: ListView(
           scrollDirection: Axis.vertical,
@@ -87,7 +88,9 @@ class HelpScreenState extends State<HelpScreen> {
               EdgeInsets.symmetric(vertical: _minValue, horizontal: _minValue),
           labelText: 'First Name',
           hintText: 'First Name',
-          labelStyle: TextStyle(fontSize: 16.0,)),
+          labelStyle: TextStyle(
+            fontSize: 16.0,
+          )),
     );
   }
 

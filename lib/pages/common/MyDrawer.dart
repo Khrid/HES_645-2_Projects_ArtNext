@@ -1,21 +1,19 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/about/AboutScreen.dart';
 import 'package:artnext/pages/events/ListEventsScreen.dart';
 import 'package:artnext/pages/events/manage/MyEvents.dart';
 import 'package:artnext/pages/help/HelpScreen.dart';
+import 'package:artnext/pages/login/LoginScreen.dart';
 import 'package:artnext/pages/user/SearchUser.dart';
 import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:artnext/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/AuthenticationService.dart';
 
+/// Custom Drawer that is used inside the Screen
 class MyDrawer extends StatelessWidget {
   MyDrawer(this.currentPage);
 
@@ -25,8 +23,6 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    // print("MyDrawer - user = " + user.toString());
-    // TODO: implement build
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -35,9 +31,10 @@ class MyDrawer extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 DrawerHeader(
-                    decoration: BoxDecoration(color: Colors.brown[400]
-                        //    (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
-                        ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).accentColor,
+                      //    (user!.isServiceProvider) ? Colors.blue : Colors.lightGreen,
+                    ),
                     child: Column(
                       children: [
                         Text("ArtNext",
@@ -129,7 +126,7 @@ class MyDrawer extends StatelessWidget {
                   onTap: () async {
                     // Update the state of the app.
                     // ...
-                    //Navigator.pushReplacementNamed(context, );
+                    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
                     await _auth.signOut();
                   },
                 ),

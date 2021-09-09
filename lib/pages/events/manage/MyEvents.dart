@@ -8,67 +8,64 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'CreateEvenementScreen.dart';
 import '../DisplayEvenementScreen.dart';
+import 'CreateEvenementScreen.dart';
 
+/// Display the list of events for a service provider
 class MyEvents extends StatelessWidget {
   static const routeName = '/events/manage/';
 
   late MyUser? user;
 
-/*
-  _MyEventsState createState() => _MyEventsState();
-}
-
-class _MyEventsState extends State<MyEvents> {*/
-  @override
   Widget build(BuildContext context) {
     user = Provider.of<MyUser?>(context);
     print("MyEvents - user = " + user.toString());
-    return Scaffold(
-      appBar: MyAppBar("My events", false),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
-            ),
-          ),
-          Expanded(
-            child: SizedBox(
-              height: 200.0,
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('events')
-                    //.orderBy('endDate')
-                    //.where('endDate', isGreaterThan: DateTime.now())
-                    .where('organizer', isEqualTo: user!.uid)
-                    .snapshots(),
-                builder: buildEventsList,
+    if (user != null) {
+      return Scaffold(
+        appBar: MyAppBar("My events", false),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [],
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        elevation: 0.0,
-        onPressed: () {
-          Navigator.pushNamed(context, CreateEvenementScreen.routeName);
-        },
-        child: const Icon(Icons.add),
-      ),
-      drawer: MyDrawer(""),
-    );
+            Expanded(
+              child: SizedBox(
+                height: 200.0,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('events')
+                      //.orderBy('endDate')
+                      //.where('endDate', isGreaterThan: DateTime.now())
+                      .where('organizer', isEqualTo: user!.uid)
+                      .snapshots(),
+                  builder: buildEventsList,
+                ),
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 0.0,
+          onPressed: () {
+            Navigator.pushNamed(context, CreateEvenementScreen.routeName);
+          },
+          child: const Icon(Icons.add),
+        ),
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 }
 
 Widget buildEventsList(
     BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
   if (snapshot.hasData) {
-    if (!snapshot.data!.docs.isEmpty) {
+    if (snapshot.data!.docs.isNotEmpty) {
       return Column(
         children: <Widget>[
           Text(
@@ -84,12 +81,7 @@ Widget buildEventsList(
                   MyUser? user = Provider.of<MyUser?>(context);
                   DocumentSnapshot eventFromFirebase =
                       snapshot.data!.docs[index];
-                  //log(event.reference.id);
                   Event event = Event.fromJson(eventFromFirebase);
-                  // log("ListEventsScreen - buildEventsList - event #" +
-                  //     index.toString() +
-                  //     " = " +
-                  //     event.id);
 
                   var datum = readTimestamptoDate(
                       event.startDate.millisecondsSinceEpoch);
@@ -115,7 +107,6 @@ Widget buildEventsList(
                         height: 100.0,
                         width: 100.0,
                         child: ClipRRect(
-                            // borderRadius: BorderRadius.all(Radius.circular(4.0)),
                             child: FadeInImage(
                           image: NetworkImage(event.image),
                           placeholder:

@@ -1,12 +1,11 @@
-
-
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:artnext/pages/events/ListAttendeesScreen.dart';
 import 'package:artnext/pages/events/manage/UpdateEvenementScreen.dart';
-import 'package:artnext/pages/user/UserDisplay.dart';
-import 'package:artnext/widget/participateWidget.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
+import 'package:artnext/widget/ParticipateWidget.dart';
+import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,12 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:artnext/widget/readTimeStamp.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 export 'DisplayEvenementScreen.dart';
 
+/// Screen for displaying an event information
 class DisplayEvenementScreen extends StatelessWidget {
   static const routeName = '/events/event/display';
   late final MyUser user;
@@ -35,12 +33,12 @@ class DisplayEvenementScreen extends StatelessWidget {
       appBar: MyAppBar("Event detail", false),
       floatingActionButton: canEdit
           ? FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
-              arguments: event);
-        },
-        child: Icon(Icons.edit),
-      )
+              onPressed: () {
+                Navigator.pushNamed(context, UpdateEvenementScreen.routeName,
+                    arguments: event);
+              },
+              child: Icon(Icons.edit),
+            )
           : Container(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -62,17 +60,16 @@ class DisplayEvenementScreen extends StatelessWidget {
 
       //Buttons
       Widget shareAndParticipateButtons = Container(
-
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                _buildButtonShare(e.city),
-                SizedBox(width: 30),
-                _buildButtonDirection(e.address + ", " + e.city),
-                SizedBox(width: 30),
-                ParticipateWidget(user, e),
-              ]));
+            _buildButtonShare(e.city),
+            SizedBox(width: 30),
+            _buildButtonDirection(e.address + ", " + e.city),
+            SizedBox(width: 30),
+            ParticipateWidget(user, e),
+          ]));
 
       var attendees;
       // si on a bien des attendees
@@ -121,7 +118,7 @@ class DisplayEvenementScreen extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          backgroundColor: Colors.brown[400],
+                          backgroundColor: Theme.of(context).accentColor,
                         )));
               } else {
                 // pour les suivants, on ne fait plus rien
@@ -146,8 +143,7 @@ class DisplayEvenementScreen extends StatelessWidget {
               imageUrl: e.image,
               fit: BoxFit.cover,
               placeholder: (context, url) => new CircularProgressIndicator(),
-              errorWidget: (context, url, error) => new Icon(Icons.error)
-              ,
+              errorWidget: (context, url, error) => new Icon(Icons.error),
             ),
           ),
           Align(
@@ -170,89 +166,98 @@ class DisplayEvenementScreen extends StatelessWidget {
                   ]),
               child: SingleChildScrollView(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 10),
-                      Text(
-                        e.title,
-                        style: GoogleFonts.ptSans(
-                          fontSize: 26.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Container(
-                        child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    e.title,
+                    style: GoogleFonts.ptSans(
+                      fontSize: 26.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 20),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.schedule),
-                                SizedBox(width: 10),
-                                Text(readTimestamptoDate(e.startDate.millisecondsSinceEpoch) + " to " + readTimestamptoDate(e.endDate.millisecondsSinceEpoch),
-                                  textAlign: TextAlign.justify,
-                                  softWrap: true,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    e.details,
-                                    textAlign: TextAlign.justify,
-                                    softWrap: true,
-                                    style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height:15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.location_on),
-                                Text(e.city, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                              ],
-                            ),
-                            SizedBox(height: 15.0),
+                            Icon(Icons.schedule),
+                            SizedBox(width: 10),
+                            Text(
+                              readTimestamptoDate(
+                                      e.startDate.millisecondsSinceEpoch) +
+                                  " to " +
+                                  readTimestamptoDate(
+                                      e.endDate.millisecondsSinceEpoch),
+                              textAlign: TextAlign.justify,
+                              softWrap: true,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            )
                           ],
                         ),
-                      ),
-                      Divider(
-                        height: 5,
-                        thickness: 2,
-                        indent: 60,
-                        endIndent: 60,
-                      ),
-                      shareAndParticipateButtons,
-                      const SizedBox(height: 25),
-                      Divider(
-                        height: 5,
-                        thickness: 2,
-                        indent: 60,
-                        endIndent: 60,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        "Attendees : ",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                e.details,
+                                textAlign: TextAlign.justify,
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, height: 1.5),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Container(padding: const EdgeInsets.all(4), child: attendees)
-                    ],
-                  )),
+                        SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.location_on),
+                            Text(e.city,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                          ],
+                        ),
+                        SizedBox(height: 15.0),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: 5,
+                    thickness: 2,
+                    indent: 60,
+                    endIndent: 60,
+                  ),
+                  shareAndParticipateButtons,
+                  const SizedBox(height: 25),
+                  Divider(
+                    height: 5,
+                    thickness: 2,
+                    indent: 60,
+                    endIndent: 60,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Attendees : ",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Container(padding: const EdgeInsets.all(4), child: attendees)
+                ],
+              )),
             ),
           ),
         ],
@@ -264,7 +269,9 @@ class DisplayEvenementScreen extends StatelessWidget {
   GestureDetector _buildButtonShare(String city) {
     return GestureDetector(
       onTap: () async {
-        Share.share("Je participe bientôt à un super évènement à " + city + " ! \nRejoins-moi par ici !\n\nhttps://artnext.page.link/openapp");
+        Share.share("Je participe bientôt à un super évènement à " +
+            city +
+            " ! \nRejoins-moi par ici !\n\nhttps://artnext.page.link/openapp");
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -287,7 +294,8 @@ class DisplayEvenementScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         String query = Uri.encodeComponent(address);
-        String googleUrl = "https://www.google.com/maps/search/?api=1&query=$query";
+        String googleUrl =
+            "https://www.google.com/maps/search/?api=1&query=$query";
         await launch(googleUrl);
       },
       child: Column(
@@ -319,7 +327,6 @@ class DisplayEvenementScreen extends StatelessWidget {
         image: attendee["image"],
       );
       userfind.setUid(attendee.id);
-      print("RECHERCHE ERREUR" + userfind.toString());
       return Column(
         children: [
           Container(
@@ -328,7 +335,8 @@ class DisplayEvenementScreen extends StatelessWidget {
               //aligns CircleAvatar to Top Center.
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, UserDisplay.routeName, arguments: userfind);
+                  Navigator.pushNamed(context, UserInfo.routeName,
+                      arguments: userfind);
                 },
                 child: CircleAvatar(
                   radius: 25, //radius is 50
@@ -336,8 +344,7 @@ class DisplayEvenementScreen extends StatelessWidget {
                       "https://dza2a2ql7zktf.cloudfront.net/binaries-cdn/dqzqcuqf9/image/fetch/ar_16:10,q_auto:best,dpr_3.0,c_fill,w_376/https://d2u3kfwd92fzu7.cloudfront.net/asset/cms/THUMB_Art_Basel_2020_Francis_Picabia_1900-2000-3-1-11-3-1.jpg"),
                   // backgroundImage: AssetImage("assets/images/profil.png"),
                 ),
-              )
-          ),
+              )),
           Text(attendee["firstname"].toString().substring(0, 1) +
               ". " +
               ((attendee["lastname"].toString().length > 5)

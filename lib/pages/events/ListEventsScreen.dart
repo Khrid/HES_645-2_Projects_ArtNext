@@ -1,4 +1,5 @@
 import 'package:artnext/common/Constants.dart';
+import 'package:artnext/enums/EventTypeEnum.dart';
 import 'package:artnext/models/ScreenArguments.dart';
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
@@ -9,11 +10,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'ListEventsFilteredScreen.dart';
 import 'manage/CreateEvenementScreen.dart';
 
 export 'ListEventsScreen.dart';
 
+/// Screen for displaying the events list
 class ListEventsScreen extends StatefulWidget {
   static const routeName = '/events';
   var selectedOrderBy = "Start date";
@@ -26,20 +29,19 @@ class ListEventsScreen extends StatefulWidget {
 }
 
 class ListEventsScreenState extends State<ListEventsScreen> {
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: Text("Events"),
-        backgroundColor: Colors.brown[400],
+        backgroundColor: Theme.of(context).accentColor,
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: (value) => showSortDialog(context, value),
             itemBuilder: (BuildContext context) {
-              return Constants.choices.map((String choice) {
+              return Constants.SORT_FILTER_CHOICES.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -57,9 +59,9 @@ class ListEventsScreenState extends State<ListEventsScreen> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection(''
-                    'events')
+                        'events')
                     .orderBy(widget.orderByFirebase)
-                // .where('endDate', isGreaterThan: DateTime.now())
+                    // .where('endDate', isGreaterThan: DateTime.now())
                     .snapshots(),
                 builder: buildEventsList,
               ),
@@ -69,26 +71,25 @@ class ListEventsScreenState extends State<ListEventsScreen> {
       ),
       floatingActionButton: user!.isServiceProvider
           ? FloatingActionButton(
-        elevation: 0.0,
-        onPressed: () {
-          Navigator.pushNamed(context, CreateEvenementScreen.routeName);
-        },
-        child: const Icon(Icons.add),
-      )
+              elevation: 0.0,
+              onPressed: () {
+                Navigator.pushNamed(context, CreateEvenementScreen.routeName);
+              },
+              child: const Icon(Icons.add),
+            )
           : Container(),
       drawer: MyDrawer(""),
     );
   }
 
-  Widget buildEventsList(BuildContext context,
-      AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget buildEventsList(
+      BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
     if (snapshot.hasData) {
       // List<String> myList = [];
       return Column(
         children: <Widget>[
           Text(
-            readTimestampYear(Event
-                .fromJson(snapshot.data!.docs[0])
+            readTimestampYear(Event.fromJson(snapshot.data!.docs[0])
                 .startDate
                 .millisecondsSinceEpoch),
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
@@ -98,7 +99,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot eventFromFirebase =
-                  snapshot.data!.docs[index];
+                      snapshot.data!.docs[index];
                   Event event = Event.fromJson(eventFromFirebase);
                   var datum = readTimestamptoDate(
                       event.startDate.millisecondsSinceEpoch);
@@ -138,29 +139,24 @@ class ListEventsScreenState extends State<ListEventsScreen> {
                               errorWidget: (context, error, url) =>
                                   Image.asset("assets/images/placeholder.jpg"),
                             ),
-                          )
-
+                          )),
+                      onTap: () => {
+                        Navigator.pushNamed(
+                            context, DisplayEvenementScreen.routeName,
+                            arguments: event)
+                      },
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 3.0),
+                            child: Text(datum),
+                          ),
+                          Text(event.city),
+                        ],
                       ),
-
-                    onTap: () =>
-                    {
-                      Navigator.pushNamed(
-                          context, DisplayEvenementScreen.routeName,
-                          arguments: event)
-                    },
-                    trailing: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
-                          child: Text(datum),
-                        ),
-                        Text(event.city),
-                      ],
+                      isThreeLine: true,
                     ),
-                    isThreeLine: true,
-                  )
-                  ,
                   );
                 }),
           ),
@@ -177,7 +173,6 @@ class ListEventsScreenState extends State<ListEventsScreen> {
       return Center(child: CircularProgressIndicator());
     }
   }
-
 
   void showSortDialog(BuildContext context, String value) {
     showDialog(
@@ -226,38 +221,33 @@ class ListEventsScreenState extends State<ListEventsScreen> {
               content: Container(
                 child: Wrap(
                   children: [
-                    Row(
-                        children: [
-                          Text("Type of event:",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        ]
-                    ),
+                    Row(children: [
+                      Text(
+                        "Type of event:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ]),
                     //For create a list of button with all parameters for filter type
-                    getFilterType(context, 'type', Constants.eventTypes),
+                    getFilterType(context, 'type'),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                          children: [
-                            Text("By city: ",
-                              style: TextStyle(fontWeight: FontWeight.bold),),
-                          ]
-                      ),
+                      child: Row(children: [
+                        Text(
+                          "By city: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ]),
                     ),
                     DropdownButton<String>(
                       value: widget.myList[0],
-                      items: widget.myList
-                          .map((String cityList) {
+                      items: widget.myList.map((String cityList) {
                         return DropdownMenuItem<String>(
-                            value: cityList,
-                            child: Text(cityList));
+                            value: cityList, child: Text(cityList));
                       }).toList(),
                       onChanged: (String? newValue) {
                         Navigator.pushNamed(
                             context, ListEventsFilteredScreen.routeName,
-                            arguments: ScreenArguments(
-                                'city',
-                                newValue!
-                            ));
+                            arguments: ScreenArguments('city', newValue!));
                       },
                     ),
                     SizedBox(width: 200),
@@ -271,24 +261,21 @@ class ListEventsScreenState extends State<ListEventsScreen> {
 }
 
 // For creating a list of filtering button from a list
-Widget getFilterType(BuildContext context, String type, List<String> myList) {
+Widget getFilterType(BuildContext context, String type) {
   return Wrap(
-      children:
-      myList.map((item) =>
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(onPressed: () {
-              Navigator.pushNamed(
-                  context, ListEventsFilteredScreen.routeName,
-                  arguments: ScreenArguments(
-                      type,
-                      item
-                  ));
-            }, child: Text(item),
+      children: EventTypeEnum.values
+          .map(
+            (item) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                      context, ListEventsFilteredScreen.routeName,
+                      arguments: ScreenArguments(type, getEventTypeText(item)));
+                },
+                child: Text(getEventTypeText(item)),
+              ),
             ),
-          ),
-      ).toList()
-  );
+          )
+          .toList());
 }
-
-

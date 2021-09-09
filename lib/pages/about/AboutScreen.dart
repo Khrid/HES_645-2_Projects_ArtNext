@@ -2,13 +2,15 @@ import 'package:artnext/pages/common/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// The "About" screen displays the information about the app, developpers and
+/// github link
 class AboutScreen extends StatelessWidget {
   static const routeName = '/about';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.brown[100],
+        backgroundColor: Theme.of(context).primaryColor,
         appBar: MyAppBar("About", false),
         body: SingleChildScrollView(
             child: Align(
@@ -96,7 +98,6 @@ class AboutScreen extends StatelessWidget {
                             )),
                       ),
                     ),
-
                     SizedBox(
                       height: 25,
                     ),
@@ -126,7 +127,8 @@ class AboutScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        await launch("https://github.com/hes-6452-gr2/HES_645-2_Projects_ArtNext");
+                        await launch(
+                            "https://github.com/hes-6452-gr2/HES_645-2_Projects_ArtNext");
                       }, // handle your image tap here
                       child: Image.asset(
                         'assets/images/github.png',

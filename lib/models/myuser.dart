@@ -1,15 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Represents an User object, based on Firebase document
 class MyUser {
+  /// Technical ID of firestore document
   late final String uid;
+
+  /// User firstname
   String firstname;
+
+  /// User lastname
   String lastname;
+
+  /// Is the user a premium user ?
   bool isPremium;
+
+  /// Is the user a service provider ?
   bool isServiceProvider;
+
+  /// Profile picture
   String image;
+
+  /// Event that the user is attending to
   late List attendingTo = [];
+
+  /// User email
   String? email;
 
+  /// Default constructor
   MyUser(
       {this.firstname = "",
       this.lastname = "",
@@ -18,10 +35,8 @@ class MyUser {
       this.image = "",
       this.email});
 
-
-  @override
+  /// Returns a readable MyUser object
   String toString() {
-    // TODO: implement toString
     return "MyUser{uid:" +
         uid +
         ",firstname:" +
@@ -39,6 +54,7 @@ class MyUser {
         "}";
   }
 
+  /// Translate a MyUser object to JSON
   Map<String, Object?> toJson() {
     return {
       //'id': id,
@@ -51,6 +67,7 @@ class MyUser {
     };
   }
 
+  /// Retrieves the user info from Firebase document
   Future<void> populateUserInfoFromFirestore() async {
     DocumentSnapshot<Map<String, dynamic>> snap =
         await FirebaseFirestore.instance.collection("users").doc(uid).get();
@@ -72,26 +89,31 @@ class MyUser {
     }
   }
 
+  /// Save the user info to Firebase
   Future<void> saveToFirestore() async {
     await FirebaseFirestore.instance.collection("users").doc(uid).set(toJson());
   }
 
+  /// Remove the event from the attendency list and sync it with Firebase
   removeAttendingTo(String eventId) async {
     attendingTo.remove(eventId);
     //await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
     saveToFirestore();
   }
 
+  /// Add the event from the attendency list and sync it with Firebase
   addAttendingTo(String eventId) async {
     attendingTo.add(eventId);
     //await FirebaseFirestore.instance.collection("users").doc(uid).update(toJson());
     saveToFirestore();
   }
 
+  /// Set an user UID
   void setUid(String uid) {
     this.uid = uid;
   }
 
+  /// Set an user email
   void setEmail(String email) {
     this.email = email;
   }

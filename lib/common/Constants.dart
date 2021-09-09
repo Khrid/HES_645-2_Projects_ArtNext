@@ -1,13 +1,7 @@
-class Constants{
-  static const String Sortedby = 'Sorted by';
-  static const String Filterby = 'Filter by';
+class Constants {
+  static const String SORT_BY = 'Sort by';
+  static const String FILTER_BY = 'Filter by';
 
-  static const List<String> choices = <String>[
-    Sortedby,
-    Filterby
-  ];
-
-  static const List<String> eventTypes = <String>[
-    'concert', 'undefined', 'opening', 'exhibition'
-  ];
+  // For the action buttons on the events page
+  static const List<String> SORT_FILTER_CHOICES = <String>[SORT_BY, FILTER_BY];
 }

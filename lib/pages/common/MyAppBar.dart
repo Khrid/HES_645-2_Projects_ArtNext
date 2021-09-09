@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../services/AuthenticationService.dart';
 
+/// Custom AppBar that is used inside the Screen
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final bool filterActionsAvailable;
@@ -13,28 +14,16 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   MyAppBar(this.title, this.filterActionsAvailable);
 
-
-
-  @override
   MyAppBarState createState() {
     return MyAppBarState();
   }
 
-  @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 class MyAppBarState extends State<MyAppBar> {
-
-  @override
-// TODO: implement preferredSize
-
-  @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
-    //await user.populateUserInfoFromFirebase();
-    // print("MyAppBar - user = " + user.toString());
 
     List<Widget> actions = <Widget>[];
 
@@ -42,7 +31,7 @@ class MyAppBarState extends State<MyAppBar> {
       actions.add(PopupMenuButton<String>(
         onSelected: (value) => _showAlertDialog(context, value),
         itemBuilder: (BuildContext context) {
-          return Constants.choices.map((String choice) {
+          return Constants.SORT_FILTER_CHOICES.map((String choice) {
             return PopupMenuItem<String>(
               value: choice,
               child: Text(choice),
@@ -52,20 +41,18 @@ class MyAppBarState extends State<MyAppBar> {
       ));
     }
 
-    // TODO: implement build
     return AppBar(
       title: Text(widget.title),
-      backgroundColor: Colors.brown[400],
+      backgroundColor: Theme.of(context).accentColor,
       actions: actions,
-      //backgroundColor: (user!.isServiceProvider ? Colors.orange[400] : Colors.brown[400]),
     );
   }
 
   void choiceAction(String choice) {
-    if (choice == Constants.Filterby) {
+    if (choice == Constants.FILTER_BY) {
       print('Filter bar');
     }
-    if (choice == Constants.Sortedby) {
+    if (choice == Constants.SORT_BY) {
       print('Sorted bar');
     }
   }
@@ -82,7 +69,7 @@ class MyAppBarState extends State<MyAppBar> {
               child: Text(value),
               onPressed: () {
                 ///Insert here an action, in your case should be:
-                  Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
             ),
           ],

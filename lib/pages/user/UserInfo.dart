@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+/// Screen for displaying the user information
 class UserInfo extends StatefulWidget {
   static const routeName = '/user/info';
 
@@ -16,18 +17,27 @@ class UserInfo extends StatefulWidget {
 class _UserInfoState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<MyUser?>(context);
-    // TODO: implement build
+    var user;
+    bool ownAccount = false;
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      user = ModalRoute.of(context)!.settings.arguments as MyUser;
+    } else {
+      user = Provider.of<MyUser?>(context);
+      ownAccount = true;
+    }
+
     return Scaffold(
-        appBar: MyAppBar("User info", false),
+        appBar: MyAppBar(ownAccount ? "My info" : "User info", false),
         body: ListView(
           physics: BouncingScrollPhysics(),
           children: [
             const SizedBox(height: 24),
-            buildName(user!),
+            buildName(user!, ownAccount),
             const SizedBox(height: 24),
-            Center(child: buildUpgradeButton(user.isPremium)),
-            const SizedBox(height: 24),
+            ownAccount
+                ? Center(child: buildUpgradeButton(user.isPremium))
+                : SizedBox(),
+            ownAccount ? const SizedBox(height: 24) : SizedBox(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -95,10 +105,11 @@ class _UserInfoState extends State<UserInfo> {
             Container(
               child: SizedBox(
                 height: 400.0,
-                child: StreamBuilder(stream: FirebaseFirestore.instance
-                    .collection('events')
-                    .where('listAttendees', arrayContains: user.uid)
-                    .snapshots(),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('events')
+                      .where('listAttendees', arrayContains: user.uid)
+                      .snapshots(),
                   builder: buildEventsList,
                 ),
               ),
@@ -106,22 +117,22 @@ class _UserInfoState extends State<UserInfo> {
             //const SizedBox(height: 48),
             //buildAbout(user),
           ],
-        )
-
-        );
+        ));
   }
 
-  Widget buildName(MyUser user) => Column(
+  Widget buildName(MyUser user, bool ownAccount) => Column(
         children: [
           Text(
             user.firstname + " " + user.lastname,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
           const SizedBox(height: 4),
-          Text(
-            user.email!+"",
-            style: TextStyle(color: Colors.grey),
-          )
+          ownAccount
+              ? Text(
+                  user.email! + "",
+                  style: TextStyle(color: Colors.grey),
+                )
+              : SizedBox()
         ],
       );
 
@@ -139,17 +150,18 @@ class _UserInfoState extends State<UserInfo> {
         },
       );
 
-  Widget buildMyEventsTitle()  => Column(
-    children: [
-      Text(
-        "My attendency history",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-      ),
-    ],
-  );
+  Widget buildMyEventsTitle() => Column(
+        children: [
+          Text(
+            "Attendency history",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+        ],
+      );
 }
 
-Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+Widget buildEventsList(
+    BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
   if (snapshot.hasData) {
     return Column(
       children: <Widget>[
@@ -163,9 +175,12 @@ Widget buildEventsList(BuildContext context, AsyncSnapshot<QuerySnapshot> snapsh
                 return Card(
                   elevation: 5,
                   child: ListTile(
-                    title: Text((event.title.length > 100) ? event.title.substring(0,100)+("[...]") : event.title),
+                    title: Text((event.title.length > 100)
+                        ? event.title.substring(0, 100) + ("[...]")
+                        : event.title),
                     onTap: () => {
-                      Navigator.pushNamed(context, DisplayEvenementScreen.routeName,
+                      Navigator.pushNamed(
+                          context, DisplayEvenementScreen.routeName,
                           arguments: event)
                     },
                   ),

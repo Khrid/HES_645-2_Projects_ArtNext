@@ -1,16 +1,16 @@
 import 'package:artnext/models/event.dart';
 import 'package:artnext/models/myuser.dart';
 import 'package:artnext/pages/common/MyAppBar.dart';
-import 'package:artnext/pages/common/MyDrawer.dart';
-import 'package:artnext/pages/user/UserDisplay.dart';
+import 'package:artnext/pages/user/UserInfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 export 'ListEventsScreen.dart';
 
+/// Screen for displaying the attendency list of an event
 class ListAttendees extends StatelessWidget {
-  static const routeName = '/events/event/display/attendees';
+  static const routeName = '/events/event/attendees';
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ListAttendees extends StatelessWidget {
     final event = ModalRoute.of(context)!.settings.arguments as Event;
     print("ListAttendees - user = " + user.toString() + " " + event.toString());
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: MyAppBar("Attendees", false),
       body: Column(
         children: [
@@ -36,7 +36,6 @@ class ListAttendees extends StatelessWidget {
           ),
         ],
       ),
-      //drawer: MyDrawer(""),
     );
   }
 }
@@ -58,22 +57,6 @@ Widget buildAttendeesList(
                         .doc(e.listAttendees[index].toString())
                         .snapshots(),
                     builder: buildAttendeeCard);
-                /*MyUser tmp = MyUser();
-                  tmp.setUid(e.listAttendees[index].toString());
-                  tmp.populateUserInfoFromFirestore();
-                  print(tmp);
-                  return Card(
-                    elevation: 5,
-                    child: ListTile(
-                      title: Text(
-                          tmp.firstname + " " + tmp.lastname),
-                      leading: SizedBox(
-                        height: 100.0,
-                        width: 100.0,
-                      ),
-                      //isThreeLine: true,
-                    ),
-                  );*/
               }),
         ),
       ],
@@ -106,7 +89,7 @@ Widget buildAttendeeCard(BuildContext context,
           width: 100.0,
         ),
         onTap: () {
-          Navigator.pushNamed(context, UserDisplay.routeName, arguments: userfind);
+          Navigator.pushNamed(context, UserInfo.routeName, arguments: userfind);
         },
         //isThreeLine: true,
       ),

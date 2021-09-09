@@ -5,7 +5,6 @@
         android:label="ArtNext"
         android:icon="@mipmap/ic_launcher">
 
-       <!-- TODO: Add your API key here -->
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyDzWWfl_zdK0yCVYkcvWzCQHenSEHeC5Wc"/>
 

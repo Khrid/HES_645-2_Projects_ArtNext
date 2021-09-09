@@ -35,14 +35,11 @@ class _ParticipateWidgetState extends State<ParticipateWidget> {
     var participating = (widget.e.listAttendees.contains(widget.user.uid));
     text = (participating) ? "I am going" : "I am not going";
     return Container(
-
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: participating
-              ? Icon(Icons.check)
-              : Icon(Icons.close),
+          icon: participating ? Icon(Icons.check) : Icon(Icons.close),
           color: Colors.black,
           onPressed: _toggleFavorite,
           padding: EdgeInsets.all(8.0),
