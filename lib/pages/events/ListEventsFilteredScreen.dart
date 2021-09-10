@@ -16,7 +16,7 @@ export 'ListEventsScreen.dart';
 class ListEventsFilteredScreen extends StatefulWidget {
   ListEventsFilteredScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/eventsfilter';
+  static const routeName = '/events/filtered';
 
   var selectedOrderBy = "Start date";
   var orderByFirebase = "startDate";

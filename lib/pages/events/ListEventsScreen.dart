@@ -178,7 +178,7 @@ class ListEventsScreenState extends State<ListEventsScreen> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          if (value.toString() == 'Sorted by') {
+          if (value.toString() == Constants.SORT_BY) {
             return AlertDialog(
               title: Text(value.toString()),
               content: Container(

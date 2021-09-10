@@ -106,7 +106,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               RegisterScreen.routeName: (context) => RegisterScreen(),
               // /events
               ListEventsScreen.routeName: (context) => ListEventsScreen(),
-              // /eventsfilter
+              // /events/filtered
               ListEventsFilteredScreen.routeName: (context) =>
                   ListEventsFilteredScreen(),
               // //events/event/display
